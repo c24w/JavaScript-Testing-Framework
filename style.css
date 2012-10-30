@@ -1,0 +1,32 @@
+*
+{
+    font-family: sans-serif;
+}
+
+.testFixture
+{
+}
+
+.testCase
+{
+}
+
+.testCase .desc
+{
+    font-weight: bold;
+}
+
+.test
+{
+}
+
+.test .fail
+{
+    color: #c00;
+    font-style: italic;
+}
+
+.test .pass
+{
+    color: #0c0;
+}
