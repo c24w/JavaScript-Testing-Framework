@@ -1,25 +1,22 @@
-requires('framework/outputters.js');
-requires('framework/utils.js');
-
-var normalIndent = '\t  ';
-var failIndent = '\t';
+requires('outputters.js');
+requires('utils.js');
+requires('formatting.js');
 
 function testCase(description, tests) {
 	var desc = description;
 	var tests = tests;
 	this.getDescription = function () { return desc }
 	this.getTests = function () { return tests }
-	this.runTests = function (outputter) {
-		runTests(this, outputter);
+	this.outputTestResults = function (outputter) {
+		outputTestResults(this, outputter);
 	}
 }
 
 function autoRunTestCase(description, tests) {
-	new testCase(description, tests).runTests(consoleOutputter);
+	new testCase(description, tests).outputTestResults(htmlOutputter);
 }
 
-function runTests(testcase, outputter) {
-	console.log('\n' + normalIndent + '---  ' + testcase.getDescription() + '  ---\n');
+function outputTestResults(testcase, outputter) {
 	var tests = testcase.getTests();
 	for (var test in tests) {
 		try {
@@ -27,12 +24,12 @@ function runTests(testcase, outputter) {
 			outputter(true, test);
 		}
 		catch (e) {
-			var msg = e.message.isWhitespace ? '' : ' - ' + e.message;
+			var msg = e.message.isWhitespace() ? '' : ' - ' + e.message;
 			outputter(false, test + msg);
 		}
 	}
 }
-
+/*
 function displayTestCase(description) {
 
 	var testCase = document.createElement('div');
@@ -49,3 +46,4 @@ var displayTestInTestCase = function (testCase, testPassed, name, msg) {
 	test.innerHTML = '<span class="{0}">{1}</span>{2}'.format(className, name, message);
 	testCase.appendChild(test);
 }
+*/

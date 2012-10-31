@@ -7,13 +7,6 @@ String.prototype.format = function () {
 	return s;
 }
 
-function requires(src) {
-	var script = document.createElement('script');
-	script.src = src;
-	document.head.appendChild(script);
-}
-
 String.prototype.isWhitespace = function () {
-	console.log(this);
 	return /^\s*$/.test(this);
 }
