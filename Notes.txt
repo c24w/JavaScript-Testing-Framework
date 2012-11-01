@@ -1,15 +1,10 @@
-
-Test-driving chrome extension seems impossible with unit-type tests.  A test framework cannot interpret the chrome_extension library, hence it cannot interact with the browser in the same way as an extension.
-
-Hoping I can run pure JS / dumb unit tests which assure basic functionality.
+Test-driving chrome extension seems impossible with unit-type tests.  A test framework uses browsers as slaves, which cannot interpret the chrome_extension library, hence it cannot test chrome_extension methods, etc.
 
 Seemlingly impossible to tie together a JS testing framework with actual implementation of JS files interacting with HTML, THEN all inside a chrome extension with the developer SDK!
 
-Can't think of a way to run whitebox tests :/ could easily use screenshot-matching tests, but that's flaky and not unit
-
-Added ballache of not being able to easily grab the contents of an HTML file from inside the test case, to check it's state
-
 Cannot test the holistically outside of actual usage environment, i.e. when the extension is installed and interacting with the browser.
+
+Added ballache of not being able to easily grab the contents of an HTML file from inside the test case, to check it's state.
 
 Hours of failure trying to scrape popup html from an iframe or popup, etc.  Eventually managed to get AsyncTestCase example working with XMLHttpRequest to the popup file via chrome-extension://xxx/popup.html, rather than as a local file directly.  Oh, and it required adding "web_accessible_resources": [ "popup.html" ], to manifest file.
 
@@ -19,24 +14,28 @@ E.g. I can only call chrome.storage.sync.set(x,y,z) while actually executing as 
 
 *** Reverted to window.open(...).document.body access to popup test html page, not XMLHttprequest ***
 
-May be able to implement simpler testing with my own simplistic framework or by using a plain assertion library.  The test html page can now contain expected as well as actual results - pulling from here to complex test runner seems overkill
-
-Js test driver is running in the scope of the extension?  Therefore can access chrome_extensions.js? (without referencing it possibly). The test runner doesn't run in the actual execution of the extension though! (console).  Maybe could reference //chrome-extensions:xxx/src/popup.js (instead of as local file) from inside test runner test js file. That way the popup.js file is running in scope of the extension (can call browser methods) and test runner can validate their results...? So swap out assertEquals that I made with the test runner methods.  Although not sure if test runner config file can reference absolute path for popup.js in (for e.g.) appdata - couldn't find it! Relative path to non-imported popup.js obviously isn't running as the extension / in scope of the browser.  FAILS: cannot access chrome_extension methods because the test runner isn't loaded as part of the extension, whereas my own testing js/html files can be.
-
 JS test driver frameworks seem (naturally) geared at cross-browser testing, by automating and capturing browsers as slaves - perhaps not the right approach for this.
 
-https://github.com/testdouble/in-my-words
+Only good thought so far: great not having to care about cross-browser compatibility with JavaScript :D can build for webkit to satisfy chrome
 
-Only good thought so far: great not having to care about cross-browser compatibility :D
+May be able to implement simpler testing with my own simplistic framework or by using a plain assertion library.  The test html page can now contain expected as well as actual results - pulling from here to complex test runner seems overkill. Summary: fuck this, I'm going to make my own JS testing framework which runs within the scope of the extension, rather than scraping data into an external framework.
 
-coming along ok...
+
+* * *
+
+
+building it
 
 testCase vs autoRunTestCase - why should the test automatically run?  testCase holds the data/tests, which can then be run using testCase.runTests(outputter) or runTests(testCase, outputter)
-
 
 Raname test case to test set or something
 Case implies same test with different inputs/scenarios; set is more a collection of related tests, e.g. test which would be kept in the same test fixture class
 Test case within test set/collection/fixture...?
+
+dfferent approach - test drive the test framework?!  Paradox?
+
+
+e.g:
 
 test
 	assert throws if condition is false
@@ -65,3 +64,17 @@ case true != false
 case 'hello' != 'world'
 	assert evaluates true conditions and returns the correct result
 		assert(assert(case) == true)
+
+
+* * *
+
+
+Hoping I can run pure JS / dumb unit tests which assure basic functionality.
+
+Can't think of a way to run whitebox tests :/ could easily use screenshot-matching tests, but that's flaky and not unit - consider this later.
+
+
+* * *
+
+
+Only TDD chrome extension I could find: https://github.com/testdouble/in-my-words
