@@ -2,7 +2,7 @@ requires('assertions.js');
 
 window.addEventListener('load', function () {
 
-	new autoRunTestFixture('Dumb Tests', {
+	var tf = new testFixture('Dumb Tests', {
 
 		'Test should pass': function () {
 			assert(true);
@@ -18,5 +18,8 @@ window.addEventListener('load', function () {
 
 		
 	});
+
+	outputTestFixture(tf, testOutputters.html);
+	outputTestFixture(tf, testOutputters.console);
 
 });

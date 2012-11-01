@@ -5,23 +5,30 @@ testOutputters = {
 		consoleTestWriter(true, testPassed, testName, msg);
 	},
 	html: function (testPassed, testName, msg) {
-		htmlTestWriter(true, testPassed, testName, msg);
+		determineOutput(true, testPassed, testName, msg);
 	}
 }
 
 function consoleTestWriter(writePasses, testPassed, testName, msg) {
-	var msg = formatMsg(msg);
 	if (!testPassed)
-		console.error(failIndent + testName + msg);
+		console.error(failIndent + testName + formatMsg(msg));
 	else if (writePasses)
-		console.log(normalIndent + testName + msg);
+		console.log(normalIndent + testName);
 }
 
-function htmlTestWriter(writePasses, testPassed, testName, msg) {
+function determineOutput(writePasses, testPassed, testName, msg) {
 	if (!testPassed)
-		appendTestToHtml(false, testName, msg);
+		writeFailedTestHtml(testName, msg);
 	else if (writePasses)
-		appendTestToHtml(true, testName);
+		writePassedTestHtml(testName);
+}
+
+function writeFailedTestHtml(testName, msg) {
+	appendTestToHtml(false, testName, msg);
+}
+
+function writePassedTestHtml(testName) {
+	appendTestToHtml(true, testName);
 }
 
 function appendTestToHtml(testPassed, testName, msg) {
@@ -38,7 +45,7 @@ function formatMsg(msg) {
 	return !msg || msg.isWhitespace() ? '' : ' - ' + msg;
 }
 
-function outputTestFixtureResults(testcase, testOutputter) {
+function outputTestFixture(testcase, testOutputter) {
 	var tests = testcase.getTests();
 	for (var test in tests) {
 		try {
