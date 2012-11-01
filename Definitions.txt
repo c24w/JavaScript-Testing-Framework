@@ -1,0 +1,2 @@
+Test Fixture - collection of related tests
+Test Case - varying scenarios for an individual test

@@ -1,0 +1,67 @@
+
+Test-driving chrome extension seems impossible with unit-type tests.  A test framework cannot interpret the chrome_extension library, hence it cannot interact with the browser in the same way as an extension.
+
+Hoping I can run pure JS / dumb unit tests which assure basic functionality.
+
+Seemlingly impossible to tie together a JS testing framework with actual implementation of JS files interacting with HTML, THEN all inside a chrome extension with the developer SDK!
+
+Can't think of a way to run whitebox tests :/ could easily use screenshot-matching tests, but that's flaky and not unit
+
+Added ballache of not being able to easily grab the contents of an HTML file from inside the test case, to check it's state
+
+Cannot test the holistically outside of actual usage environment, i.e. when the extension is installed and interacting with the browser.
+
+Hours of failure trying to scrape popup html from an iframe or popup, etc.  Eventually managed to get AsyncTestCase example working with XMLHttpRequest to the popup file via chrome-extension://xxx/popup.html, rather than as a local file directly.  Oh, and it required adding "web_accessible_resources": [ "popup.html" ], to manifest file.
+
+Now that I can grab data directly from the extension exactly as it will appear in use and fully interacting with the browser, I create a test js file and test html file.  Test js file has functions wrapping production js file, and writing results to the test html file, to be retrieved by the XMLHttprequest for testing.  Summary: real js methods get tested and their real usage results are logged in a test html file.  The data is retrieved and compare to expected results, as per normal unit tests.
+
+E.g. I can only call chrome.storage.sync.set(x,y,z) while actually executing as the extension, so cannot during a typical, browser-slave test run.  Because popup tests js and popup test html are integrated into the extension, they can interact with it as such and I can pull the data from them.
+
+*** Reverted to window.open(...).document.body access to popup test html page, not XMLHttprequest ***
+
+May be able to implement simpler testing with my own simplistic framework or by using a plain assertion library.  The test html page can now contain expected as well as actual results - pulling from here to complex test runner seems overkill
+
+Js test driver is running in the scope of the extension?  Therefore can access chrome_extensions.js? (without referencing it possibly). The test runner doesn't run in the actual execution of the extension though! (console).  Maybe could reference //chrome-extensions:xxx/src/popup.js (instead of as local file) from inside test runner test js file. That way the popup.js file is running in scope of the extension (can call browser methods) and test runner can validate their results...? So swap out assertEquals that I made with the test runner methods.  Although not sure if test runner config file can reference absolute path for popup.js in (for e.g.) appdata - couldn't find it! Relative path to non-imported popup.js obviously isn't running as the extension / in scope of the browser.  FAILS: cannot access chrome_extension methods because the test runner isn't loaded as part of the extension, whereas my own testing js/html files can be.
+
+JS test driver frameworks seem (naturally) geared at cross-browser testing, by automating and capturing browsers as slaves - perhaps not the right approach for this.
+
+https://github.com/testdouble/in-my-words
+
+Only good thought so far: great not having to care about cross-browser compatibility :D
+
+coming along ok...
+
+testCase vs autoRunTestCase - why should the test automatically run?  testCase holds the data/tests, which can then be run using testCase.runTests(outputter) or runTests(testCase, outputter)
+
+
+Raname test case to test set or something
+Case implies same test with different inputs/scenarios; set is more a collection of related tests, e.g. test which would be kept in the same test fixture class
+Test case within test set/collection/fixture...?
+
+test
+	assert throws if condition is false
+		expected e
+		try assert(false)
+		catch e
+			assert(e == expected e)
+			
+impl
+	assert(cond)
+		if !cond throw e
+		
+test
+	assert passes if condition is true
+		assert(assert(true) == true))
+		
+impl
+	assert(cond)
+		if !cond throw e
+		return true
+		
+test
+case 1 === 1
+case (10 * 5 === 25 * 2)
+case true != false
+case 'hello' != 'world'
+	assert evaluates true conditions and returns the correct result
+		assert(assert(case) == true)

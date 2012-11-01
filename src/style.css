@@ -3,6 +3,15 @@
     font-family: sans-serif;
 }
 
+body
+{
+    background: #000;
+}
+
+.testArea
+{
+}
+
 .testFixture
 {
 }
@@ -11,22 +20,26 @@
 {
 }
 
-.testCase .desc
-{
-    font-weight: bold;
-}
+    .testCase .desc
+    {
+        font-weight: bold;
+    }
 
 .test
 {
 }
 
-.test .fail
-{
-    color: #c00;
-    font-style: italic;
-}
+    .test.fail
+    {
+        color: #f00;
+    }
 
-.test .pass
-{
-    color: #0c0;
-}
+        .test.fail .name
+        {
+            font-weight: bold;
+        }
+
+    .test.pass
+    {
+        color: #0c0;
+    }
