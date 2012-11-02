@@ -1,10 +1,11 @@
-requires('formatting.js');
+loadResource('formatting.js');
 
 testOutputters = {
 	console: function (testPassed, testName, msg) {
 		consoleTestWriter(true, testPassed, testName, msg);
 	},
 	html: function (testPassed, testName, msg) {
+		loadResource('style.css');
 		determineOutput(true, testPassed, testName, msg);
 	}
 }

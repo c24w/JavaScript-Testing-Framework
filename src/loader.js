@@ -1,27 +1,29 @@
-var frameworkBaseURL = '../src/';
-
 window.addEventListener('DOMContentLoaded', function () {
-	requires('framework.js');
-	loadStylesheet();
+	loadResource('framework.js');
 });
 
 var loaded = new Array();
 loaded[0] = 'loader.js';
 
-function requires(src, onload) {
-	var src = frameworkBaseURL + src;
-	if (loaded.indexOf(src) == -1) {
-		loaded[loaded.length] = src;
-		var script = document.createElement('script');
-		script.src = src;
-		document.head.appendChild(script);
-		script.onload = onload;
+function loadResource(file) {
+	if (loaded.indexOf(file) == -1) {
+		if (file.endsWith('.js'))
+			loadScript(file);
+		else if (file.endsWith('.css'))
+			loadStylesheet(file);
+		loaded[loaded.length] = file;
 	}
 }
 
-function loadStylesheet() {
+function loadScript(file) {
+	var script = document.createElement('script');
+	script.src = frameworkBaseURL + file;
+	document.head.appendChild(script);
+}
+
+function loadStylesheet(file) {
 	var stylesheet = document.createElement('link');
 	stylesheet.rel = 'stylesheet';
-	stylesheet.href = frameworkBaseURL + 'style.css';
+	stylesheet.href = frameworkBaseURL + file;
 	document.head.appendChild(stylesheet);
 }

@@ -1,4 +1,4 @@
-requires('assertions.js');
+loadResource('assertions.js');
 
 window.addEventListener('load', function () {
 

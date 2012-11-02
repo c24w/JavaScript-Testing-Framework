@@ -10,3 +10,7 @@ String.prototype.format = function () {
 String.prototype.isWhitespace = function () {
 	return /^\s*$/.test(this);
 }
+
+String.prototype.endsWith = function (suffix) {
+	return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};

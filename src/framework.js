@@ -1,6 +1,5 @@
-requires('outputting.js');
-requires('utils.js');
-requires('formatting.js');
+loadResource('outputting.js');
+loadResource('formatting.js');
 
 function testFixture(description, tests) {
 	var desc = description;
