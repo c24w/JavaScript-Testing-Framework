@@ -24,7 +24,7 @@ function appendTestToHtml(testPassed, testName, msg) {
 
 	var name = document.createElement('div');
 	name.className = 'name';
-	name.innerHTML = testName;
+	name.innerHTML = monospaceFunctions(testName);
 	test.appendChild(name);
 
 	if (typeof msg !== 'undefined') {
@@ -46,4 +46,21 @@ function htmlDescWriter(description) {
 
 function htmlTerminatorWriter() {
 	fixture.appendChild(document.createElement('hr'));
+}
+
+function monospaceFunctions(testName) {
+	var text = testName;
+	var words = testName.split('\u0020');
+	var result = '';
+	for (var i = 0; i < words.length; i++) {
+		var word = words[i];
+		try {
+			if (eval(word)) {
+				text = text.replace(word, '<span class="code">' + word + '</span>');
+			}
+		}
+		catch (e) {
+		}
+	}
+	return text;
 }
