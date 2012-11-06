@@ -1,4 +1,4 @@
-function determineOutput(writePasses, testPassed, testName, msg) {
+function htmlTestWriter(writePasses, testPassed, testName, msg) {
 	if (!testPassed)
 		writeFailedTestHtml(testName, msg);
 	else if (writePasses)

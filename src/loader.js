@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', function () {
-	//loadResource('framework.js');
+	//loadResource('test-fixtures.js');
 });
 
 function loadResources(/*resources,..,.., batchLoadCallback*/) {

@@ -1,12 +1,24 @@
-testOutputters = {
-	console: function (testPassed, testName, msg) {
+function outputTestsToConsole(testFixture) {
+	loadResource('console-output.js', function () {
+		outputTests(testFixture, consoleTestWriter);
+	});
+}
+
+function outputTestsToHtml(testFixture) {
+	loadResources('html-output.js', 'style.css', function () {
+		outputTests(testFixture, htmlTestWriter);
+	});
+}
+
+descOutputters = {
+	console: function (desc) {
 		loadResource('console-output.js', function () {
-			consoleTestWriter(true, testPassed, testName, msg);
+			consoleDescWriter(true, testPassed, testName, msg);
 		});
 	},
-	html: function (testPassed, testName, msg) {
+	html: function (desc) {
 		loadResources('html-output.js', 'style.css', function () {
-			determineOutput(true, testPassed, testName, msg);
+			htmlDescWriter(desc);
 		});
 	}
 }
@@ -17,15 +29,15 @@ function formatMsg(msg) {
 	});
 }
 
-function outputTestFixture(testFixture, testOutputter) {
+function outputTests(testFixture, testOutputter) {
 	var tests = testFixture.getTests();
 	for (var test in tests) {
 		try {
 			tests[test]();
-			testOutputter(true, test);
+			testOutputter(true, true, test);
 		}
 		catch (e) {
-			testOutputter(false, test, e.message);
+			testOutputter(true, false, test, e.message);
 		}
 	}
 }

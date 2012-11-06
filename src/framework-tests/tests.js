@@ -1,4 +1,4 @@
-loadResources('framework.js', 'assertions.js', function () {
+loadResources('test-fixtures.js', 'assertions.js', function () {
 
 	new autoRunTestFixtureToConsole('Test Fixture Tests', {
 
