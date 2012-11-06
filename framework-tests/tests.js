@@ -1,6 +1,6 @@
 loadResources('test-fixtures.js', 'assertions.js', function () {
 
-	new autoRunTestFixtureToConsole('Assertion tests', {
+	new autoRunTestFixtureToHtml('Assertion tests', {
 
 		'assert should not throw an AssertException for true conditions': function () {
 			try {
@@ -17,7 +17,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.getInfo(), 'Should fail');
+				assertEqual(e.message, 'Should fail');
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -43,7 +43,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.getInfo(), 'Should fail');
+				assertEqual(e.message, 'Should fail');
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -68,7 +68,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.getInfo(), 'Should fail');
+				assertEqual(e.message, 'Should fail');
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -91,7 +91,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.getInfo(), 'Should fail');
+				assertEqual(e.message, 'Should fail');
 				return;
 			}
 			throw new Error('Test should not have thrown this error');

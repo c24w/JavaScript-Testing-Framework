@@ -31,6 +31,11 @@ body
         color: #f00;
     }
 
+    .test.fail .info
+    {
+        color: #aaa;
+    }
+
     .test.pass .name
     {
         color: #0c0;

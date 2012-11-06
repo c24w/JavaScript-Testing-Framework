@@ -21,8 +21,19 @@ function appendTestToHtml(testPassed, testName, msg) {
 	var test = document.createElement('div');
 	var testResult = testPassed ? 'pass' : 'fail';
 	test.className = 'test ' + testResult;
-	var message = msg == null ? '' : msg;
-	test.innerHTML = '<span class="name">{0}</span>{1}'.format(testName, msg);
+
+	var name = document.createElement('div');
+	name.className = 'name';
+	name.innerHTML = testName;
+	test.appendChild(name);
+
+	if (typeof msg !== 'undefined') {
+		var info = document.createElement('div');
+		info.className = 'info';
+		info.innerHTML = msg;
+		test.appendChild(info);
+	}
+
 	fixture.appendChild(test);
 }
 
@@ -31,4 +42,8 @@ function htmlDescWriter(description) {
 	desc.className = 'description';
 	desc.innerHTML = description;
 	fixture.appendChild(desc);
+}
+
+function htmlTerminatorWriter() {
+	fixture.appendChild(document.createElement('hr'));
 }

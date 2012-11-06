@@ -6,7 +6,7 @@ function outputTestFixtureToConsole(testFixture) {
 
 function outputTestFixtureToHtml(testFixture) {
 	loadResources('html-output.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, htmlDescWriter, htmlTestWriter);
+		outputTestFixture(true, testFixture, htmlDescWriter, htmlTestWriter, htmlTerminatorWriter);
 	});
 }
 
