@@ -1,24 +1,31 @@
-loadResource('outputting.js');
-loadResource('formatting.js');
-
 function testFixture(description, tests) {
-	var desc = description;
-	var tests = tests;
-	this.getDescription = function () { return desc }
+	this.getDescription = function () { return description }
 	this.getTests = function () { return tests }
-	this.outputTo = function (testOutputter) { outputTestFixture(this, testOutputter) }
-	this.outputToConsole = function () { this.output(testOutputters.console) }
-	this.outputToHTML = function () { this.output(testOutputters.html) }
+	this.outputTo = function (testOutputter) {
+		outputTestFixture(this, testOutputter);
+	}
+	this.outputToConsole = function () {
+		var instance = this;
+		loadResource('outputting.js', function () {
+			instance.outputTo(testOutputters.console);
+		});
+	}
+	this.outputToHtml = function () {
+		var instance = this;
+		loadResource('outputting.js', function () {
+			instance.outputTo(testOutputters.html);
+		});
+	}
 }
 
 function autoRunTestFixture(description, outputter, tests) {
-	new testFixture(description, tests).output(outputter);
+	new testFixture(description, tests).outputTo(outputter);
 }
 
 function autoRunTestFixtureToHtml(description, tests) {
-	new testFixture(description, tests).output(testOutputters.html);
+	new testFixture(description, tests).outputToHtml();
 }
 
 function autoRunTestFixtureToConsole(description, tests) {
-	new testFixture(description, tests).output(testOutputters.console);
+	new testFixture(description, tests).outputToConsole();
 }

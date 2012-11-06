@@ -1,25 +1,27 @@
-loadResource('assertions.js');
+loadResource('framework.js', function () {
+	loadResource('assertions.js', function () {
+		loadResource('outputting.js', function () {
 
-window.addEventListener('load', function () {
+			var tf = new testFixture('Dumb Tests', {
 
-	var tf = new testFixture('Dumb Tests', {
+				'Test should pass': function () {
+					assert(true);
+				},
 
-		'Test should pass': function () {
-			assert(true);
-		},
+				'Test should fail': function () {
+					assert(false);
+				},
 
-		'Test should fail': function () {
-			assert(false);
-		},
+				'Test should fail also': function () {
+					assert(false, 'because I said so');
+				},
 
-		'Test should fail also': function () {
-			assert(false, 'because I said so');
-		},
 
-		
+			});
+
+			outputTestFixture(tf, testOutputters.html);
+			outputTestFixture(tf, testOutputters.console);
+
+		});
 	});
-
-	outputTestFixture(tf, testOutputters.html);
-	outputTestFixture(tf, testOutputters.console);
-
 });

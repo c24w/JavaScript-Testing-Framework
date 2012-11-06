@@ -78,3 +78,11 @@ Can't think of a way to run whitebox tests :/ could easily use screenshot-matchi
 
 
 Only TDD chrome extension I could find: https://github.com/testdouble/in-my-words
+
+
+Loading js files asynchronously:
+if loaded, execute callback
+else if loading, retry in timeout
+else append to head
+
+issues: tests running in a random order, due to varying load/callback speeds

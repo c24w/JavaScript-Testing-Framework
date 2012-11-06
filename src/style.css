@@ -36,7 +36,7 @@ body
 
         .test.fail .name
         {
-            font-weight: bold;
+            /*   font-weight: bold;*/
         }
 
     .test.pass
