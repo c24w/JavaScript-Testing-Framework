@@ -12,12 +12,13 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		},
 
 		'assert should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
 			try {
-				assert(false, 'Should fail'); // need cases
+				assert(false, expectedMsg); // need cases
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.message, 'Should fail');
+				assertEqual(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -36,14 +37,15 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		},
 
 		'assertEqual should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
 			try {
-				assertEqual(true, false, 'Should fail'); // need cases
+				assertEqual(true, false, expectedMsg); // need cases
 				//assertEqual(1, '1', 'Should fail');
 				//assertEqual(false, 0, 'Should fail');
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.message, 'Should fail');
+				assertEqual(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -61,14 +63,15 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		},
 
 		'assertEquiv should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
 			try {
-				assertEquiv(true, false, 'Should fail'); // need cases
+				assertEquiv(true, false, expectedMsg); // need cases
 				//assertEquiv(false, 'false', 'Should fail');
 				//assertEquiv(true, 10, 'Should fail');
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.message, 'Should fail');
+				assertEqual(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
@@ -85,13 +88,14 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		},
 
 		'assertInstance should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
 			try {
-				assertInstance(new AssertException(), Error, 'Should fail'); // need cases
+				assertInstance(new Object(), String, 'Should fail'); // need cases
 				//assertInstance(new Object(), String, 'Should fail');
 			}
 			catch (e) {
 				assertInstance(e, AssertException);
-				assertEqual(e.message, 'Should fail');
+				assertEqual(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');

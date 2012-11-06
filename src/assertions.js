@@ -3,20 +3,23 @@ function assert(condition, optionalInfo) {
 		throw new AssertException(optionalInfo);
 }
 
-function assertEquiv(actual, expected) {
-	assert(actual == expected, '');
+function assertEquiv(actual, expected, optionalInfo) {
+	var info = optionalInfo ? optionalInfo : buildMessage('assertEquiv', actual, expected);
+	assert(actual == expected, info);
 }
 
-function assertEqual(actual, expected) {
-	assert(actual === expected, buildMessage('assertEqual', actual, expected));
+function assertEqual(actual, expected, optionalInfo) {
+	var info = optionalInfo ? optionalInfo : buildMessage('assertEqual', actual, expected);
+	assert(actual === expected, info);
 }
 
-function assertInstance(object, type) {
-	assert(object instanceof type, '');
+function assertInstance(object, type, optionalInfo) {
+	var info = optionalInfo ? optionalInfo : buildMessage('assertInstance', object, type);
+	assert(object instanceof type, info);
 }
 
 function buildMessage(assertType, actual, expected) {
-	return '{0} - expected: {1} found: {2}'.format(assertType, actual, expected);
+	return assertType + ' - expected: "' + expected + '" found: "' + actual + '"';
 }
 
 function AssertException(info) {
