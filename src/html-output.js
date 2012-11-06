@@ -24,13 +24,13 @@ function appendTestToHtml(testPassed, testName, msg) {
 
 	var name = document.createElement('div');
 	name.className = 'name';
-	name.innerHTML = monospaceFunctions(testName);
+	name.innerHTML = formatCodeParts(testName);
 	test.appendChild(name);
 
 	if (typeof msg !== 'undefined') {
 		var info = document.createElement('div');
 		info.className = 'info';
-		info.innerHTML = msg;
+		info.innerHTML = formatCodeParts(msg);
 		test.appendChild(info);
 	}
 
@@ -48,7 +48,7 @@ function htmlTerminatorWriter() {
 	fixture.appendChild(document.createElement('hr'));
 }
 
-function monospaceFunctions(testName) {
+function formatCodeParts(testName) {
 	var text = testName;
 	var words = testName.split('\u0020');
 	var result = '';

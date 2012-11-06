@@ -31,12 +31,6 @@ body
     margin: 10px 0;
 }
 
-    .test .name .code
-    {
-        font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
-        font-size: 95%;
-    }
-
     .test.fail .name
     {
         color: #f00;
@@ -52,3 +46,9 @@ body
         margin-left: 1em;
         color: #999;
     }
+
+.code
+{
+    font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
+    font-size: 95%;
+}
