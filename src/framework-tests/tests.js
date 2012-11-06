@@ -1,6 +1,6 @@
 loadResources('test-fixtures.js', 'assertions.js', function () {
 
-	new autoRunTestFixtureToConsole('Test Fixture Tests', {
+	new autoRunTestFixtureToConsole('Assertion tests', {
 
 		'assert should not throw an AssertException for true conditions': function () {
 			try {
@@ -96,6 +96,9 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			}
 			throw new Error('Test should not have thrown this error');
 		},
+
+		'': function () {
+		}
 
 	});
 });

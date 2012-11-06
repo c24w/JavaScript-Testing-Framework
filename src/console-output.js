@@ -1,8 +1,10 @@
-function consoleTestWriter(writePasses, testPassed, testName, msg) {
-	loadResource('formatting.js', function () {
-		if (!testPassed)
-			console.error(failIndent + testName + formatMsg(msg));
-		else if (writePasses)
-			console.log(normalIndent + testName);
-	});
+function consoleTestWriter(outputPasses, testPassed, testName, msg) {
+	if (!testPassed)
+		console.error(testFailIndent + testName + msg);
+	else if (outputPasses)
+		console.log(testPassIndent + testName);
+}
+
+function consoleDescWriter(description) {
+	console.log(descIndent + description);
 }

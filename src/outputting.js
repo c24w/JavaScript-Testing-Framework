@@ -1,12 +1,12 @@
-function outputTestsToConsole(testFixture) {
-	loadResource('console-output.js', function () {
-		outputTests(testFixture, consoleTestWriter);
+function outputTestFixtureToConsole(testFixture) {
+	loadResources('console-output.js', 'formatting.js', function () {
+		outputTestFixture(true, testFixture, consoleTestWriter, consoleDescWriter);
 	});
 }
 
-function outputTestsToHtml(testFixture) {
+function outputTestFixtureToHtml(testFixture) {
 	loadResources('html-output.js', 'style.css', function () {
-		outputTests(testFixture, htmlTestWriter);
+		outputTestFixture(true, testFixture, htmlTestWriter, htmlDescWriter);
 	});
 }
 
@@ -24,20 +24,28 @@ descOutputters = {
 }
 
 function formatMsg(msg) {
-	loadResource('utils.js', function () {
-		return !msg || msg.isWhitespace() ? '' : ' - ' + msg;
-	});
+	return isUselessString(msg) ? '' : ' - ' + msg;
 }
 
-function outputTests(testFixture, testOutputter) {
+function formatDesc(desc) {
+	return isUselessString(desc) ? 'Test fixture' : desc;
+}
+
+function isUselessString(s) {
+	return !s || s.isWhitespace();
+}
+
+function outputTestFixture(outputPasses, testFixture, testOutputter, descOutputter) {
+	var desc = formatDesc(testFixture.getDescription());
+	descOutputter(desc);
 	var tests = testFixture.getTests();
 	for (var test in tests) {
 		try {
 			tests[test]();
-			testOutputter(true, true, test);
+			testOutputter(outputPasses, true, test);
 		}
 		catch (e) {
-			testOutputter(true, false, test, e.message);
+			testOutputter(outputPasses, false, test, formatMsg(e.message));
 		}
 	}
 }

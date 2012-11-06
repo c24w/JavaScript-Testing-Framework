@@ -12,34 +12,26 @@ body
 {
 }
 
-.testFixture
+.testfixture
 {
 }
 
-.testCase
-{
-}
-
-    .testCase .desc
+    .testfixture .description
     {
-        font-weight: bold;
+        color: #ddd;
     }
 
 .test
 {
+    color: #aaa;
 }
 
-    .test.fail
+    .test.fail .name
     {
         color: #f00;
     }
 
-        .test.fail .name
-        {
-            /*   font-weight: bold;*/
-        }
-
-    .test.pass
+    .test.pass .name
     {
         color: #0c0;
     }
