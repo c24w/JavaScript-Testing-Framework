@@ -31,7 +31,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 		},
 
 		'assertEqual should fail with custom reason': function () {
-			assertEqual(1, 'true', 'because "1" and "true" are only equal with type-conversion (i.e. assertEquiv()).');
+			assertEqual(1, true, 'because "1" and "true" are only equal with type-conversion (i.e. assertEquiv()).');
 		},
 
 		'assertEquiv should fail with generated reason': function () {

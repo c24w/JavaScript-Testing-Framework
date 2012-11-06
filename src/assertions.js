@@ -19,9 +19,13 @@ function assertInstance(object, type, optionalInfo) {
 }
 
 function buildMessage(assertType, actual, expected) {
-	return assertType + ' - expected: "' + expected + '" found: "' + actual + '"';
+	return assertType + ' - expected: "' + encloseInType(expected) + '" found: "' + encloseInType(actual) + '"';
 }
 
 function AssertException(info) {
 	this.message = info;
+}
+
+function encloseInType(object) {
+	return typeof object + "(" + object + ")";
 }
