@@ -95,9 +95,6 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
-		},
-
-		'': function () {
 		}
 
 	});

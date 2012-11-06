@@ -1,12 +1,12 @@
 function outputTestFixtureToConsole(testFixture) {
 	loadResources('console-output.js', 'formatting.js', function () {
-		outputTestFixture(true, testFixture, consoleTestWriter, consoleDescWriter);
+		outputTestFixture(true, testFixture, consoleDescWriter, consoleTestWriter, consoleTerminatorWriter);
 	});
 }
 
 function outputTestFixtureToHtml(testFixture) {
 	loadResources('html-output.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, htmlTestWriter, htmlDescWriter);
+		outputTestFixture(true, testFixture, htmlDescWriter, htmlTestWriter);
 	});
 }
 
@@ -35,7 +35,7 @@ function isUselessString(s) {
 	return !s || s.isWhitespace();
 }
 
-function outputTestFixture(outputPasses, testFixture, testOutputter, descOutputter) {
+function outputTestFixture(outputPasses, testFixture, descOutputter, testOutputter, terminatorOutputter) {
 	var desc = formatDesc(testFixture.getDescription());
 	descOutputter(desc);
 	var tests = testFixture.getTests();
@@ -48,4 +48,6 @@ function outputTestFixture(outputPasses, testFixture, testOutputter, descOutputt
 			testOutputter(outputPasses, false, test, formatMsg(e.message));
 		}
 	}
+	if (terminatorOutputter)
+		terminatorOutputter();
 }

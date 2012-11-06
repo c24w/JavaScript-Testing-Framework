@@ -8,3 +8,7 @@ function consoleTestWriter(outputPasses, testPassed, testName, msg) {
 function consoleDescWriter(description) {
 	console.log(descIndent + description);
 }
+
+function consoleTerminatorWriter(description) {
+	console.log(bottomLine);
+}
