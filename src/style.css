@@ -5,11 +5,8 @@
 
 body
 {
-    background: #000;
-}
-
-.testArea
-{
+    margin: 20px;
+    background: #fff;
 }
 
 .testfixture
@@ -18,12 +15,20 @@ body
 
     .testfixture .description
     {
-        color: #ddd;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 10px;
+    }
+
+    .testfixture hr
+    {
+        margin-top: 40px;
     }
 
 .test
 {
     color: #aaa;
+    margin: 10px 0;
 }
 
     .test .name .code
@@ -37,12 +42,13 @@ body
         color: #f00;
     }
 
-    .test.fail .info
-    {
-        color: #aaa;
-    }
-
     .test.pass .name
     {
-        color: #0c0;
+        color: #000;
+    }
+
+    .test.fail .info
+    {
+        margin-left: 1em;
+        color: #999;
     }

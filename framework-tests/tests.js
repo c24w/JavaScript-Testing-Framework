@@ -90,7 +90,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		'assertInstance should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assertInstance(new Object(), String, 'Should fail'); // need cases
+				assertInstance(new Object(), String, expectedMsg); // need cases
 				//assertInstance(new Object(), String, 'Should fail');
 			}
 			catch (e) {
