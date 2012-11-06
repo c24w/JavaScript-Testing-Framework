@@ -22,13 +22,13 @@ body
 
     .testfixture hr
     {
-        margin-top: 40px;
+        margin: 40px 0;
     }
 
 .test
 {
     color: #aaa;
-    margin: 10px 0;
+    padding: 10px;
 }
 
     .test.fail .name
@@ -44,7 +44,12 @@ body
     .test.fail .info
     {
         margin-left: 1em;
-        color: #999;
+        color: #888;
+    }
+
+    .test.highlight
+    {
+        background: #F7F7F7;
     }
 
 .code

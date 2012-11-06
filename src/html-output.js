@@ -1,4 +1,8 @@
-var fixture = document.createElement('div');
+function getTestFixture() {
+}
+
+var highlightFlag = false;
+var fixture = makeDiv();
 fixture.className = 'testfixture';
 document.body.appendChild(fixture);
 
@@ -18,34 +22,48 @@ function writePassedTestHtml(testName) {
 }
 
 function appendTestToHtml(testPassed, testName, msg) {
-	var test = document.createElement('div');
-	var testResult = testPassed ? 'pass' : 'fail';
-	test.className = 'test ' + testResult;
+	var className = getTestClassName(testPassed);
+	addToFixture(makeDiv(className));
 
-	var name = document.createElement('div');
-	name.className = 'name';
+	var name = makeDiv('name');
 	name.innerHTML = formatCodeParts(testName);
 	test.appendChild(name);
 
 	if (typeof msg !== 'undefined') {
-		var info = document.createElement('div');
-		info.className = 'info';
+		var info = makeDiv('info');
 		info.innerHTML = formatCodeParts(msg);
 		test.appendChild(info);
 	}
-
-	fixture.appendChild(test);
 }
 
 function htmlDescWriter(description) {
-	var desc = document.createElement('div');
-	desc.className = 'description';
+	var desc = makeDiv('description');
 	desc.innerHTML = description;
-	fixture.appendChild(desc);
+	addToFixture(desc);
 }
 
 function htmlTerminatorWriter() {
-	fixture.appendChild(document.createElement('hr'));
+	addToFixture(document.createElement('hr'));
+}
+
+function getTestClassName(testPassed) {
+	var resultClass = testPassed ? ' pass' : ' fail';
+	var highlightClass = highlightFlag ? ' highlight' : '';
+	var className = 'test' + resultClass + highlightClass;
+
+	highlightFlag = !highlightFlag;
+
+	return className;
+}
+
+function makeDiv(className) {
+	var d = document.createElement('div');
+	d.className = className;
+	return d;
+}
+
+function addToFixture(el) {
+	addToFixture(el);
 }
 
 function formatCodeParts(testName) {

@@ -1,8 +1,4 @@
-window.addEventListener('DOMContentLoaded', function () {
-	//loadResource('test-fixtures.js');
-});
-
-function loadResources(/*resources,..,.., batchLoadCallback*/) {
+function loadResources(/*resource.css, resource.js, ..., ..., batchResourceLoadCallback*/) {
 	var loadCount = 0;
 	var resourceCount = arguments.length - 1;
 	var batchLoadCallback = arguments[arguments.length - 1];
