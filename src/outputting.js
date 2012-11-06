@@ -24,7 +24,7 @@ descOutputters = {
 }
 
 function formatMsg(msg) {
-	return isUselessString(msg) ? 'No additional information' : msg;
+	return isUselessString(msg) ? 'no additional information' : msg;
 }
 
 function formatDesc(desc) {

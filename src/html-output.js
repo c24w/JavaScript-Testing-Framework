@@ -54,13 +54,8 @@ function monospaceFunctions(testName) {
 	var result = '';
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];
-		try {
-			if (eval(word)) {
-				text = text.replace(word, '<span class="code">' + word + '</span>');
-			}
-		}
-		catch (e) {
-		}
+		if (window[word])
+			text = text.replace(word, '<span class="code">' + word + '</span>');
 	}
 	return text;
 }

@@ -1,6 +1,8 @@
 function consoleTestWriter(outputPasses, testPassed, testName, msg) {
-	if (!testPassed)
-		console.error(testFailIndent + testName + msg);
+	if (!testPassed) {
+		var info = msg.isWhitespace() ? '' : ' - ' + msg;
+		console.error(testFailIndent + testName + info);
+	}
 	else if (outputPasses)
 		console.log(testPassIndent + testName);
 }
