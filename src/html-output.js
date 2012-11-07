@@ -23,8 +23,7 @@ function writePassedTestHtml(testName) {
 
 function appendTestToHtml(testPassed, testName, msg) {
 	var className = getTestClassName(testPassed);
-	addToFixture(makeDiv(className));
-
+	var test = makeDiv(className);
 	var name = makeDiv('name');
 	name.innerHTML = formatCodeParts(testName);
 	test.appendChild(name);
@@ -34,6 +33,7 @@ function appendTestToHtml(testPassed, testName, msg) {
 		info.innerHTML = formatCodeParts(msg);
 		test.appendChild(info);
 	}
+	addToFixture(test);
 }
 
 function htmlDescWriter(description) {
@@ -63,7 +63,7 @@ function makeDiv(className) {
 }
 
 function addToFixture(el) {
-	addToFixture(el);
+	fixture.appendChild(el);
 }
 
 function formatCodeParts(testName) {
