@@ -12,10 +12,10 @@ function loadResources(/*resource.css, resource.js, ..., ..., batchResourceLoadC
 	}
 }
 
-var loading = new Array();
-var loaded = new Array();
-loaded[0] = 'loader.js';
-loaded[1] = 'utils.js';
+var loadingStatus = {
+	'loader.js': 'loaded',
+	'utils.js': 'loaded'
+}
 
 function loadResource(file, loadCallback) {
 	if (isLoaded(file)) {
@@ -43,7 +43,6 @@ function loadScript(file, loadCallback) {
 	document.head.appendChild(script);
 	script.onload = function () {
 		setLoaded(file);
-		loading[loading.indexOf(file)] == null;
 		if (typeof loadCallback !== 'undefined')
 			loadCallback();
 	};
@@ -62,20 +61,19 @@ function loadStylesheet(file, loadCallback) {
 }
 
 function isLoaded(file) {
-	return loaded.indexOf(file) !== -1;
+	return loadingStatus[file] === 'loaded';
 }
 
 function isLoading(file) {
-	return loading.indexOf(file) !== -1;
-}
-
-function setLoading(file) {
-	loading[loaded.length] = file;
+	return loadingStatus[file] === 'loading';
 }
 
 function setLoaded(file) {
-	loaded[loaded.length] = file;
-	loading.splice(loading.indexOf(file), 1);
+	loadingStatus[file] = 'loaded';
+}
+
+function setLoading(file) {
+	loadingStatus[file] = 'loading';
 }
 
 function isScript(file) {

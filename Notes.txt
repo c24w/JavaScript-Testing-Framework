@@ -86,3 +86,12 @@ else if loading, retry in timeout
 else append to head
 
 issues: tests running in a random order, due to varying load/callback speeds
+
+
+options re loading external resources:
+ - dozens of <script> tags - hard txcodeep track and clumsy
+ - fewer files with a few <script> tags - bad practice and hard to manage code
+ - AJAX requests - ideal solution, although requires a server; I'm testing locally, with static files, no desire for server
+ - dynamically insert <script> tags as/when required, with callback for load event - emulates AJAX behaviour in a slightly hacky way, but works perfectly
+
+load resources (I think only the plural function) has a bug which causes the same fiels to be loaded more than once
