@@ -13,7 +13,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 			},
 
 			'assert.that should fail with custom reason': function () {
-				assert.that(false, 'because I said so');
+				assert.that(false, 'because this checks assert.that(false)');
 			},
 
 		}),

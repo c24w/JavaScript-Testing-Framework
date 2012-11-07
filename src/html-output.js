@@ -1,7 +1,6 @@
 function getTestFixture() {
 }
 
-var highlightFlag = false;
 var fixture = makeDiv();
 fixture.className = 'testfixture';
 document.body.appendChild(fixture);
@@ -48,11 +47,7 @@ function htmlTerminatorWriter() {
 
 function getTestClassName(testPassed) {
 	var resultClass = testPassed ? ' pass' : ' fail';
-	var highlightClass = highlightFlag ? ' highlight' : '';
-	var className = 'test' + resultClass + highlightClass;
-
-	highlightFlag = !highlightFlag;
-
+	var className = 'test' + resultClass;
 	return className;
 }
 
@@ -81,11 +76,11 @@ function formatCodeParts(testName) {
 function isDefined(word) {
 	if (window[word])
 		return true;
-	try{
+	try {
 		eval(word);
 		return true;
 	}
-	catch(e){
+	catch (e) {
 		return false;
 	}
 }

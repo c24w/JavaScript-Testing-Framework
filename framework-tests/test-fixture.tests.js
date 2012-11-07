@@ -4,7 +4,7 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 
 		'aaa': function () {
 			try {
-				assert(true);
+				assert.that(true);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');

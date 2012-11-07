@@ -119,7 +119,14 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 				assert.instance(e, AssertException);
 				assert.equal(e.message, 'assert.throws - expected: AssertException found: Error');
 			}
+		},
+
+		'assert.throws should return the defined exception, if thrown': function () {
+			var expectedMsg = 'error message';
+			var exception = assert.throws(function () { throw new AssertException(expectedMsg) }, AssertException);
+			assert.equal(exception.message, expectedMsg);
 		}
 
 	});
+
 });

@@ -28,16 +28,23 @@ body
 .test
 {
     color: #aaa;
-    padding: 10px;
 }
 
-    .test.fail .name
+    .test.fail
     {
-        color: #f00;
+        background: #F7F7F7;
+        padding: 0.5em;
+        border: 1px solid #fff;
     }
+
+        .test.fail .name
+        {
+            color: #f00;
+        }
 
     .test.pass .name
     {
+        padding: 0.25em 0.5em;
         color: #000;
     }
 
@@ -45,11 +52,6 @@ body
     {
         margin-left: 1em;
         color: #888;
-    }
-
-    .test.highlight
-    {
-        background: #F7F7F7;
     }
 
 .code
