@@ -15,7 +15,7 @@ function getHtmlOutputter() {
 
 function htmlDescWriter(description) {
 	var desc = makeDiv('description');
-	desc.innerHTML = description;
+	appendText(desc, description);
 	addToFixture(desc);
 }
 
@@ -31,8 +31,19 @@ function htmlTerminatorWriter() {
 }
 
 function htmlResultWriter(passed, failed) {
-	//console.log(passed);
-	//console.log(failed);
+	var result = makeDiv('result');
+	appendText(result, getResultMessage(passed, failed));
+	fixture.appendChild(result);
+}
+
+function getResultMessage(passed, failed) {
+	var total = passed + failed;
+	if (failed == 0)
+		return 'all passed';
+	else if (passed == 0)
+		return 'all failed';
+	else
+		return failed + '/' + total + ' failed';
 }
 
 function writeFailedTestHtml(testName, msg) {
@@ -48,11 +59,13 @@ function appendTestToHtml(testPassed, testName, msg) {
 	var test = makeDiv(className);
 	var name = makeDiv('name');
 	name.innerHTML = formatCodeParts(testName);
+	//appendText(name, formatCodeParts(testName));
 	test.appendChild(name);
 
 	if (typeof msg !== 'undefined') {
 		var info = makeDiv('info');
 		info.innerHTML = formatCodeParts(msg);
+		//appendText(info, formatCodeParts(msg));
 		test.appendChild(info);
 	}
 	addToFixture(test);
@@ -70,13 +83,17 @@ function makeDiv(className) {
 	return d;
 }
 
+function appendText(element, text) {
+	element.appendChild(document.createTextNode(text));
+}
+
 function addToFixture(el) {
 	fixture.appendChild(el);
 }
 
 function formatCodeParts(testName) {
 	var text = testName;
-	var words = testName.replace(/[,\(\)]/g, '\u0020').split('\u0020');
+	var words = testName.split(/[,\(\)\u0020]/g);
 	var result = '';
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];

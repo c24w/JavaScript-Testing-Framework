@@ -23,6 +23,7 @@ function consoleTestWriter(outputPasses, testPassed, testName, msg) {
 }
 
 function consoleDescWriter(description) {
+	console.log('');
 	console.log(nonFailPadding + descPrefix + description);
 }
 
@@ -34,9 +35,7 @@ function consoleResultWriter(passed, failed) {
 		console.log(nonFailPadding + message);
 }
 
-function consoleTerminatorWriter(description) {
-	console.log('');
-}
+function consoleTerminatorWriter(description) { }
 
 function getResultMessage(passed, failed) {
 	var total = passed + failed;
