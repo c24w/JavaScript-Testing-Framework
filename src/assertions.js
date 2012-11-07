@@ -27,7 +27,8 @@ function assertThrows(func, exception, optionalInfo) {
 		assertInstance(e, exception, info);
 		return e;
 	}
-	throw new AssertException(exception.name + ' was never thrown');
+	var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
+	throw new AssertException(info);
 }
 
 function buildMessage(assertType, actual, expected) {

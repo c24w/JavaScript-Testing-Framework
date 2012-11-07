@@ -10,19 +10,6 @@ function outputTestFixtureToHtml(testFixture) {
 	});
 }
 
-descOutputters = {
-	console: function (desc) {
-		loadResource('console-output.js', function () {
-			consoleDescWriter(true, testPassed, testName, msg);
-		});
-	},
-	html: function (desc) {
-		loadResources('html-output.js', 'style.css', function () {
-			htmlDescWriter(desc);
-		});
-	}
-}
-
 function formatMsg(msg) {
 	return isUselessString(msg) ? 'no additional information' : msg;
 }

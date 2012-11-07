@@ -102,8 +102,23 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 		},
 
 		'assertThrows should throw an AssertException if the defined exception is not thrown': function () {
-			var expectedMsg = 'Should fail';
-			assertThrows(console.log, AssertException);
+			try {
+				assertThrows(function () { }, AssertException);
+			}
+			catch (e) {
+				assertInstance(e, AssertException);
+				assertEqual(e.message, 'AssertException was never thrown');
+			}
+		},
+
+		'assertThrows should throw an AssertException if the wrong exception is thrown': function () {
+			try {
+				assertThrows(function () { throw new Error() }, AssertException);
+			}
+			catch (e) {
+				assertInstance(e, AssertException);
+				assertEqual(e.message, 'assertThrows - expected: AssertException found: Error');
+			}
 		}
 
 	});
