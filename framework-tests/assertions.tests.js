@@ -99,6 +99,11 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
+		},
+
+		'assertThrows should throw an AssertException if the defined exception is not thrown': function () {
+			var expectedMsg = 'Should fail';
+			assertThrows(console.log, AssertException);
 		}
 
 	});

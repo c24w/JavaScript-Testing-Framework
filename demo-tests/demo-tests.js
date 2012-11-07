@@ -18,6 +18,12 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 			assertInstance(new Number(123), Number);
 		},
 
+		'assertThrows should pass': function () {
+			var info = 'fail message';
+			var exception = assertThrows(function () { throw new AssertException(info) }, AssertException);
+			assertEqual(exception.message, info);
+		},
+
 		'assert should fail without reason': function () {
 			assert(false);
 		},
@@ -34,6 +40,12 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 			assertEqual(1, true, 'because "1" and "true" are only equal with type-conversion, i.e. assertEquiv');
 		},
 
+		'assertEqual should fail (using the result of assertThrows) with generated reason': function () {
+			var expectedInfo = 'error info';
+			var exception = assertThrows(function () { throw new Error('omgwtfbbq') }, Error);
+			assertEqual(exception.message, expectedInfo);
+		},
+
 		'assertEquiv should fail with generated reason': function () {
 			assertEquiv('a', 'b');
 		},
@@ -43,12 +55,24 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 		},
 
 		'assertInstance should fail with generated reason': function () {
-			assertInstance('abc', Object);
+			assertInstance('abc', Number);
 		},
 
 		'assertInstance should fail with custom reason': function () {
 			assertInstance(new Object, Error, 'because an Object is not an instance of Error');
-		}
+		},
+
+		'assertThrows should fail (because nothing throws) with generated reason': function () {
+			var exception = assertThrows(function () { }, Error);
+		},
+
+		'assertThrows should fail (because a different exception is thrown) with generated reason': function () {
+			assertThrows(function () { throw new Error() }, AssertException);
+		},
+
+		'assertThrows should fail with custom reason': function () {
+			assertThrows(function () { throw new Error() }, AssertException, 'because the callback function throws an Error and AssertException was expected');
+		},
 
 	});
 

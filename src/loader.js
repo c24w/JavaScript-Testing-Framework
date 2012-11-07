@@ -12,11 +12,6 @@ function loadResources(/*resource.css, resource.js, ..., ..., batchResourceLoadC
 	}
 }
 
-var loadingStatus = {
-	'loader.js': 'loaded',
-	'utils.js': 'loaded'
-}
-
 function loadResource(file, loadCallback) {
 	if (isLoaded(file)) {
 		if (typeof loadCallback !== 'undefined')
@@ -60,20 +55,25 @@ function loadStylesheet(file, loadCallback) {
 	};
 }
 
+var resourceStatus = {
+	'loader.js': 'loaded',
+	'utils.js': 'loaded'
+}
+
 function isLoaded(file) {
-	return loadingStatus[file] === 'loaded';
+	return resourceStatus[file] === 'loaded';
 }
 
 function isLoading(file) {
-	return loadingStatus[file] === 'loading';
+	return resourceStatus[file] === 'loading';
 }
 
 function setLoaded(file) {
-	loadingStatus[file] = 'loaded';
+	resourceStatus[file] = 'loaded';
 }
 
 function setLoading(file) {
-	loadingStatus[file] = 'loading';
+	resourceStatus[file] = 'loading';
 }
 
 function isScript(file) {

@@ -1,0 +1,84 @@
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/utils.js". tests.html:5
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/loader.js". tests.html:5
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/framework-tests/assertions.tests.js". tests.html:5
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loading loader.js:22
+... loader.js:23
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/framework-tests/test-fixture.tests.js". tests.html:5
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loading loader.js:22
+assertions.js:loading loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loading loader.js:22
+assertions.js:loading loader.js:22
+... loader.js:23
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/test-fixtures.js". loader.js:46
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/assertions.js". loader.js:46
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+... loader.js:23
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/outputting.js". loader.js:46
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loading loader.js:22
+... loader.js:23
+Resource interpreted as Script but transferred with MIME type text/plain: "file:///C:/work/JavaScript-Testing-Framework/src/html-output.js". loader.js:46
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loaded loader.js:22
+style.css:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loaded loader.js:22
+style.css:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loaded loader.js:22
+style.css:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loaded loader.js:22
+style.css:loaded loader.js:22
+... loader.js:23
+loader.js:loaded loader.js:22
+utils.js:loaded loader.js:22
+test-fixtures.js:loaded loader.js:22
+assertions.js:loaded loader.js:22
+outputting.js:loaded loader.js:22
+html-output.js:loaded loader.js:22
+style.css:loaded loader.js:22
+... loader.js:23
+

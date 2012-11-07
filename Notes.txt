@@ -95,3 +95,5 @@ options re loading external resources:
  - dynamically insert <script> tags as/when required, with callback for load event - emulates AJAX behaviour in a slightly hacky way, but works perfectly
 
 load resources (I think only the plural function) has a bug which causes the same fiels to be loaded more than once
+
+Real focus on providing meaningful errors, hence various assertion types and generated of custom info messages
