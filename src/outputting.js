@@ -1,5 +1,5 @@
 function outputTestFixtureToConsole(testFixture) {
-	loadResources('console-output.js', 'formatting.js', function () {
+	loadResources('console-output.js', function () {
 		outputTestFixture(true, testFixture, getConsoleOutputter());
 	});
 }
@@ -23,6 +23,7 @@ function isUselessString(s) {
 }
 
 function outputTestFixture(outputPasses, testFixture, outputter) {
+	var passed = 0, failed = 0;
 	var desc = formatDesc(testFixture.getDescription());
 	outputter.descOutputter(desc);
 	var tests = testFixture.getTests();
@@ -30,10 +31,13 @@ function outputTestFixture(outputPasses, testFixture, outputter) {
 		try {
 			tests[test]();
 			outputter.testOutputter(outputPasses, true, test);
+			passed++;
 		}
 		catch (e) {
 			outputter.testOutputter(outputPasses, false, test, formatMsg(e.message));
+			failed++;
 		}
 	}
+	outputter.resultOutputter(passed, failed);
 	outputter.terminatorOutputter();
 }

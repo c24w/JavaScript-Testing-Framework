@@ -8,7 +8,8 @@ function getHtmlOutputter() {
 	return {
 		descOutputter: htmlDescWriter,
 		testOutputter: htmlTestWriter,
-		terminatorOutputter: htmlTerminatorWriter
+		terminatorOutputter: htmlTerminatorWriter,
+		resultOutputter: htmlResultWriter
 	}
 }
 
@@ -27,6 +28,11 @@ function htmlTestWriter(outputPasses, testPassed, testName, msg) {
 
 function htmlTerminatorWriter() {
 	addToFixture(document.createElement('hr'));
+}
+
+function htmlResultWriter(passed, failed) {
+	//console.log(passed);
+	//console.log(failed);
 }
 
 function writeFailedTestHtml(testName, msg) {
