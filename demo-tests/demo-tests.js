@@ -92,14 +92,14 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 				assert.equal(exception.message, expectedMsg);
 			},
 
-			})
+		})
 
-];
+	];
 
-for (var f in fixtures) {
-	var f = fixtures[f];
-	outputTestFixtureToHtml(f);
-	outputTestFixtureToConsole(f);
-}
+	for (var f in fixtures) {
+		var f = fixtures[f];
+		outputTestFixtureToHtml(f);
+		outputTestFixtureToConsole(f);
+	}
 
 });

@@ -1,12 +1,12 @@
 function outputTestFixtureToConsole(testFixture) {
-	loadResources('console-output.js', function () {
-		outputTestFixture(true, testFixture, getConsoleOutputter());
+	loadResources('console-outputter.js', function () {
+		outputTestFixture(true, testFixture, new consoleOutputter());
 	});
 }
 
 function outputTestFixtureToHtml(testFixture) {
-	loadResources('html-output.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, getHtmlOutputter());
+	loadResources('html-outputter.js', 'style.css', function () {
+		outputTestFixture(true, testFixture, new htmlOutputter());
 	});
 }
 
@@ -38,6 +38,6 @@ function outputTestFixture(outputPasses, testFixture, outputter) {
 			failed++;
 		}
 	}
-	outputter.resultOutputter(passed, failed);
+	outputter.resultOutputter();
 	outputter.terminatorOutputter();
 }
