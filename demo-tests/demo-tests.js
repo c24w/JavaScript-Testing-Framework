@@ -2,76 +2,76 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 	var tf = new testFixture('Demo Tests', {
 
-		'assert should pass': function () {
-			assert(true);
+		'assert.basic should pass': function () {
+			assert.basic(true);
 		},
 
-		'assertEqual should pass': function () {
-			assertEqual('a', "a");
+		'assert.equal should pass': function () {
+			assert.equal('a', "a");
 		},
 
-		'assertEquiv should pass': function () {
-			assertEquiv(1, "1");
+		'assert.equiv should pass': function () {
+			assert.equiv(1, "1");
 		},
 
-		'assertInstance should pass': function () {
-			assertInstance(new Number(123), Number);
+		'assert.instance should pass': function () {
+			assert.instance(new Number(123), Number);
 		},
 
-		'assertThrows should pass': function () {
+		'assert.throws should pass': function () {
 			var info = 'fail message';
-			var exception = assertThrows(function () { throw new AssertException(info) }, AssertException);
-			assertEqual(exception.message, info);
+			var exception = assert.throws(function () { throw new AssertException(info) }, AssertException);
+			assert.equal(exception.message, info);
 		},
 
-		'assert should fail without reason': function () {
-			assert(false);
+		'assert.basic should fail without reason': function () {
+			assert.basic(false);
 		},
 
-		'assert should fail with custom reason': function () {
-			assert(false, 'because I said so');
+		'assert.basic should fail with custom reason': function () {
+			assert.basic(false, 'because I said so');
 		},
 
-		'assertEqual should fail with generated reason': function () {
-			assertEqual(1, '1');
+		'assert.equal should fail with generated reason': function () {
+			assert.equal(1, '1');
 		},
 
-		'assertEqual should fail with custom reason': function () {
-			assertEqual(1, true, 'because "1" and "true" are only equal with type-conversion, i.e. assertEquiv');
+		'assert.equal should fail with custom reason': function () {
+			assert.equal(1, true, 'because "1" and "true" are only equal with type-conversion, i.e. assert.equiv');
 		},
 
-		'assertEqual should fail (using the result of assertThrows) with generated reason': function () {
-			var expectedInfo = 'error info';
-			var exception = assertThrows(function () { throw new Error('omgwtfbbq') }, Error);
-			assertEqual(exception.message, expectedInfo);
+		'assert.equiv should fail with generated reason': function () {
+			assert.equiv('a', 'b');
 		},
 
-		'assertEquiv should fail with generated reason': function () {
-			assertEquiv('a', 'b');
+		'assert.equiv should fail with custom reason': function () {
+			assert.equiv(0, true, 'because this compares "0" and "true"');
 		},
 
-		'assertEquiv should fail with custom reason': function () {
-			assertEquiv(0, true, 'because this compares "0" and "true"');
+		'assert.instance should fail with generated reason': function () {
+			assert.instance('abc', Number);
 		},
 
-		'assertInstance should fail with generated reason': function () {
-			assertInstance('abc', Number);
+		'assert.instance should fail with custom reason': function () {
+			assert.instance(new Object, Error, 'because an Object is not an instance of Error');
 		},
 
-		'assertInstance should fail with custom reason': function () {
-			assertInstance(new Object, Error, 'because an Object is not an instance of Error');
+		'assert.throws should fail (because no exception is thrown) with generated reason': function () {
+			var exception = assert.throws(function () { }, Error);
 		},
 
-		'assertThrows should fail (because nothing throws) with generated reason': function () {
-			var exception = assertThrows(function () { }, Error);
+		'assert.throws should fail (because a different exception is thrown) with generated reason': function () {
+			assert.throws(function () { throw new Error() }, AssertException);
 		},
 
-		'assertThrows should fail (because a different exception is thrown) with generated reason': function () {
-			assertThrows(function () { throw new Error() }, AssertException);
+		'assert.throws should fail with custom reason': function () {
+			assert.throws(function () { throw new Error() }, AssertException, 'because an Error is thrown in the callback, but an AssertException was expected');
 		},
 
-		'assertThrows should fail with custom reason': function () {
-			assertThrows(function () { throw new Error() }, AssertException, 'because the callback function throws an Error and AssertException was expected');
+		'assert.equal should fail (using the result of assert.throws) with generated reason': function () {
+			var expectedMsg = 'error message';
+			var exception = assert.throws(function () { throw new Error('omgwtfbbq') }, Error);
+			assert.equal(exception.message, expectedMsg);
 		},
 
 	});

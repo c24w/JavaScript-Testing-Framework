@@ -2,122 +2,122 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 
 	new autoRunTestFixtureToHtml('Assertion tests', {
 
-		'assert should not throw an AssertException for true conditions': function () {
+		'assert.basic should not throw an AssertException for true conditions': function () {
 			try {
-				assert(true);
+				assert.basic(true);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assert should throw an AssertException for false conditions': function () {
+		'assert.basic should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assert(false, expectedMsg); // need cases
+				assert.basic(false, expectedMsg); // need cases
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, expectedMsg);
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
 		},
 
-		'assertEqual should not throw an AssertException for true conditions': function () {
+		'assert.equal should not throw an AssertException for true conditions': function () {
 			try {
-				assertEqual(true, true);
-				assertEqual(1, 1);
-				assertEqual('abc', 'abc');
-				assertEqual('abc', "abc");
+				assert.equal(true, true);
+				assert.equal(1, 1);
+				assert.equal('abc', 'abc');
+				assert.equal('abc', "abc");
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assertEqual should throw an AssertException for false conditions': function () {
+		'assert.equal should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assertEqual(true, false, expectedMsg); // need cases
-				//assertEqual(1, '1', 'Should fail');
-				//assertEqual(false, 0, 'Should fail');
+				assert.equal(true, false, expectedMsg); // need cases
+				//assert.equal(1, '1', 'Should fail');
+				//assert.equal(false, 0, 'Should fail');
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, expectedMsg);
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
 		},
 
-		'assertEquiv should not throw an AssertException for true conditions': function () {
+		'assert.equiv should not throw an AssertException for true conditions': function () {
 			try {
-				assertEquiv(true, 1);
-				assertEquiv(false, "0");
-				assertEquiv('1', 1);
+				assert.equiv(true, 1);
+				assert.equiv(false, "0");
+				assert.equiv('1', 1);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assertEquiv should throw an AssertException for false conditions': function () {
+		'assert.equiv should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assertEquiv(true, false, expectedMsg); // need cases
-				//assertEquiv(false, 'false', 'Should fail');
-				//assertEquiv(true, 10, 'Should fail');
+				assert.equiv(true, false, expectedMsg); // need cases
+				//assert.equiv(false, 'false', 'Should fail');
+				//assert.equiv(true, 10, 'Should fail');
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, expectedMsg);
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
 		},
 
-		'assertInstance should not throw an AssertException for true conditions': function () {
+		'assert.instance should not throw an AssertException for true conditions': function () {
 			try {
-				assertInstance(new AssertException(), AssertException);
-				assertInstance(new Object(), Object);
+				assert.instance(new AssertException(), AssertException);
+				assert.instance(new Object(), Object);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assertInstance should throw an AssertException for false conditions': function () {
+		'assert.instance should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assertInstance(new Object(), String, expectedMsg); // need cases
-				//assertInstance(new Object(), String, 'Should fail');
+				assert.instance(new Object(), String, expectedMsg); // need cases
+				//assert.instance(new Object(), String, 'Should fail');
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, expectedMsg);
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
 				return;
 			}
 			throw new Error('Test should not have thrown this error');
 		},
 
-		'assertThrows should throw an AssertException if the defined exception is not thrown': function () {
+		'assert.throws should throw an AssertException if the defined exception is not thrown': function () {
 			try {
-				assertThrows(function () { }, AssertException);
+				assert.throws(function () { }, AssertException);
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, 'AssertException was never thrown');
+				assert.instance(e, AssertException);
+				assert.equal(e.message, 'AssertException was never thrown');
 			}
 		},
 
-		'assertThrows should throw an AssertException if the wrong exception is thrown': function () {
+		'assert.throws should throw an AssertException if the wrong exception is thrown': function () {
 			try {
-				assertThrows(function () { throw new Error() }, AssertException);
+				assert.throws(function () { throw new Error() }, AssertException);
 			}
 			catch (e) {
-				assertInstance(e, AssertException);
-				assertEqual(e.message, 'assertThrows - expected: AssertException found: Error');
+				assert.instance(e, AssertException);
+				assert.equal(e.message, 'assert.throws - expected: AssertException found: Error');
 			}
 		}
 

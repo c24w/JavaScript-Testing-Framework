@@ -1,42 +1,46 @@
-function assert(condition, optionalInfo) {
-	if (!condition)
-		throw new AssertException(optionalInfo);
-}
+var assert = {
 
-function assertEquiv(actual, expected, optionalInfo) {
-	var info = optionalInfo ? optionalInfo : buildMessage('assertEquiv', encloseInType(actual), encloseInType(expected));
-	assert(actual == expected, info);
-}
+	basic: function (condition, optionalInfo) {
+		if (!condition)
+			throw new AssertException(optionalInfo);
+	},
 
-function assertEqual(actual, expected, optionalInfo) {
-	var info = optionalInfo ? optionalInfo : buildMessage('assertEqual', encloseInType(actual), encloseInType(expected));
-	assert(actual === expected, info);
-}
+	equiv: function (actual, expected, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.equiv', encloseInType(actual), encloseInType(expected));
+		assert.basic(actual == expected, info);
+	},
 
-function assertInstance(object, type, optionalInfo) {
-	var info = optionalInfo ? optionalInfo : buildMessage('assertInstance', encloseInType(object), type.name);
-	assert(object instanceof type, info);
-}
+	equal: function (actual, expected, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.equal', encloseInType(actual), encloseInType(expected));
+		assert.basic(actual === expected, info);
+	},
 
-function assertThrows(func, exception, optionalInfo) {
-	try {
-		func();
+	instance: function (object, type, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', encloseInType(object), type.name);
+		assert.basic(object instanceof type, info);
+	},
+
+	throws: function (func, exception, optionalInfo) {
+		try {
+			func();
+		}
+		catch (e) {
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.throws', e.name, exception.name);
+			assert.instance(e, exception, info);
+			return e;
+		}
+		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
+		throw new AssertException(info);
 	}
-	catch (e) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assertThrows', e.name, exception.name);
-		assertInstance(e, exception, info);
-		return e;
-	}
-	var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
-	throw new AssertException(info);
+
 }
 
 function buildMessage(assertType, actual, expected) {
 	return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
 }
 
-function AssertException(info) {
-	this.message = info;
+function AssertException(message) {
+	this.message = message;
 }
 
 function encloseInType(object) {

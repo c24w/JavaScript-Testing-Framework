@@ -68,12 +68,24 @@ function addToFixture(el) {
 
 function formatCodeParts(testName) {
 	var text = testName;
-	var words = testName.replace(/[,\.\(\)]/g, '\u0020').split('\u0020');
+	var words = testName.replace(/[,\(\)]/g, '\u0020').split('\u0020');
 	var result = '';
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];
-		if (window[word])
+		if (isDefined(word))
 			text = text.replace(word, '<span class="code">' + word + '</span>');
 	}
 	return text;
+}
+
+function isDefined(word) {
+	if (window[word])
+		return true;
+	try{
+		eval(word);
+		return true;
+	}
+	catch(e){
+		return false;
+	}
 }
