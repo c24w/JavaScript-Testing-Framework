@@ -1,3 +1,11 @@
+function getConsoleOutputter() {
+	return {
+		descOutputter: consoleDescWriter,
+		testOutputter : consoleTestWriter,
+		terminatorOutputter: consoleTerminatorWriter
+	}
+}
+
 function consoleTestWriter(outputPasses, testPassed, testName, msg) {
 	if (!testPassed) {
 		var info = msg.isWhitespace() ? '' : ' - ' + msg;

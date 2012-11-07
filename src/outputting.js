@@ -1,12 +1,12 @@
 function outputTestFixtureToConsole(testFixture) {
 	loadResources('console-output.js', 'formatting.js', function () {
-		outputTestFixture(true, testFixture, consoleDescWriter, consoleTestWriter, consoleTerminatorWriter);
+		outputTestFixture(true, testFixture, getConsoleOutputter());
 	});
 }
 
 function outputTestFixtureToHtml(testFixture) {
 	loadResources('html-output.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, htmlDescWriter, htmlTestWriter, htmlTerminatorWriter);
+		outputTestFixture(true, testFixture, getHtmlOutputter());
 	});
 }
 
@@ -22,19 +22,18 @@ function isUselessString(s) {
 	return !s || s.isWhitespace();
 }
 
-function outputTestFixture(outputPasses, testFixture, descOutputter, testOutputter, terminatorOutputter) {
+function outputTestFixture(outputPasses, testFixture, outputter) {
 	var desc = formatDesc(testFixture.getDescription());
-	descOutputter(desc);
+	outputter.descOutputter(desc);
 	var tests = testFixture.getTests();
 	for (var test in tests) {
 		try {
 			tests[test]();
-			testOutputter(outputPasses, true, test);
+			outputter.testOutputter(outputPasses, true, test);
 		}
 		catch (e) {
-			testOutputter(outputPasses, false, test, formatMsg(e.message));
+			outputter.testOutputter(outputPasses, false, test, formatMsg(e.message));
 		}
 	}
-	if (terminatorOutputter)
-		terminatorOutputter();
+	outputter.terminatorOutputter();
 }

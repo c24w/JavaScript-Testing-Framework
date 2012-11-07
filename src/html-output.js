@@ -1,15 +1,32 @@
 function getTestFixture() {
 }
 
-var fixture = makeDiv();
-fixture.className = 'testfixture';
+var fixture = makeDiv('testfixture');
 document.body.appendChild(fixture);
+
+function getHtmlOutputter() {
+	return {
+		descOutputter: htmlDescWriter,
+		testOutputter: htmlTestWriter,
+		terminatorOutputter: htmlTerminatorWriter
+	}
+}
+
+function htmlDescWriter(description) {
+	var desc = makeDiv('description');
+	desc.innerHTML = description;
+	addToFixture(desc);
+}
 
 function htmlTestWriter(outputPasses, testPassed, testName, msg) {
 	if (!testPassed)
 		writeFailedTestHtml(testName, msg);
 	else if (outputPasses)
 		writePassedTestHtml(testName);
+}
+
+function htmlTerminatorWriter() {
+	addToFixture(document.createElement('hr'));
 }
 
 function writeFailedTestHtml(testName, msg) {
@@ -33,16 +50,6 @@ function appendTestToHtml(testPassed, testName, msg) {
 		test.appendChild(info);
 	}
 	addToFixture(test);
-}
-
-function htmlDescWriter(description) {
-	var desc = makeDiv('description');
-	desc.innerHTML = description;
-	addToFixture(desc);
-}
-
-function htmlTerminatorWriter() {
-	addToFixture(document.createElement('hr'));
 }
 
 function getTestClassName(testPassed) {
