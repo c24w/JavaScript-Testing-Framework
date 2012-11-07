@@ -1,23 +1,23 @@
 var assert = {
 
-	basic: function (condition, optionalInfo) {
+	that: function (condition, optionalInfo) {
 		if (!condition)
 			throw new AssertException(optionalInfo);
 	},
 
 	equiv: function (actual, expected, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : buildMessage('assert.equiv', encloseInType(actual), encloseInType(expected));
-		assert.basic(actual == expected, info);
+		assert.that(actual == expected, info);
 	},
 
 	equal: function (actual, expected, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : buildMessage('assert.equal', encloseInType(actual), encloseInType(expected));
-		assert.basic(actual === expected, info);
+		assert.that(actual === expected, info);
 	},
 
 	instance: function (object, type, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', encloseInType(object), type.name);
-		assert.basic(object instanceof type, info);
+		assert.that(object instanceof type, info);
 	},
 
 	throws: function (func, exception, optionalInfo) {

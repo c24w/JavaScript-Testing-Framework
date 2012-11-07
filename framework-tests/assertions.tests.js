@@ -2,19 +2,19 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 
 	new autoRunTestFixtureToHtml('Assertion tests', {
 
-		'assert.basic should not throw an AssertException for true conditions': function () {
+		'assert.that should not throw an AssertException for true conditions': function () {
 			try {
-				assert.basic(true);
+				assert.that(true);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assert.basic should throw an AssertException for false conditions': function () {
+		'assert.that should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assert.basic(false, expectedMsg); // need cases
+				assert.that(false, expectedMsg); // need cases
 			}
 			catch (e) {
 				assert.instance(e, AssertException);

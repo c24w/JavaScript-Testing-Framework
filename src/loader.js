@@ -1,4 +1,4 @@
-function loadResources(/*resource.css, resource.js, ..., ..., batchResourceLoadCallback*/) {
+function loadResources(/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
 	var loadCount = 0;
 	var resourceCount = arguments.length - 1;
 	var batchLoadCallback = arguments[arguments.length - 1];
@@ -20,7 +20,7 @@ function loadResource(file, loadCallback) {
 	}
 
 	if (isLoading(file)) {
-		setTimeout(function () { loadResource(file, loadCallback) }, 500);
+		setTimeout(function () { loadResource(file, loadCallback) }, 100);
 		return;
 	}
 
@@ -55,25 +55,30 @@ function loadStylesheet(file, loadCallback) {
 	};
 }
 
-var resourceStatus = {
-	'loader.js': 'loaded',
-	'utils.js': 'loaded'
+var fileStatuses = {
+	LOADING: 0,
+	LOADED: 1
+}
+
+var fileStatus = {
+	'loader.js': fileStatuses.LOADED,
+	'utils.js': fileStatuses.LOADED
 }
 
 function isLoaded(file) {
-	return resourceStatus[file] === 'loaded';
+	return fileStatus[file] === fileStatuses.LOADED;
 }
 
 function isLoading(file) {
-	return resourceStatus[file] === 'loading';
+	return fileStatus[file] === fileStatuses.LOADING;
 }
 
 function setLoaded(file) {
-	resourceStatus[file] = 'loaded';
+	fileStatus[file] = fileStatuses.LOADED;
 }
 
 function setLoading(file) {
-	resourceStatus[file] = 'loading';
+	fileStatus[file] = fileStatuses.LOADING;
 }
 
 function isScript(file) {
