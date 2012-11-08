@@ -1,11 +1,20 @@
+var TEST_RUNNER_EVENT = {
+	START: 1,
+	DESC: 2,
+	PASS: 3,
+	FAIL: 4,
+	STATS: 5,
+	END: 6,
+}
+
 function outputTestFixtureToConsole(testFixture) {
-	loadResources('console-outputter.js', function () {
+	loadResources('console-test-handler.js', function () {
 		outputTestFixture(true, testFixture, new ConsoleOutputter());
 	});
 }
 
 function outputTestFixtureToHtml(testFixture) {
-	loadResources('html-outputter.js', 'style.css', function () {
+	loadResources('html-test-handler.js', 'style.css', function () {
 		outputTestFixture(true, testFixture, new HtmlOutputter());
 	});
 }
@@ -22,22 +31,32 @@ function isUselessString(s) {
 	return !s || s.isWhitespace();
 }
 
-function outputTestFixture(outputPasses, testFixture, outputter) {
-	var passed = 0, failed = 0;
-	var desc = formatDesc(testFixture.getDescription());
-	outputter.descOutputter(desc);
-	var tests = testFixture.getTests();
-	for (var test in tests) {
-		try {
-			tests[test]();
-			outputter.testOutputter(outputPasses, true, test);
-			passed++;
+function TestRunner(testFixture) {
+
+	this.run = function (testEventHandler) {
+
+		testEventHandler.handle(TEST_RUNNER_EVENT.START);
+
+		var passes = 0, fails = 0;
+		var desc = formatDesc(testFixture.getDescription());
+		testEventHandler.handle(TEST_RUNNER_EVENT.DESC, desc);
+
+		var tests = testFixture.getTests();
+		for (var test in tests) {
+			try {
+				tests[test]();
+				testEventHandler.handle(TEST_RUNNER_EVENT.PASS, test);
+				passes++;
+			}
+			catch (e) {
+				testEventHandler.handle(TEST_RUNNER_EVENT.FAIL, test, formatMsg(e.message));
+				fails++;
+			}
 		}
-		catch (e) {
-			outputter.testOutputter(outputPasses, false, test, formatMsg(e.message));
-			failed++;
-		}
+
+		testEventHandler.handle(TEST_RUNNER_EVENT.STATS, passes, fails);
+		testEventHandler.handle(TEST_RUNNER_EVENT.END);
+
 	}
-	outputter.resultOutputter();
-	outputter.terminatorOutputter();
+
 }

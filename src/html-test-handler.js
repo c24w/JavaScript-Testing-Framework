@@ -1,41 +1,62 @@
-function HtmlOutputter() {
+function HtmlTestHandler() {
 
-	var passed = 0, failed = 0;
-	var fixture = makeDiv('testfixture');
-	document.body.appendChild(fixture);
+	var fixture;
 
-	this.descOutputter = function (description) {
+	this.handle = function (handleType) {
+		var args = arguments;
+		loadResource('style.css', function () {
+			switch (handleType) {
+				case TEST_RUNNER_EVENT.START:
+					startOutputter();
+					break;
+				case TEST_RUNNER_EVENT.DESC:
+					descOutputter(args[1]);
+					break;
+				case TEST_RUNNER_EVENT.PASS:
+					testOutputter(true, true, args[1]);
+					break;
+				case TEST_RUNNER_EVENT.FAIL:
+					testOutputter(true, false, args[1], args[2]);
+					break;
+				case TEST_RUNNER_EVENT.STATS:
+					statsOutputter(args[1], args[2]);
+					break;
+				case TEST_RUNNER_EVENT.END:
+					endOutputter();
+					break;
+			}
+		});
+	}
+
+	function startOutputter() {
+		fixture = makeDiv('testfixture');
+		document.body.appendChild(fixture);
+	}
+
+	function descOutputter(description) {
 		var descEl = makeDiv('description');
 		descEl.innerHTML = formatCodeParts(description);
 		addToFixture(descEl);
 	}
 
-	this.testOutputter = function (outputPasses, testPassed, testName, msg) {
+	function testOutputter(outputPasses, testPassed, testName, msg) {
 		if (!testPassed) {
 			writeFailedTestHtml(testName, msg);
-			failed++;
 		}
 		else if (outputPasses) {
 			writePassedTestHtml(testName);
-			passed++;
 		}
 	}
 
-	this.terminatorOutputter = function () {
-		document.body.appendChild(document.createElement('hr'));
-	}
-
-	this.resultOutputter = function () {
-		fixture.className += failed > 0 ? ' failed' : ' passed';
+	function statsOutputter(passes, fails) {
+		fixture.className += fails > 0 ? ' failed' : ' passed';
 		var result = makeDiv('result');
-		appendText(result, getResultMessage(passed, failed));
+		appendText(result, getResultMessage(passes, fails));
 		addToFixture(result);
 	}
 
-	this.summaryOutputter = function () {
-		var summary = makeDiv('summary');
-		appendText(summary, 'hello');
-		document.body.insertBefore(summary, document.body.firstChild);
+	function endOutputter() {
+		document.body.appendChild(document.createElement('hr'));
 	}
 
 	function writeFailedTestHtml(testName, msg) {
@@ -45,7 +66,7 @@ function HtmlOutputter() {
 	function writePassedTestHtml(testName) {
 		appendTestToHtml(true, testName);
 	}
-
+	// hide html operations in another file or something
 	function appendTestToHtml(testPassed, testName, msg) {
 		var className = getTestClassName(testPassed);
 		var test = makeDiv(className);

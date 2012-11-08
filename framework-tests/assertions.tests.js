@@ -1,6 +1,6 @@
-loadResources('test-fixtures.js', 'assertions.js', function () {
+loadResources('test-fixtures.js', 'outputting.js', 'html-test-handler.js', 'assertions.js', function () {
 
-	new AutoRunTestFixtureToHtml('Assertion tests', {
+	new TestRunner(new TestFixture('Assertion tests', {
 
 		'assert.that should not throw an AssertException for true conditions': function () {
 			try {
@@ -127,6 +127,6 @@ loadResources('test-fixtures.js', 'assertions.js', function () {
 			assert.equal(exception.message, expectedMsg);
 		}
 
-	});
+	})).run(new HtmlTestHandler());
 
 });

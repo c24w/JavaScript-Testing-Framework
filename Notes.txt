@@ -97,3 +97,14 @@ options re loading external resources:
 load resources (I think only the plural function) has a bug which causes the same fiels to be loaded more than once
 
 Real focus on providing meaningful errors, hence various assertion types and generated of custom info messages
+
+
+
+
+outputFixture -> testRunner(testEventHandler)?
+
+output passes -> handler not arg
+
+handler contains testFailed(test), testPassed(test)
+
+write test for testRunner with mock handler, e.g. test should fail, logs it
