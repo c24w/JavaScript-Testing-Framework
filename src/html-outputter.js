@@ -1,13 +1,13 @@
-function htmlOutputter() {
+function HtmlOutputter() {
 
 	var passed = 0, failed = 0;
 	var fixture = makeDiv('testfixture');
 	document.body.appendChild(fixture);
 
 	this.descOutputter = function (description) {
-		var desc = makeDiv('description');
-		appendText(desc, description);
-		addToFixture(desc);
+		var descEl = makeDiv('description');
+		descEl.innerHTML = formatCodeParts(description);
+		addToFixture(descEl);
 	}
 
 	this.testOutputter = function (outputPasses, testPassed, testName, msg) {
@@ -22,13 +22,14 @@ function htmlOutputter() {
 	}
 
 	this.terminatorOutputter = function () {
-		addToFixture(document.createElement('hr'));
+		document.body.appendChild(document.createElement('hr'));
 	}
 
 	this.resultOutputter = function () {
+		fixture.className += failed > 0 ? ' failed' : ' passed';
 		var result = makeDiv('result');
 		appendText(result, getResultMessage(passed, failed));
-		fixture.appendChild(result);
+		addToFixture(result);
 	}
 
 	this.summaryOutputter = function () {
@@ -70,9 +71,9 @@ function htmlOutputter() {
 function getResultMessage(passed, failed) {
 	var total = passed + failed;
 	if (failed == 0)
-		return 'All passed';
+		return passed + ' passed';
 	else if (passed == 0)
-		return 'All failed';
+		return failed + ' failed';
 	else
 		return failed + '/' + total + ' failed';
 }

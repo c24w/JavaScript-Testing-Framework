@@ -11,6 +11,17 @@ body
 
 .testfixture
 {
+    padding:1em;
+}
+
+.testfixture.passed
+{
+    background:#F5FAF5;
+}
+
+.testfixture.failed
+{
+    background:#FAF5F5;
 }
 
     .testfixture .description
@@ -22,7 +33,7 @@ body
 
     .testfixture hr
     {
-        margin: 25px 0;
+        margin: 2em 0 0;
     }
 
 .test

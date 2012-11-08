@@ -1,12 +1,12 @@
 function outputTestFixtureToConsole(testFixture) {
 	loadResources('console-outputter.js', function () {
-		outputTestFixture(true, testFixture, new consoleOutputter());
+		outputTestFixture(true, testFixture, new ConsoleOutputter());
 	});
 }
 
 function outputTestFixtureToHtml(testFixture) {
 	loadResources('html-outputter.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, new htmlOutputter());
+		outputTestFixture(true, testFixture, new HtmlOutputter());
 	});
 }
 

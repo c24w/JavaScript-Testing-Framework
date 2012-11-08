@@ -4,7 +4,7 @@ var testPrefix = '|' + spacer;
 var nonFailPadding = spacer + spacer;
 var bottomLine = '\u2514' + spacer;
 
-function consoleOutputter() {
+function ConsoleOutputter() {
 
 	var passed = 0, failed = 0;
 
@@ -42,9 +42,9 @@ function consoleOutputter() {
 function getResultMessage(passed, failed) {
 	var total = passed + failed;
 	if (failed == 0)
-		return 'all passed';
+		return passed + ' passed';
 	else if (passed == 0)
-		return 'all failed';
+		return failed + ' failed';
 	else
 		return failed + '/' + total + ' failed';
 }

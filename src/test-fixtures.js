@@ -1,22 +1,22 @@
-function testFixture(description, tests) {
+function TestFixture(description, tests) {
 	this.getDescription = function () { return description }
 	this.getTests = function () { return tests }
 }
 
-function autoRunTestFixture(description, outputter, tests) {
+function AutoRunTestFixture(description, outputter, tests) {
 	loadResource('outputting.js', function () {
-		outputTestFixture(new testFixture(description, tests), outputter);
+		outputTestFixture(new TestFixture(description, tests), outputter);
 	});
 }
 
-function autoRunTestFixtureToHtml(description, tests) {
+function AutoRunTestFixtureToHtml(description, tests) {
 	loadResource('outputting.js', function () {
-		outputTestFixtureToHtml(new testFixture(description, tests));
+		outputTestFixtureToHtml(new TestFixture(description, tests));
 	});
 }
 
-function autoRunTestFixtureToConsole(description, tests) {
+function AutoRunTestFixtureToConsole(description, tests) {
 	loadResource('outputting.js', function () {
-		outputTestFixtureToConsole(new testFixture(description, tests));
+		outputTestFixtureToConsole(new TestFixture(description, tests));
 	});
 }

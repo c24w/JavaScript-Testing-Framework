@@ -1,6 +1,6 @@
 loadResources('test-fixtures.js', 'assertions.js', function () {
 
-	new autoRunTestFixtureToHtml('Assertion tests', {
+	new AutoRunTestFixtureToHtml('Assertion tests', {
 
 		'assert.that should not throw an AssertException for true conditions': function () {
 			try {

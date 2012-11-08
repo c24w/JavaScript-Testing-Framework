@@ -2,7 +2,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 	var fixtures = [
 
-		new testFixture('assert.that', {
+		new TestFixture('assert.that', {
 
 			'assert.that should pass': function () {
 				assert.that(true);
@@ -18,7 +18,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 		}),
 
-		new testFixture('assert.equal', {
+		new TestFixture('assert.equal', {
 
 			'assert.equal should pass': function () {
 				assert.equal('a', "a");
@@ -34,7 +34,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 		}),
 
-		new testFixture('assert.equiv', {
+		new TestFixture('assert.equiv', {
 
 			'assert.equiv should pass': function () {
 				assert.equiv(1, "1");
@@ -50,7 +50,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 		}),
 
-		new testFixture('assert.instance', {
+		new TestFixture('assert.instance', {
 
 			'assert.instance should pass': function () {
 				assert.instance(new Number(123), Number);
@@ -66,7 +66,7 @@ loadResources('test-fixtures.js', 'assertions.js', 'outputting.js', function () 
 
 		}),
 
-		new testFixture('assert.throws', {
+		new TestFixture('assert.throws', {
 
 			'assert.throws should pass': function () {
 				var info = 'fail message';

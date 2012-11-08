@@ -1,15 +1,11 @@
-loadResources('test-fixtures.js', 'assertions.js', function () {
+loadResources('test-fixtures.js', 'Assertions.js', function () {
 
-	new autoRunTestFixtureToHtml('Test-fixture tests', {
+	new AutoRunTestFixtureToHtml('Test-fixture tests', {
 
-		'aaa': function () {
-			try {
-				assert.that(true);
-			}
-			catch (e) {
-				throw new Error('Test should not have thrown this error');
-			}
+		'': function () {
+
 		}
 
 	});
+
 });
