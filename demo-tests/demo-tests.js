@@ -25,6 +25,10 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 			},
 
 			'assert.equal should fail with generated reason': function () {
+				assert.equal(1, 2);
+			},
+
+			'assert.equal should fail with generated reason including types': function () {
 				assert.equal(1, '1');
 			},
 
