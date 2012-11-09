@@ -1,6 +1,6 @@
 function HtmlTestHandler() {
 
-	var fixture;
+	var fixture, topbar;
 
 	this.handle = function (handleType) {
 		var args = Array.prototype.slice.call(arguments, 1);
@@ -38,7 +38,9 @@ function HtmlTestHandler() {
 	function descOutputter(description) {
 		var descEl = makeDiv('description');
 		descEl.innerHTML = formatCodeParts(description);
-		addToFixture(descEl);
+		topbar = makeDiv('topbar');
+		topbar.appendChild(descEl);
+		addToFixture(topbar);
 	}
 
 	function testOutputter(outputPasses, testPassed, testName, msg) {
@@ -54,7 +56,7 @@ function HtmlTestHandler() {
 		fixture.className += fails > 0 ? ' failed' : ' passed';
 		var result = makeDiv('result');
 		appendText(result, getResultMessage(passes, fails));
-		addToFixture(result);
+		topbar.appendChild(result);
 	}
 
 	function endOutputter() { }
@@ -107,7 +109,7 @@ function getTestClassName(testPassed) {
 
 function makeDiv(className) {
 	var d = document.createElement('div');
-	d.className = className;
+	if (className) d.className = className;
 	return d;
 }
 
@@ -122,7 +124,7 @@ function formatCodeParts(testName) {
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];
 		if (/`.+`/.test(word))
-			text = text.replace(word, '<span class="code">' + word.replace(/`/g,'') + '</span>');
+			text = text.replace(word, '<span class="code">' + word.replace(/`/g, '') + '</span>');
 		else if (isDefined(word))
 			text = text.replace(word, '<span class="code">' + word + '</span>');
 	}
