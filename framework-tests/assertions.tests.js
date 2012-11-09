@@ -1,4 +1,4 @@
-loadResources('test-fixtures.js', 'outputting.js', 'html-test-handler.js', 'assertions.js', function () {
+loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertions.js', function () {
 
 	new TestRunner(new TestFixture('Assertion tests', {
 

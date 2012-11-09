@@ -1,4 +1,4 @@
-loadResources('test-fixtures.js', 'outputting.js', 'html-test-handler.js', 'assertions.js', function () {
+loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertions.js', function () {
 
 	var mockOutputter = {
 		descOutputter: function () { },
@@ -10,7 +10,7 @@ loadResources('test-fixtures.js', 'outputting.js', 'html-test-handler.js', 'asse
 
 	new TestRunner(new TestFixture('Test-runner tests', {
 
-		'outputTestFixture should': function () {
+		'TestRunner should': function () {
 			var fixture = new TestFixture('Fixture', {
 				'Test should fail': function () {
 					assert.equal('this test', 'should fail');
