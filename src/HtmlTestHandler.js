@@ -1,6 +1,6 @@
 function HtmlTestHandler() {
 
-	var fixture, topbar;
+	var fixture, topbar, testsContainer;
 
 	this.handle = function (handleType) {
 		var args = Array.prototype.slice.call(arguments, 1);
@@ -53,6 +53,8 @@ function HtmlTestHandler() {
 	}
 
 	function statsOutputter(passes, fails) {
+		if (fails === 0)
+			testsContainer.className += ' collapsed';
 		fixture.className += fails > 0 ? ' failed' : ' passed';
 		var result = makeDiv('result');
 		appendText(result, getResultMessage(passes, fails));
@@ -83,7 +85,15 @@ function HtmlTestHandler() {
 			//appendText(info, formatCodeParts(msg));
 			test.appendChild(info);
 		}
-		addToFixture(test);
+		if (!testsContainer) {
+			testsContainer = makeDiv('testscontainer');
+			fixture.onclick = function () {
+				var cn = testsContainer.className;
+				testsContainer.className = 'testscontainer' + (cn === 'testscontainer' ? ' collapsed' : '');
+			}
+			addToFixture(testsContainer);
+		}
+		testsContainer.appendChild(test);
 	}
 
 	function addToFixture(el) {
@@ -93,9 +103,9 @@ function HtmlTestHandler() {
 
 function getResultMessage(passes, fails) {
 	var total = passes + fails;
-	if (fails == 0)
+	if (fails === 0)
 		return passes + ' passed';
-	else if (passes == 0)
+	else if (passes === 0)
 		return fails + ' failed';
 	else
 		return fails + '/' + total + ' failed';

@@ -31,7 +31,7 @@ body
 
     .testfixture .topbar
     {
-        overflow:auto;
+        overflow: auto;
     }
 
         .testfixture .topbar .description
@@ -44,9 +44,14 @@ body
 
         .testfixture .topbar .result
         {
-            font-style:italic;
+            font-style: italic;
             float: right;
         }
+
+    .testfixture .testscontainer.collapsed
+    {
+        display: none;
+    }
 
 .test
 {
