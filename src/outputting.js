@@ -7,18 +7,6 @@ var TEST_RUNNER_EVENT = {
 	END: 6,
 }
 
-function outputTestFixtureToConsole(testFixture) {
-	loadResources('console-test-handler.js', function () {
-		outputTestFixture(true, testFixture, new ConsoleOutputter());
-	});
-}
-
-function outputTestFixtureToHtml(testFixture) {
-	loadResources('html-test-handler.js', 'style.css', function () {
-		outputTestFixture(true, testFixture, new HtmlOutputter());
-	});
-}
-
 function formatMsg(msg) {
 	return isUselessString(msg) ? 'no additional information' : msg;
 }

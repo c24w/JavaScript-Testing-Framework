@@ -19,7 +19,7 @@ function HtmlTestHandler() {
 					testOutputter(true, false, args[0], args[1]);
 					break;
 				case TEST_RUNNER_EVENT.STATS:
-					statsOutputter(args[1], args[1]);
+					statsOutputter(args[0], args[1]);
 					break;
 				case TEST_RUNNER_EVENT.END:
 					endOutputter();
@@ -89,14 +89,14 @@ function HtmlTestHandler() {
 	}
 }
 
-function getResultMessage(passed, failed) {
-	var total = passed + failed;
-	if (failed == 0)
-		return passed + ' passed';
-	else if (passed == 0)
-		return failed + ' failed';
+function getResultMessage(passes, fails) {
+	var total = passes + fails;
+	if (fails == 0)
+		return passes + ' passed';
+	else if (passes == 0)
+		return fails + ' failed';
 	else
-		return failed + '/' + total + ' failed';
+		return fails + '/' + total + ' failed';
 }
 
 function getTestClassName(testPassed) {
