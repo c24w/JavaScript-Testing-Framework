@@ -1,6 +1,6 @@
 loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertions.js', function () {
 
-	new TestRunner(new TestFixture('Assertion tests', {
+	new TestRunner(new TestFixture('Assertions tests', {
 
 		'assert.that should not throw an AssertException for true conditions': function () {
 			try {

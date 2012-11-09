@@ -17,21 +17,21 @@ function getResultMessage(passed, failed) {
 function ConsoleTestHandler() {
 
 	this.handle = function (handleType /*, args */) {
-		var args = arguments;
+		var args = Array.prototype.slice.call(arguments, 1);
 		switch (handleType) {
 			case TEST_RUNNER_EVENT.START:
 				break;
 			case TEST_RUNNER_EVENT.DESC:
-				descOutputter(args[1]);
+				descOutputter(args[0]);
 				break;
 			case TEST_RUNNER_EVENT.PASS:
-				testOutputter(true, true, args[1]);
+				testOutputter(true, true, args[0]);
 				break;
 			case TEST_RUNNER_EVENT.FAIL:
-				testOutputter(true, false, args[1], args[2]);
+				testOutputter(true, false, args[0], args[1]);
 				break;
 			case TEST_RUNNER_EVENT.STATS:
-				statsOutputter(args[1], args[2]);
+				statsOutputter(args[1], args[1]);
 				break;
 			case TEST_RUNNER_EVENT.END:
 				break;

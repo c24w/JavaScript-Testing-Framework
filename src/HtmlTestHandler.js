@@ -117,11 +117,13 @@ function appendText(element, text) {
 
 function formatCodeParts(testName) {
 	var text = testName;
-	var words = testName.split(/[,\(\)\u0020]/g);
+	var words = testName.split(/[,\u0020]/g);
 	var result = '';
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];
-		if (isDefined(word))
+		if (/`.+`/.test(word))
+			text = text.replace(word, '<span class="code">' + word.replace(/`/g,'') + '</span>');
+		else if (isDefined(word))
 			text = text.replace(word, '<span class="code">' + word + '</span>');
 	}
 	return text;
