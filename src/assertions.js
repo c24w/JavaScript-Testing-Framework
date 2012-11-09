@@ -7,17 +7,29 @@ var assert = {
 			throw new AssertException(optionalInfo);
 	},
 
-	equiv: function (actual, expected, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assert.equiv', encloseInType(actual), encloseInType(expected));
-		assert.that(actual == expected, info);
-	},
-
 	equal: function (actual, expected, optionalInfo) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
 		var info = optionalInfo ? optionalInfo : buildMessage('assert.equal', act, exp);
 		assert.that(actual === expected, info);
+	},
+
+	equiv: function (actual, expected, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.equiv', encloseInType(actual), encloseInType(expected));
+		assert.that(actual == expected, info);
+	},
+
+	greater: function (number1, number2, optionalInfo) {
+		assert.type(number1, 'number', 'assert.greater - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
+		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found:' + typeof number2);
+		var info = optionalInfo ? optionalInfo : 'assert.greater - {0} is not greater than {1}'.format(number1, number2);
+		assert.that(number1 > number2, info);
+	},
+
+	type: function (object, type, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.type', object, type.name);
+		assert.equal(typeof object, type, info);
 	},
 
 	instance: function (object, type, optionalInfo) {

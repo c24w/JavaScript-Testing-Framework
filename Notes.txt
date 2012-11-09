@@ -117,3 +117,5 @@ assertGT
 re-run single test or fixture
 
 added type comparison to assert.equal to only output types when they are different
+
+add new assert.types to demo tests

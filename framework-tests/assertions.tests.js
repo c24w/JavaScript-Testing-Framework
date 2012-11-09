@@ -77,6 +77,57 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			throw new Error('Test should not have thrown this error');
 		},
 
+		'assert.greater should not throw an AssertException for true conditions': function () {
+			try {
+				assert.greater(1, 0);
+				assert.greater(1, -1);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.greater should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
+			try {
+				assert.greater(0, 1, expectedMsg); // need cases
+			}
+			catch (e) {
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
+				return;
+			}
+			throw new Error('Test should not have thrown this error');
+		},
+
+		'assert.type should not throw an AssertException for true conditions': function () {
+			try {
+				assert.type(new AssertException(), 'object');
+				assert.type('hello', 'string');
+				assert.type(1, 'number');
+				assert.type(true, 'boolean');
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.type should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
+			try {
+				assert.type(1, 'string', expectedMsg); // need cases
+				//assert.type(true, 'number', expectedMsg); // need cases
+				//assert.type(false, 'object', expectedMsg); // need cases
+				//assert.type('hello', 'boolean', expectedMsg); // need cases
+			}
+			catch (e) {
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
+				return;
+			}
+			throw new Error('Test should not have thrown this error');
+		},
+
 		'assert.instance should not throw an AssertException for true conditions': function () {
 			try {
 				assert.instance(new AssertException(), AssertException);
