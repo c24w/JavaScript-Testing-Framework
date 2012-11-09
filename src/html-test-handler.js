@@ -3,23 +3,23 @@ function HtmlTestHandler() {
 	var fixture;
 
 	this.handle = function (handleType) {
-		var args = arguments;
+		var args = Array.prototype.slice.call(arguments, 1);
 		loadResource('style.css', function () {
 			switch (handleType) {
 				case TEST_RUNNER_EVENT.START:
 					startOutputter();
 					break;
 				case TEST_RUNNER_EVENT.DESC:
-					descOutputter(args[1]);
+					descOutputter(args[0]);
 					break;
 				case TEST_RUNNER_EVENT.PASS:
-					testOutputter(true, true, args[1]);
+					testOutputter(true, true, args[0]);
 					break;
 				case TEST_RUNNER_EVENT.FAIL:
-					testOutputter(true, false, args[1], args[2]);
+					testOutputter(true, false, args[0], args[1]);
 					break;
 				case TEST_RUNNER_EVENT.STATS:
-					statsOutputter(args[1], args[2]);
+					statsOutputter(args[1], args[1]);
 					break;
 				case TEST_RUNNER_EVENT.END:
 					endOutputter();
@@ -29,6 +29,8 @@ function HtmlTestHandler() {
 	}
 
 	function startOutputter() {
+		if (document.body.children.length > 0)
+			document.body.appendChild(document.createElement('hr'));
 		fixture = makeDiv('testfixture');
 		document.body.appendChild(fixture);
 	}
@@ -55,9 +57,7 @@ function HtmlTestHandler() {
 		addToFixture(result);
 	}
 
-	function endOutputter() {
-		document.body.appendChild(document.createElement('hr'));
-	}
+	function endOutputter() { }
 
 	function writeFailedTestHtml(testName, msg) {
 		appendTestToHtml(false, testName, msg);
