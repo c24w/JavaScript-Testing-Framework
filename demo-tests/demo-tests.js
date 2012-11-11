@@ -2,18 +2,18 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 	var fixtures = [
 
-		new TestFixture('assert.that', {
+		new TestFixture('assert.true', {
 
-			'assert.that should pass': function () {
-				assert.that(true);
+			'assert.true should pass': function () {
+				assert.true(true);
 			},
 
-			'assert.that should fail without reason': function () {
-				assert.that(false);
+			'assert.true should fail without reason': function () {
+				assert.true(false);
 			},
 
-			'assert.that should fail with custom reason': function () {
-				assert.that(false, 'because this checks assert.that(false)');
+			'assert.true should fail with custom reason': function () {
+				assert.true(false, 'because this checks assert.true(false)');
 			}
 
 		}),

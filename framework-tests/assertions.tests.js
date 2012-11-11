@@ -2,19 +2,19 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 
 	new TestRunner(new TestFixture('Assertions tests', {
 
-		'assert.that should not throw an AssertException for true conditions': function () {
+		'assert.true should not throw an AssertException for true conditions': function () {
 			try {
-				assert.that(true);
+				assert.true(true);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
 			}
 		},
 
-		'assert.that should throw an AssertException for false conditions': function () {
+		'assert.true should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assert.that(false, expectedMsg); // need cases
+				assert.true(false, expectedMsg); // need cases
 			}
 			catch (e) {
 				assert.instance(e, AssertException);

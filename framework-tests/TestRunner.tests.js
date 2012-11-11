@@ -43,12 +43,12 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 		new TestFixture('Mock test fixture', {
 			FIXTURE_SETUP: function () { addTrace('FIXTURE_SETUP') },
 			TEST_SETUP: function () { addTrace('TEST_SETUP') },
-			'Passing test 1': function () { addTrace('Test 1'); assert.that(true) },
-			'Passing test 2': function () { addTrace('Test 2'); assert.that(true) },
-			'Passing test 3': function () { addTrace('Test 3'); assert.that(true) },
-			'Failing test 1': function () { addTrace('Test 4'); assert.that(false) },
-			'Failing test 2': function () { addTrace('Test 5'); assert.that(false) },
-			'Failing test 3': function () { addTrace('Test 6'); assert.that(false) }
+			'Passing test 1': function () { addTrace('Test 1'); assert.true(true) },
+			'Passing test 2': function () { addTrace('Test 2'); assert.true(true) },
+			'Passing test 3': function () { addTrace('Test 3'); assert.true(true) },
+			'Failing test 1': function () { addTrace('Test 4'); assert.true(false) },
+			'Failing test 2': function () { addTrace('Test 5'); assert.true(false) },
+			'Failing test 3': function () { addTrace('Test 6'); assert.true(false) }
 		})
 		)
 		.run(mockTestHandler);
@@ -56,7 +56,7 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 	new TestRunner(new TestFixture('TestRunner tests', {
 
 		'TestRunner should send test start event to the TestHandler': function () {
-			assert.that(mockTestHandler.receivedEvents.start, 'start was not called in TestHandler');
+			assert.true(mockTestHandler.receivedEvents.start, 'start was not called in TestHandler');
 		},
 
 		'TestRunner should send test description event and data to the TestHandler': function () {
@@ -86,7 +86,7 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 		},
 
 		'TestRunner should send end stats event and data to the TestHandler': function () {
-			assert.that(mockTestHandler.receivedEvents.end, 'end was not called in TestHandler');
+			assert.true(mockTestHandler.receivedEvents.end, 'end was not called in TestHandler');
 		},
 
 		'TestRunner should call `FIXTURE_SETUP` once before any tests are run': function () {
