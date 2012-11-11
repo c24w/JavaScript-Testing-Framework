@@ -133,3 +133,6 @@ add new assert.types to demo tests
 
 add test body to tooltip or something
 
+rename assert.that to assert.true and add assert.false
+
+add control to top, e.g. collapse all, re-run all

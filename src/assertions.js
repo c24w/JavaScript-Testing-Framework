@@ -22,11 +22,25 @@ var assert = {
 
 	greater: function (number1, number2, optionalInfo) {
 		assert.type(number1, 'number', 'assert.greater - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
-		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found:' + typeof number2);
+		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found: ' + typeof number2);
 		var info = optionalInfo ? optionalInfo : 'assert.greater - {0} is not greater than {1}'.format(number1, number2);
 		assert.that(number1 > number2, info);
 	},
 
+	less: function (number1, number2, optionalInfo) {
+		assert.type(number1, 'number', 'assert.less - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
+		assert.type(number2, 'number', 'assert.less - second argument: expected: Number found: ' + typeof number2);
+		var info = optionalInfo ? optionalInfo : 'assert.less - {0} is not less than {1}'.format(number1, number2);
+		assert.that(number1 < number2, info);
+	},
+	/*
+	contains: function (number1, number2, optionalInfo) {
+		assert.type(number1, 'number', 'assert.greater - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
+		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found:' + typeof number2);
+		var info = optionalInfo ? optionalInfo : 'assert.greater - {0} is not greater than {1}'.format(number1, number2);
+		assert.that(number1 < number2, info);
+	},
+	*/
 	type: function (object, type, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : buildMessage('assert.type', object, type.name);
 		assert.equal(typeof object, type, info);

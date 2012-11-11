@@ -14,7 +14,7 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 			'assert.that should fail with custom reason': function () {
 				assert.that(false, 'because this checks assert.that(false)');
-			},
+			}
 
 		}),
 
@@ -34,7 +34,7 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 			'assert.equal should fail with custom reason': function () {
 				assert.equal(1, true, 'because "1" and "true" are only equal with type-conversion, i.e. assert.equiv');
-			},
+			}
 
 		}),
 
@@ -50,7 +50,39 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 			'assert.equiv should fail with custom reason': function () {
 				assert.equiv(0, true, 'because this compares "0" and "true"');
+			}
+
+		}),
+
+		new TestFixture('assert.greater', {
+
+			'assert.greater should pass': function () {
+				assert.greater(1, 0);
 			},
+
+			'assert.greater should fail with generated reason': function () {
+				assert.greater(0, 1);
+			},
+
+			'assert.greater should fail with custom reason': function () {
+				assert.greater(0, 1, 'because 1 is equal to 1');
+			}
+
+		}),
+
+		new TestFixture('assert.less', {
+
+			'assert.less should pass': function () {
+				assert.less(0, 1);
+			},
+
+			'assert.less should fail with generated reason': function () {
+				assert.less(1, 0);
+			},
+
+			'assert.less should fail with custom reason': function () {
+				assert.less(1, 1, 'because 1 is equal to 1');
+			}
 
 		}),
 
@@ -66,7 +98,7 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 			'assert.instance should fail with custom reason': function () {
 				assert.instance(new Object, Error, 'because an Object is not an instance of Error');
-			},
+			}
 
 		}),
 
@@ -94,7 +126,7 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 				var expectedMsg = 'error message';
 				var exception = assert.throws(function () { throw new Error('omgwtfbbq') }, Error);
 				assert.equal(exception.message, expectedMsg);
-			},
+			}
 
 		})
 
