@@ -18,6 +18,22 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 		}),
 
+		new TestFixture('assert.false', {
+
+			'assert.false should pass': function () {
+				assert.false(false);
+			},
+
+			'assert.false should fail without reason': function () {
+				assert.false(true);
+			},
+
+			'assert.false should fail with custom reason': function () {
+				assert.false(true, 'because this checks assert.false(true)');
+			}
+
+		}),
+
 		new TestFixture('assert.equal', {
 
 			'assert.equal should pass': function () {

@@ -11,6 +11,15 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			}
 		},
 
+		'assert.false should not throw an AssertException for false conditions': function () {
+			try {
+				assert.false(false);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
 		'assert.true should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
