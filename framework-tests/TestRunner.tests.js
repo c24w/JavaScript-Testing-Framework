@@ -5,7 +5,7 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			start: false, end: false
 		}
 		this.receivedData = {
-			desc: null, passedTests: [], failedTests: [], noPasses: null, noFails: null
+			desc: [], passedTests: [], failedTests: [], noPasses: [], noFails: []
 		}
 		this.handle = function (handleType) {
 			var args = Array.prototype.slice.call(arguments, 1);
@@ -14,7 +14,7 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 					this.receivedEvents.start = true;
 					break;
 				case TEST_RUNNER_EVENT.DESC:
-					this.receivedData.desc = args[0];
+					this.receivedData.desc = args;
 					break;
 				case TEST_RUNNER_EVENT.PASS:
 					var index = this.receivedData.passedTests.length;
@@ -36,15 +36,19 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 	}
 
 	var mockTestHandler = new MockTestHandler();
+	var trace = [];
+	function addTrace(t) { trace[trace.length] = t }
 
 	new TestRunner(
 		new TestFixture('Mock test fixture', {
-			'Passing test 1': function () { assert.that(true) },
-			'Passing test 2': function () { assert.that(true) },
-			'Passing test 3': function () { assert.that(true) },
-			'Failing test 1': function () { assert.that(false) },
-			'Failing test 2': function () { assert.that(false) },
-			'Failing test 3': function () { assert.that(false) }
+			FIXTURE_SETUP: function () { addTrace('FIXTURE_SETUP') },
+			TEST_SETUP: function () { addTrace('TEST_SETUP') },
+			'Passing test 1': function () { addTrace('Test 1'); assert.that(true) },
+			'Passing test 2': function () { addTrace('Test 2'); assert.that(true) },
+			'Passing test 3': function () { addTrace('Test 3'); assert.that(true) },
+			'Failing test 1': function () { addTrace('Test 4'); assert.that(false) },
+			'Failing test 2': function () { addTrace('Test 5'); assert.that(false) },
+			'Failing test 3': function () { addTrace('Test 6'); assert.that(false) }
 		})
 		)
 		.run(mockTestHandler);
@@ -52,28 +56,28 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 	new TestRunner(new TestFixture('TestRunner tests', {
 
 		'TestRunner should send test start event to the TestHandler': function () {
-
 			assert.that(mockTestHandler.receivedEvents.start, 'start was not called in TestHandler');
 		},
 
 		'TestRunner should send test description event and data to the TestHandler': function () {
 			var fixtureName = 'Mock test fixture';
-
-			assert.equal(mockTestHandler.receivedData.desc, fixtureName);
+			var data = mockTestHandler.receivedData.desc;
+			assert.equal(data.length, 1);
+			assert.equal(data[0], fixtureName);
 		},
 
 		'TestRunner should send test pass event and data to the TestHandler': function () {
-			var passData = mockTestHandler.receivedData.passedTests;
-			assert.equal(passData.length, 3);
-			for (var i = 0; i < passData.length;)
-				assert.equal(passData[i], 'Passing test ' + (++i));
+			var data = mockTestHandler.receivedData.passedTests;
+			assert.equal(data.length, 3);
+			for (var i = 0; i < data.length;)
+				assert.equal(data[i], 'Passing test ' + (++i));
 		},
 
 		'TestRunner should send test fail event and data to the TestHandler': function () {
-			var failData = mockTestHandler.receivedData.failedTests;
-			assert.equal(failData.length, 3);
-			for (var i = 0; i < failData.length;)
-				assert.equal(failData[i], 'Failing test ' + (++i));
+			var data = mockTestHandler.receivedData.failedTests;
+			assert.equal(data.length, 3);
+			for (var i = 0; i < data.length;)
+				assert.equal(data[i], 'Failing test ' + (++i));
 		},
 
 		'TestRunner should send test stats event and data to the TestHandler': function () {
@@ -83,6 +87,15 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 
 		'TestRunner should send end stats event and data to the TestHandler': function () {
 			assert.that(mockTestHandler.receivedEvents.end, 'end was not called in TestHandler');
+		},
+
+		'TestRunner should call `FIXTURE_SETUP` once before any tests are run': function () {
+			assert.equal(trace[0], 'FIXTURE_SETUP');
+		},
+
+		'TestRunner should call `TEST_SETUP` once before each test is run': function () {
+			for (var i = 1; i < trace.length; i += 2)
+				assert.equal(trace[i], 'TEST_SETUP');
 		}
 
 	})).run(new HtmlTestHandler());

@@ -1,93 +1,76 @@
-*
-{
+* {
     font-family: sans-serif;
 }
 
-body
-{
+body {
     margin: 20px;
     background: #fff;
 }
 
-.testfixture
-{
+.testfixture {
     padding: 1em;
 }
 
-    .testfixture.passed
-    {
+    .testfixture.passed {
         background: #F5FAF5;
     }
 
-    .testfixture.failed
-    {
+    .testfixture.failed {
         background: #FAF5F5;
     }
 
-    .testfixture hr
-    {
+    .testfixture hr {
         margin: 2em 0 0;
     }
 
-    .testfixture .topbar
-    {
+    .testfixture .header {
+        cursor: pointer;
         overflow: auto;
     }
 
-        .testfixture .topbar .description
-        {
+        .testfixture .header .description {
             float: left;
             font-weight: bold;
             color: #000;
-            margin-bottom: 10px;
         }
 
-        .testfixture .topbar .result
-        {
+        .testfixture .header .result {
             font-style: italic;
             float: right;
         }
 
-    .testfixture .testscontainer.collapsed
-    {
+    .testfixture .tests.collapsed {
         display: none;
     }
 
-.test
-{
+.test {
     color: #aaa;
 }
 
-    .test.fail
-    {
+    .test.fail {
         background: #F7F7F7;
         padding: 0.5em;
         border: 1px solid #fff;
     }
 
-        .test.fail .name
-        {
+        .test.fail .name {
             color: #f00;
         }
 
-    .test.pass .name
-    {
+    .test.pass .name {
         padding: 0.25em 0.5em;
         color: #000;
     }
 
-    .test.fail .info
-    {
+    .test.fail .info {
         margin-left: 1em;
         color: #888;
     }
 
-.code
-{
+.code {
     font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
     font-size: 95%;
 }
 
-.result
-{
+.result {
 }

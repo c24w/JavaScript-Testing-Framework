@@ -112,10 +112,24 @@ write test for testRunner with mock handler, e.g. test should fail, logs it
 HTML code marking can use `word` to monospace the word (like markdown) - not bulletproof, e.g. `code`notcode`code` will highlight all as code
 
 thoughts:
-setup
-assertGT
+
+have to be at the top of the fixture, if need them:
+FIXTURE_SETUP = function(){}
+SETUP = function(){}
+then:
+var setup;
+if test === SETUP
+   setup = tests[test];
+if(setup)
+   setup()
+   
+
+assertGreater
 re-run single test or fixture
 
 added type comparison to assert.equal to only output types when they are different
 
 add new assert.types to demo tests
+
+add test body to tooltip or something
+

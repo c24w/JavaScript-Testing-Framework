@@ -30,14 +30,27 @@ function TestRunner(testFixture) {
 		testEventHandler.handle(TEST_RUNNER_EVENT.DESC, desc);
 
 		var tests = testFixture.getTests();
-		for (var test in tests) {
+
+		var fixtureSetup = tests.FIXTURE_SETUP;
+		var setup = tests.TEST_SETUP;
+
+		if (fixtureSetup) {
+			fixtureSetup();
+			delete tests.FIXTURE_SETUP;
+		}
+
+		for (var testName in tests) {
 			try {
-				tests[test]();
-				testEventHandler.handle(TEST_RUNNER_EVENT.PASS, test);
-				passes++;
+				if (testName !== 'TEST_SETUP') {
+					if (setup) setup();
+					var test = tests[testName];
+					test();
+					testEventHandler.handle(TEST_RUNNER_EVENT.PASS, testName);
+					passes++;
+				}
 			}
 			catch (e) {
-				testEventHandler.handle(TEST_RUNNER_EVENT.FAIL, test, formatMsg(e.message));
+				testEventHandler.handle(TEST_RUNNER_EVENT.FAIL, testName, formatMsg(e.message));
 				fails++;
 			}
 		}
