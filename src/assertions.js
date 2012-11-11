@@ -72,10 +72,28 @@ var assert = {
 	},
 
 	not: {
+
 		'null': function (obj, optionalInfo) {
 			var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
 			assert.true(obj !== null, info);
+		},
+
+		instance: function (object, type, optionalInfo) {
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.instance', encloseInType(object), type.name);
+			assert.true(!(object instanceof type), info);
+		},
+
+		throws: function (func, exception, optionalInfo) {
+			try {
+				func();
+			}
+			catch (e) {
+				var info = optionalInfo ? optionalInfo : buildMessage('assert.not.throws', e.name+' was thrown', exception.name+' not thrown');
+				assert.not.instance(e, exception, info);
+				return e;
+			}
 		}
+
 	}
 
 }

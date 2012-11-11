@@ -136,3 +136,13 @@ add test body to tooltip or something
 rename assert.that to assert.true and add assert.false
 
 add control to top, e.g. collapse all, re-run all
+
+test and demo assert.not.* ---- resume here for not.throws
+add tests for them
+then implement in assertions.tests to tidy existing code
+
+add TestException throughout to tests - using AssertException in tests is confusing (make sure don't remove AssertException where required though)
+
+add assert.throwsAny? - any exception
+
+TEST CASES!?

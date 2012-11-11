@@ -1,5 +1,7 @@
 loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertions.js', function () {
 
+	function TestException() { }
+
 	new TestRunner(new TestFixture('Assertions tests', {
 
 		'assert.true should not throw an AssertException for true conditions': function () {
@@ -168,7 +170,9 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			catch (e) {
 				assert.instance(e, AssertException);
 				assert.equal(e.message, 'AssertException was never thrown');
+				return;
 			}
+			throw new Error('Test should not have thrown this error');
 		},
 
 		'assert.throws should throw an AssertException if the wrong exception is thrown': function () {
@@ -178,13 +182,45 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			catch (e) {
 				assert.instance(e, AssertException);
 				assert.equal(e.message, 'assert.throws - expected: AssertException found: Error');
+				return;
 			}
+			throw new Error('Test should not have thrown this error');
 		},
 
 		'assert.throws should return the defined exception, if thrown': function () {
 			var expectedMsg = 'error message';
 			var exception = assert.throws(function () { throw new AssertException(expectedMsg) }, AssertException);
 			assert.equal(exception.message, expectedMsg);
+		},
+
+		'assert.not.throws should not throw an AssertException if the defined exception is not thrown': function () {
+			try {
+				assert.not.throws(function () { }, Error);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.not.throws should not throw an AssertException if the wrong type of exception is thrown': function () {
+			try {
+				assert.not.throws(function () { throw new TestException() }, Error);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.not.throws should throw an AssertException if the defined exception is thrown': function () {
+			try {
+				assert.not.throws(function () { throw new Error() }, Error);
+			}
+			catch (e) {
+				assert.instance(e, AssertException);
+				assert.equal(e.message, 'assert.not.throws - expected: Error not thrown found: Error was thrown');
+				return;
+			}
+			throw new Error('Test should not have thrown this error');
 		}
 
 	})).run(new HtmlTestHandler());
