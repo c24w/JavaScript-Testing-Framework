@@ -41,18 +41,70 @@ function HtmlTestHandler(configuration) {
 	}
 
 	function startOutputter() {
-		/*if (document.body.children.length > 0)
-			document.body.appendChild(document.createElement('hr'));*/
+		if (document.body.children.length === 0)
+			addControls();
 		fixture = makeDiv('testfixture');
-		document.body.appendChild(fixture);
+		addTo(document.body, fixture);
+	}
+
+	function addControls() {
+		var controls = makeDiv('controls');
+		var text = makeEl('span');
+		addText(text, 'Expand:')
+
+		addTo(controls, text);
+
+		addTo(controls, makeControlButton('All', function () {
+			setClass('.testfixture .tests.collapsed', 'tests');
+		}));
+
+		addTo(controls, makeControlButton('Passed', function () {
+			setClass('.testfixture.passed .tests.collapsed', 'tests');
+		}));
+
+		addTo(controls, makeControlButton('Failed', function () {
+			setClass('.testfixture.failed .tests.collapsed', 'tests');
+		}));
+
+		text = makeEl('span'); 9
+		text.style.marginLeft = '2em';
+		addText(text, 'Collapse:')
+		addTo(controls, text);
+
+		addTo(controls, makeControlButton('All', function () {
+			setClass('.testfixture .tests', 'tests collapsed');
+		}));
+
+		addTo(controls, makeControlButton('Passed', function () {
+			setClass('.testfixture.passed .tests', 'tests collapsed');
+		}));
+
+		addTo(controls, makeControlButton('Failed', function () {
+			setClass('.testfixture.failed .tests', 'tests collapsed');
+		}));
+
+		addTo(document.body, controls);
+	}
+
+	function makeControlButton(label, func) {
+		var button = makeEl('button');
+		button.innerHTML = label;
+		button.onclick = func;
+		return button;
+	}
+
+	function setClass(selector, newClass) {
+		var testGroups = document.querySelectorAll(selector);
+		for (var i = 0; i < testGroups.length; i++)
+			testGroups[i].className = newClass;
 	}
 
 	function createFixtureHeader(description) {
 		header = makeDiv('header');
 		var desc = makeDiv('description');
 		desc.innerHTML = formatCodeParts(description);
-		header.appendChild(desc);
-		addToFixture(header);
+		addTo(header, desc);
+		addTo(fixture, header);
 	}
 
 	function testOutputter(outputPasses, testPassed, testName, msg) {
@@ -69,8 +121,8 @@ function HtmlTestHandler(configuration) {
 			testsContainer.className += ' collapsed';
 		fixture.className += fails > 0 ? ' failed' : ' passed';
 		var result = makeDiv('result');
-		appendText(result, getResultMessage(passes, fails));
-		header.appendChild(result);
+		addText(result, getResultMessage(passes, fails));
+		addTo(header, result);
 	}
 
 	function shouldBeCollapsed(numFails) {
@@ -79,20 +131,18 @@ function HtmlTestHandler(configuration) {
 	}
 
 	function endOutputter() { }
-	// hide html operations in another file or something
+
 	function appendTestToHtml(testPassed, testName, msg) {
 		var className = getTestClassName(testPassed);
 		var test = makeDiv(className);
 		var name = makeDiv('name');
 		name.innerHTML = formatCodeParts(testName);
-		//appendText(name, formatCodeParts(testName));
-		test.appendChild(name);
+		addTo(test, name);
 
 		if (typeof msg !== 'undefined') {
 			var info = makeDiv('info');
 			info.innerHTML = formatCodeParts(msg);
-			//appendText(info, formatCodeParts(msg));
-			test.appendChild(info);
+			addTo(test, info);
 		}
 		if (!testsContainer) {
 			testsContainer = makeDiv('tests');
@@ -100,13 +150,9 @@ function HtmlTestHandler(configuration) {
 				var cn = testsContainer.className;
 				testsContainer.className = 'tests' + (cn === 'tests' ? ' collapsed' : '');
 			}
-			addToFixture(testsContainer);
+			addTo(fixture, testsContainer);
 		}
-		testsContainer.appendChild(test);
-	}
-
-	function addToFixture(el) {
-		fixture.appendChild(el);
+		addTo(testsContainer, test);
 	}
 }
 
@@ -127,12 +173,20 @@ function getTestClassName(testPassed) {
 }
 
 function makeDiv(className) {
-	var d = document.createElement('div');
+	var d = makeEl('div');
 	if (className) d.className = className;
 	return d;
 }
 
-function appendText(element, text) {
+function makeEl(type) {
+	return document.createElement(type);
+}
+
+function addTo(parent, el) {
+	parent.appendChild(el);
+}
+
+function addText(element, text) {
 	element.appendChild(document.createTextNode(text));
 }
 

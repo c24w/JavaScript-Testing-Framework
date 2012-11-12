@@ -173,3 +173,8 @@ add complements for all asserts
 fix code marking
 
 added config option for HtmlTestHandler, implementing autocollapse option
+
+HTML controls
+collapse all
+expand all
+invert expanded

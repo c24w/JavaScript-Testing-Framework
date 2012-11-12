@@ -1,114 +1,123 @@
 *
 {
-    font-family: sans-serif;
+	font-family: sans-serif;
 }
 
 body
 {
-    margin: 20px;
-    background: #fff;
+	margin: 1em;
+	background: #fff;
 }
+
+.controls
+{
+}
+
+	.controls button
+	{
+		margin: 0 0.5em;
+	}
 
 .testfixture
 {
-    margin: 0.5em 0;
+	margin: 0.5em 0;
 }
 
-    .testfixture .header
-    {
-        cursor: pointer;
-        padding: 0.5em;
-        overflow: auto;
-    }
+	.testfixture .header
+	{
+		cursor: pointer;
+		padding: 0.5em;
+		overflow: auto;
+	}
 
-    .testfixture.passed
-    {
-        background: #F5FAF5;
-    }
+	.testfixture.passed
+	{
+		background: #F5FAF5;
+	}
 
-        .testfixture.passed .header
-        {
-            border: 1px outset #F2E6E6;
-            background: #F5FAF5;
-        }
+		.testfixture.passed .header
+		{
+			border: 1px outset #F2E6E6;
+			background: #F5FAF5;
+		}
 
-        .testfixture.passed .tests
-        {
-            border: 1px inset #E6F2E6;
-        }
+		.testfixture.passed .tests
+		{
+			border: 1px inset #E6F2E6;
+		}
 
-    .testfixture.failed
-    {
-        background: #FAF5F5;
-    }
+	.testfixture.failed
+	{
+		background: #FAF5F5;
+	}
 
-        .testfixture.failed .header
-        {
-            border: 1px outset #F2E6E6;
-            background: #FAF5F5;
-        }
+		.testfixture.failed .header
+		{
+			border: 1px outset #F2E6E6;
+			background: #FAF5F5;
+		}
 
-        .testfixture.failed .tests
-        {
-            border: 1px inset #F2E6E6;
-        }
+		.testfixture.failed .tests
+		{
+			border: 1px inset #F2E6E6;
+		}
 
-    .testfixture .header:hover
-    {
-        border-style: inset;
-    }
+	.testfixture .header:hover
+	{
+		border-style: inset;
+	}
 
-    .testfixture .header .description
-    {
-        float: left;
-        font-weight: bold;
-        color: #000;
-    }
+	.testfixture .header .description
+	{
+		float: left;
+		font-weight: bold;
+		color: #000;
+	}
 
-    .testfixture .header .result
-    {
-        font-style: italic;
-        float: right;
-    }
+	.testfixture .header .result
+	{
+		font-style: italic;
+		float: right;
+	}
 
-    .testfixture .tests.collapsed
-    {
-        display: none;
-    }
+	.testfixture .tests.collapsed
+	{
+		display: none;
+	}
 
 .test
 {
-    color: #aaa;
+	color: #aaa;
 }
 
-    .test.fail
-    {
-        background: #F7F7F7;
-        padding: 0.5em;
-        border: 1px solid #fff;
-    }
+	.test.fail
+	{
+		background: #F7F7F7;
+		padding: 0.5em;
+		border: 1px solid #fff;
+	}
 
-        .test.fail .name
-        {
-            color: #f00;
-        }
+		.test.fail .name
+		{
+			color: #f00;
+		}
 
-    .test.pass .name
-    {
-        padding: 0.25em 0.5em;
-        color: #000;
-    }
+	.test.pass .name
+	{
+		padding: 0.25em 0.5em;
+		color: #000;
+	}
 
-    .test.fail .info
-    {
-        margin-left: 1em;
-        color: #888;
-    }
+	.test.fail .info
+	{
+		margin-left: 1em;
+		color: #888;
+	}
 
 .code
 {
-    font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
-    font-size: 95%;
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
+	font-size: 95%;
 }
 
 .result
