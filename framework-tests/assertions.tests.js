@@ -163,6 +163,30 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			throw new Error('Test should not have thrown this error');
 		},
 
+		'assert.not.instance should not throw an AssertException for true conditions': function () {
+			try {
+				assert.not.instance(new Error(), TestException);
+				assert.not.instance(new Object(), Number);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.not.instance should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
+			try {
+				assert.not.instance(new String(), String, expectedMsg); // need cases
+				//assert.instance(new Object(), String, 'Should fail');
+			}
+			catch (e) {
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
+				return;
+			}
+			throw new Error('Test should not have thrown this error');
+		},
+
 		'assert.throws should throw an AssertException if the defined exception is not thrown': function () {
 			try {
 				assert.throws(function () { }, AssertException);

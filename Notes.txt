@@ -133,11 +133,11 @@ add new assert.types to demo tests
 
 add test body to tooltip or something
 
-rename assert.that to assert.true and add assert.false
+renamed assert.that to assert.true and add assert.false
 
 add control to top, e.g. collapse all, re-run all
 
-test and demo assert.not.* ---- resume here for not.throws
+test and demo assert.not.*
 add tests for them
 then implement in assertions.tests to tidy existing code
 
