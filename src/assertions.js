@@ -41,7 +41,7 @@ var assert = {
 	},
 
 	'null': function (obj, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
+		var info = optionalInfo ? optionalInfo : 'assert.null - argument was not null';
 		assert.true(obj === null, info);
 	},
 
@@ -78,6 +78,11 @@ var assert = {
 			var exp = sameType ? expected : encloseInType(expected);
 			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.equal', act, exp);
 			assert.false(actual === expected, info);
+		},
+
+		equiv: function (actual, expected, optionalInfo) {
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.equiv', encloseInType(actual), encloseInType(expected));
+			assert.false(actual == expected, info);
 		},
 
 		'null': function (obj, optionalInfo) {
