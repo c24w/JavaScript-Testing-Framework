@@ -75,8 +75,8 @@ var assert = {
 			func();
 		}
 		catch (e) {
-			var info = optionalInfo ? optionalInfo : buildMessage('assert.throws', e.name, exception.name);
-			assert.instance(e, exception, info);
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.throws', typeof e, exception.name);
+			assert.true(e instanceof exception, info);
 			return e;
 		}
 		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
@@ -115,9 +115,8 @@ var assert = {
 				func();
 			}
 			catch (e) {
-				var info = optionalInfo ? optionalInfo : buildMessage('assert.not.throws', e.name + ' was thrown', exception.name + ' not thrown');
-				assert.not.instance(e, exception, info);
-				return e;
+				var info = optionalInfo ? optionalInfo : exception.name + ' was thrown because: ' + e.message;
+				assert.false(e instanceof exception, info);
 			}
 		}
 
