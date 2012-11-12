@@ -147,6 +147,8 @@ add assert.throwsAny? - any exception
 
 TEST CASES!?
 
+add assert.less tests
+
 add DemoException to demo tests
 
 title/description on demo page - 'look at console window'

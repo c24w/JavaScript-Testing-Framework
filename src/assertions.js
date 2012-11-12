@@ -13,11 +13,6 @@ var assert = {
 		assert.true(!condition, optionalInfo);
 	},
 
-	'null': function (obj, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
-		assert.true(obj === null, info);
-	},
-
 	equal: function (actual, expected, optionalInfo) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
@@ -32,29 +27,22 @@ var assert = {
 	},
 
 	greater: function (number1, number2, optionalInfo) {
-		assert.type(number1, 'number', 'assert.greater - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
-		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found: ' + typeof number2);
+		assertIsNumber(number1, 'assert.greater - first argument');
+		assertIsNumber(number2, 'assert.greater - second argument');
 		var info = optionalInfo ? optionalInfo : 'assert.greater - {0} is not greater than {1}'.format(number1, number2);
 		assert.true(number1 > number2, info);
 	},
 
 	less: function (number1, number2, optionalInfo) {
-		assert.type(number1, 'number', 'assert.less - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
-		assert.type(number2, 'number', 'assert.less - second argument: expected: Number found: ' + typeof number2);
+		assertIsNumber(number1);
+		assertIsNumber(number2);
 		var info = optionalInfo ? optionalInfo : 'assert.less - {0} is not less than {1}'.format(number1, number2);
 		assert.true(number1 < number2, info);
 	},
-	/*
-	contains: function (number1, number2, optionalInfo) {
-		assert.type(number1, 'number', 'assert.greater - first argument: expected: {0} found: {1}'.format(Number.name, typeof number1));
-		assert.type(number2, 'number', 'assert.greater - second argument: expected: Number found:' + typeof number2);
-		var info = optionalInfo ? optionalInfo : 'assert.greater - {0} is not greater than {1}'.format(number1, number2);
-		assert.true(number1 < number2, info);
-	},
-	*/
-	type: function (obj, type, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assert.type', obj, type.name);
-		assert.equal(typeof obj, type, info);
+
+	'null': function (obj, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
+		assert.true(obj === null, info);
 	},
 
 	instance: function (obj, type, optionalInfo) {
@@ -97,6 +85,11 @@ var assert = {
 			assert.false(obj === null, info);
 		},
 
+		type: function (obj, type, optionalInfo) {
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.type', obj, type.name);
+			assert.not.equal(typeof obj, type, info);
+		},
+
 		instance: function (obj, type, optionalInfo) {
 			try {
 				assert.false(obj instanceof type, info);
@@ -121,6 +114,10 @@ var assert = {
 
 	}
 
+}
+
+function assertIsNumber(object, prefix) {
+	assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, Number.name, typeof object));
 }
 
 function buildMessage(assertType, actual, expected) {
