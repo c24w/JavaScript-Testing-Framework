@@ -4,8 +4,8 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 
 	var genericFailMsg = 'Should fail';
 
-	function assertAllPass(assertFunc) {
-		assert.not.throws(assertFunc, AssertException);
+	function assertAllPass(assertCollection) {
+		assert.not.throws(assertCollection, AssertException);
 	}
 
 	function assertFails(assertFunc) {
@@ -16,23 +16,35 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 	new TestRunner(new TestFixture('Assertions tests', {
 
 		'assert.true should not fail for true conditions': function () {
-			assertAllPass(function () { assert.true(true) });
+			assertAllPass(function () {
+				assert.true(true);
+				assert.true(1 === 1);
+			});
 		},
 
 		'assert.false should not fail for false conditions': function () {
-			assertAllPass(function () { assert.false(false) });
+			assertAllPass(function () {
+				assert.false(false)
+				assert.false(1 === 0)
+			});
 		},
 
 		'assert.true should fail for false conditions': function () {
-			assertFails(function () { assert.true(false, genericFailMsg) });
+			assertFails(function () {
+				assert.true(false, genericFailMsg)
+			});
 		},
 
 		'assert.null should not fail for true conditions': function () {
-			assertAllPass(function () { assert.null(null) });
+			assertAllPass(function () {
+				assert.null(null)
+			});
 		},
 
 		'assert.null should fail for false conditions': function () {
-			assertFails(function () { assert.null('not null', genericFailMsg) });
+			assertFails(function () {
+				assert.null('not null', genericFailMsg)
+			});
 		},
 
 		'assert.equal should not fail for true conditions': function () {

@@ -3,15 +3,14 @@ var assert = {
 	'true': function (condition, optionalInfo) {
 		if (condition === null)
 			throw new AssertException('assert condition was null');
-		if (!condition)
-			throw new AssertException(optionalInfo);
+		if (!condition) {
+			var info = optionalInfo ? optionalInfo : 'no additional information';
+			throw new AssertException(info);
+		}
 	},
 
 	'false': function (condition, optionalInfo) {
-		if (condition === null)
-			throw new AssertException('assert condition was null');
-		if (condition)
-			throw new AssertException(optionalInfo);
+		assert.true(!condition, optionalInfo);
 	},
 
 	'null': function (obj, optionalInfo) {
