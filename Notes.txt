@@ -135,7 +135,7 @@ add test body to tooltip or something
 
 renamed assert.that to assert.true and add assert.false
 
-add control to top, e.g. collapse all, re-run all
+add control to top, e.g. collapse all, re-run all, index/contents?
 
 tested and demoed assert.not.*
 add tests for them
@@ -149,4 +149,21 @@ TEST CASES!?
 
 add DemoException to demo tests
 
-group framework assertion tests into categories?
+title/description on demo page - 'look at console window'
+
+organise assertion demo/framework tests group framework assertion tests into categories?
+
+careful between assert.instance and assert.type - primitives don't work with instance, e.g. 1 instanceof Number is false, unless using the constructor, i.e. new Number(1) instance of Number, although 				assert.not.instance(new String(), String); seems to work in demo test
+"If you're dealing with literal notation, and not constructors, you can use typeof:."
+improved assert.instance to accomodate for primitives
+
+for inverted assert conditions, would this be better:
+assert.not.instance(...){
+	try{
+		assert.instance(..)
+		throw new AE(...)
+	}
+	catch(e){/*good*/}
+}
+
+add complements for all asserts

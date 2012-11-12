@@ -165,6 +165,9 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			try {
 				assert.instance(new AssertException(), AssertException);
 				assert.instance(new Object(), Object);
+				assert.instance('hello', String);
+				assert.instance(1, Number);
+				assert.instance(true, Boolean);
 			}
 			catch (e) {
 				throw new Error('Test should not have thrown this error');
@@ -174,7 +177,7 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 		'assert.instance should throw an AssertException for false conditions': function () {
 			var expectedMsg = 'Should fail';
 			try {
-				assert.instance(new Object(), String, expectedMsg); // need cases
+				assert.instance(1, String, expectedMsg); // need cases
 				//assert.instance(new Object(), String, 'Should fail');
 			}
 			catch (e) {

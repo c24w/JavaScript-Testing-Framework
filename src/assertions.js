@@ -59,8 +59,15 @@ var assert = {
 	},
 
 	instance: function (obj, type, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', encloseInType(obj), type.name);
-		assert.true(obj instanceof type, info);
+		try {
+			assert.true(obj instanceof type, info);
+		}
+		catch (e) {
+			var objToString = toString.call(obj);
+			var actualType = objToString.match(/\[object (.+)\]/)[1];
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', actualType, type.name);
+			assert.equal(actualType, type.name, info);
+		}
 	},
 
 	throws: function (func, exception, optionalInfo) {
@@ -78,14 +85,29 @@ var assert = {
 
 	not: {
 
+		equal: function (actual, expected, optionalInfo) {
+			var sameType = areTheSameType(actual, expected);
+			var act = sameType ? actual : encloseInType(actual);
+			var exp = sameType ? expected : encloseInType(expected);
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.equal', act, exp);
+			assert.false(actual === expected, info);
+		},
+
 		'null': function (obj, optionalInfo) {
 			var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
 			assert.false(obj === null, info);
 		},
 
 		instance: function (obj, type, optionalInfo) {
-			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.instance', encloseInType(obj), type.name);
-			assert.false(obj instanceof type, info);
+			try {
+				assert.false(obj instanceof type, info);
+			}
+			catch (e) {
+				var objToString = toString.call(obj);
+				var actualType = objToString.match(/\[object (.+)\]/)[1];
+				var info = optionalInfo ? optionalInfo : buildMessage('assert.not.instance', actualType, 'not ' + type.name);
+				assert.not.equal(actualType, type.name, info);
+			}
 		},
 
 		throws: function (func, exception, optionalInfo) {

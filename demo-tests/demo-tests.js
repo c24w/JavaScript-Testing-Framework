@@ -129,7 +129,23 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 			},
 
 			'assert.instance should fail with custom reason': function () {
-				assert.instance(new Object, Error, 'because an Object is not an instance of Error');
+				assert.instance(new Object(), Error, 'because an Object is not an instance of Error');
+			}
+
+		}),
+
+		new TestFixture('assert.not.instance', {
+
+			'assert.not.instance should pass': function () {
+				assert.not.instance(new Number(123), String);
+			},
+
+			'assert.not.instance should fail with generated reason': function () {
+				assert.not.instance(new String(), String);
+			},
+
+			'assert.not.instance should fail with custom reason': function () {
+				assert.not.instance(new Error(), Error, 'because this checks that a `new` Error is an instance of `Error`');
 			}
 
 		}),
@@ -142,11 +158,11 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 				assert.equal(exception.message, info);
 			},
 
-			'assert.throws should fail (because no exception is thrown) with generated reason': function () {
+			'assert.throws should fail (when no exception is thrown) with generated reason': function () {
 				var exception = assert.throws(function () { }, Error);
 			},
 
-			'assert.throws should fail (because a different exception is thrown) with generated reason': function () {
+			'assert.throws should fail (when a different exception is thrown) with generated reason': function () {
 				assert.throws(function () { throw new Error() }, AssertException);
 			},
 
@@ -164,11 +180,11 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 		new TestFixture('assert.not.throws', {
 
-			'assert.not.throws should pass (because no exception is thrown)': function () {
+			'assert.not.throws should pass (when no exception is thrown)': function () {
 				assert.not.throws(function () { }, AssertException);
 			},
 
-			'assert.not.throws should pass (because a different exception is thrown) with generated reason': function () {
+			'assert.not.throws should pass (when a different exception is thrown) with generated reason': function () {
 				var exception = assert.not.throws(function () { throw new AssertException() }, Error);
 			},
 
