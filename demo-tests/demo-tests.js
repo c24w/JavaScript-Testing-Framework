@@ -193,7 +193,9 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 		var f = fixtures[f];
 		var t = new TestRunner(f);
 		t.run(new ConsoleTestHandler());
-		t.run(new HtmlTestHandler());
+		t.run(new HtmlTestHandler({
+			autocollapse: htmlTestHandlerConfig.autocollapse.all
+		}));
 	}
 
 });
