@@ -34,6 +34,22 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 
 		}),
 
+		new TestFixture('assert.null', {
+
+			'assert.null should pass': function () {
+				assert.null(null);
+			},
+
+			'assert.null should fail without reason': function () {
+				assert.null('not null');
+			},
+
+			'assert.null should fail with custom reason': function () {
+				assert.null('not null', 'because this checks a non-`null` string for `null`');
+			}
+
+		}),
+
 		new TestFixture('assert.equal', {
 
 			'assert.equal should pass': function () {
@@ -138,10 +154,30 @@ loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', 'ConsoleTestHa
 				assert.throws(function () { throw new Error() }, AssertException, 'because an Error is thrown in the callback, but an AssertException was expected');
 			},
 
-			'assert.equal should fail (using the result of assert.throws) with generated reason': function () {
+			'assert.equal should fail (using the resulting exception of assert.throws) with generated reason': function () {
 				var expectedMsg = 'error message';
 				var exception = assert.throws(function () { throw new Error('omgwtfbbq') }, Error);
 				assert.equal(exception.message, expectedMsg);
+			}
+
+		}),
+
+		new TestFixture('assert.not.throws', {
+
+			'assert.not.throws should pass (because no exception is thrown)': function () {
+				assert.not.throws(function () { }, AssertException);
+			},
+
+			'assert.not.throws should pass (because a different exception is thrown) with generated reason': function () {
+				var exception = assert.not.throws(function () { throw new AssertException() }, Error);
+			},
+
+			'assert.not.throws should fail with generated reason': function () {
+				assert.not.throws(function () { throw new Error() }, Error);
+			},
+
+			'assert.not.throws should fail with custom reason': function () {
+				assert.not.throws(function () { throw new Error() }, Error, 'because this asserts against an Error being thrown in the callback, but an Error was thrown');
 			}
 
 		})

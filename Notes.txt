@@ -137,7 +137,7 @@ renamed assert.that to assert.true and add assert.false
 
 add control to top, e.g. collapse all, re-run all
 
-test and demo assert.not.*
+tested and demoed assert.not.*
 add tests for them
 then implement in assertions.tests to tidy existing code
 
@@ -146,3 +146,7 @@ add TestException throughout to tests - using AssertException in tests is confus
 add assert.throwsAny? - any exception
 
 TEST CASES!?
+
+add DemoException to demo tests
+
+group framework assertion tests into categories?

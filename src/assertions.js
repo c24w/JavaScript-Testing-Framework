@@ -14,6 +14,11 @@ var assert = {
 			throw new AssertException(optionalInfo);
 	},
 
+	'null': function (obj, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
+		assert.true(obj === null, info);
+	},
+
 	equal: function (actual, expected, optionalInfo) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
@@ -48,14 +53,14 @@ var assert = {
 		assert.true(number1 < number2, info);
 	},
 	*/
-	type: function (object, type, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assert.type', object, type.name);
-		assert.equal(typeof object, type, info);
+	type: function (obj, type, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.type', obj, type.name);
+		assert.equal(typeof obj, type, info);
 	},
 
-	instance: function (object, type, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', encloseInType(object), type.name);
-		assert.true(object instanceof type, info);
+	instance: function (obj, type, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : buildMessage('assert.instance', encloseInType(obj), type.name);
+		assert.true(obj instanceof type, info);
 	},
 
 	throws: function (func, exception, optionalInfo) {
@@ -75,12 +80,12 @@ var assert = {
 
 		'null': function (obj, optionalInfo) {
 			var info = optionalInfo ? optionalInfo : 'assert.not.null - argument was null';
-			assert.true(obj !== null, info);
+			assert.false(obj === null, info);
 		},
 
-		instance: function (object, type, optionalInfo) {
-			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.instance', encloseInType(object), type.name);
-			assert.true(!(object instanceof type), info);
+		instance: function (obj, type, optionalInfo) {
+			var info = optionalInfo ? optionalInfo : buildMessage('assert.not.instance', encloseInType(obj), type.name);
+			assert.false(obj instanceof type, info);
 		},
 
 		throws: function (func, exception, optionalInfo) {
@@ -88,7 +93,7 @@ var assert = {
 				func();
 			}
 			catch (e) {
-				var info = optionalInfo ? optionalInfo : buildMessage('assert.not.throws', e.name+' was thrown', exception.name+' not thrown');
+				var info = optionalInfo ? optionalInfo : buildMessage('assert.not.throws', e.name + ' was thrown', exception.name + ' not thrown');
 				assert.not.instance(e, exception, info);
 				return e;
 			}
@@ -110,7 +115,7 @@ function areTheSameType(obj1, obj2) {
 	return typeof obj1 === typeof obj2;
 }
 
-function encloseInType(object) {
-	if (object === null || typeof object === 'undefined') return object;
-	return typeof object + '(' + object + ')';
+function encloseInType(obj) {
+	if (obj === null || typeof obj === 'undefined') return obj;
+	return typeof obj + '(' + obj + ')';
 }

@@ -35,6 +35,28 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			throw new Error('Test should not have thrown this error');
 		},
 
+		'assert.null should not throw an AssertException for true conditions': function () {
+			try {
+				assert.null(null);
+			}
+			catch (e) {
+				throw new Error('Test should not have thrown this error');
+			}
+		},
+
+		'assert.null should throw an AssertException for false conditions': function () {
+			var expectedMsg = 'Should fail';
+			try {
+				assert.null('not null', expectedMsg); // need cases
+			}
+			catch (e) {
+				assert.instance(e, AssertException);
+				assert.equal(e.message, expectedMsg);
+				return;
+			}
+			throw new Error('Test should not have thrown this error');
+		},
+
 		'assert.equal should not throw an AssertException for true conditions': function () {
 			try {
 				assert.equal(true, true);
