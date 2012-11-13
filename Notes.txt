@@ -178,3 +178,5 @@ HTML controls
 collapse all
 expand all
 invert expanded
+
+timed refresh
