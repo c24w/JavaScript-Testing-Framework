@@ -8,9 +8,10 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 		Assert.not.throws(assertCollection, AssertException);
 	}
 
-	function assertFails(assertFunc) {
+	function assertFails(assertFunc, exceptionMsg) {
 		var exception = Assert.throws(assertFunc, AssertException);
-		Assert.equal(exception.message, genericFailMsg);
+		var msg = exceptionMsg ? exceptionMsg : genericFailMsg;
+		Assert.equal(exception.message, msg);
 	}
 
 	var fixtures = [
@@ -29,14 +30,37 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			},
 			'Assert.false should pass for false conditions': function () {
 				assertAllPass(function () {
-					Assert.false(false)
-					Assert.false(1 === 0)
+					Assert.false(false);
+					Assert.false(1 === 0);
 				});
 			},
 			'Assert.false should fail for false conditions': function () {
 				assertFails(function () {
 					Assert.false(true, genericFailMsg)
 				});
+			},
+
+			'`Assert.that(*).is.true()` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(true).is.true;
+					Assert.that(1 === 1).is.true;
+				});
+			},
+			'`Assert.that(*).is.true()` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(false).is.true();
+				}, 'no additional information');
+			},
+			'`Assert.that(*).is.false()` should pass for false conditions': function () {
+				assertAllPass(function () {
+					Assert.that(false).is.false();
+					Assert.that(1 === 0).is.false();
+				});
+			},
+			'`Assert.that(*).is.false()` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(true).is.false();
+				}, 'no additional information');
 			}
 		}),
 
@@ -60,6 +84,27 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 				assertFails(function () {
 					Assert.not.null(null, genericFailMsg)
 				});
+			},
+
+			'`Assert.that(*).is.null()` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(null).is.null()
+				});
+			},
+			'`Assert.that(*).is.null()` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that('not null', genericFailMsg).is.null()
+				}, 'Assert.null - argument was not null');
+			},
+			'`Assert.that(*).is.not.null()` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that('not null').is.not.null()
+				});
+			},
+			'`Assert.that(*).is.not.null()` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(null).is.not.null()
+				}, 'Assert.not.null - argument was null');
 			}
 		}),
 
@@ -86,13 +131,38 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 				assertFails(function () {
 					Assert.equiv(true, false, genericFailMsg);
 				});
+			},
+
+			'`Assert.that(*).equals(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(true).equals(true);
+					Assert.that(1).equals(1);
+					Assert.that('abc').equals('abc');
+					Assert.that('abc').equals("abc");
+				});
+			},
+			'`Assert.that(*).equals(*)` should fail for false conditions': function () {
+				assertFails(function () { Assert.equal(true, false, genericFailMsg) });
+			},
+			'`Assert.that(*).is.equiv.to(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(true).is.equiv.to(1);
+					Assert.that(false).is.equiv.to("0");
+					Assert.that('1').is.equiv.to(1);
+				});
+			},
+			'`Assert.that(*).is.equiv.to(*)` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(true).is.equiv.to(false);
+				}, 'Assert.equiv - expected: boolean(false) found: boolean(true)');
 			}
 		}),
 
-		new TestFixture('Integer comparison assersion tests', {
+		new TestFixture('Number comparison assersion tests', {
 			'Assert.greater should pass for true conditions': function () {
 				assertAllPass(function () {
 					Assert.greater(1, 0);
+					Assert.greater(1, 0.5);
 					Assert.greater(1, -1);
 				});
 			},
@@ -101,9 +171,21 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 					Assert.greater(0, 1, genericFailMsg)
 				});
 			},
+			'Assert.greater should fail for non-numeric first value': function () {
+				assertFails(function () {
+					Assert.greater(false, 1, genericFailMsg)
+				}, 'Assert.greater - first argument: expected: number found: boolean');
+			},
+			'Assert.greater should fail for non-numeric second value': function () {
+				assertFails(function () {
+					Assert.greater(2, 'one', genericFailMsg)
+				}, 'Assert.greater - second argument: expected: number found: string');
+			},
+
 			'Assert.less should pass for true conditions': function () {
 				assertAllPass(function () {
 					Assert.less(0, 1);
+					Assert.less(0.5, 1);
 					Assert.less(-1, 1);
 				});
 			},
@@ -111,13 +193,69 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 				assertFails(function () {
 					Assert.less(1, 0, genericFailMsg)
 				});
-			}
+			},
+			'Assert.less should fail for non-numeric first value': function () {
+				assertFails(function () {
+					Assert.less(false, 1, genericFailMsg)
+				}, 'Assert.less - first argument: expected: number found: boolean');
+			},
+			'Assert.less should fail for non-numeric second value': function () {
+				assertFails(function () {
+					Assert.less(2, 'one', genericFailMsg)
+				}, 'Assert.less - second argument: expected: number found: string');
+			},
+
+			'`Assert.that(*).is.greater.than(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(1).is.greater.than(0);
+					Assert.that(1).is.greater.than(0.5);
+					Assert.that(1).is.greater.than(-1);
+				});
+			},
+			'`Assert.that(*).is.greater.than(*)` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(0).is.greater.than(1);
+				}, 'Assert.greater - 0 is not greater than 1');
+			},
+			'`Assert.that(*).is.greater.than(*)` should fail for non-numeric first value': function () {
+				assertFails(function () {
+					Assert.that(false).is.greater.than(1);
+				}, 'Assert.greater - first argument: expected: number found: boolean');
+			},
+			'`Assert.that(*).is.greater.than(*)` should fail for non-numeric second value': function () {
+				assertFails(function () {
+					Assert.that(2).is.greater.than('one');
+				}, 'Assert.greater - second argument: expected: number found: string');
+			},
+
+			'`Assert.that(*).is.less.than(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(0).is.less.than(1);
+					Assert.that(0.5).is.less.than(1);
+					Assert.that(-1).is.less.than(1);
+				});
+			},
+			'`Assert.that(*).is.less.than(*)` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(1).is.less.than(0);
+				}, 'Assert.less - 1 is not less than 0');
+			},
+			'`Assert.that(*).is.less.than(*)` should fail for non-numeric first value': function () {
+				assertFails(function () {
+					Assert.that(false).is.less.than(1);
+				}, 'Assert.less - first argument: expected: number found: boolean');
+			},
+			'`Assert.that(*).is.less.than(*)` should fail for non-numeric second value': function () {
+				assertFails(function () {
+					Assert.that(2).is.less.than('one');
+				}, 'Assert.less - second argument: expected: number found: string');
+			},
 		}),
 
 		new TestFixture('Object type assertion tests', {
 			'Assert.instance should pass for true conditions': function () {
 				assertAllPass(function () {
-					Assert.instance(new AssertException(), AssertException);
+					Assert.instance(new TestException(), TestException);
 					Assert.instance(new Object(), Object);
 					Assert.instance('hello', String);
 					Assert.instance(1, Number);
@@ -137,8 +275,34 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			},
 			'Assert.not.instance should fail for false conditions': function () {
 				assertFails(function () {
-					Assert.not.instance(new String(), String, genericFailMsg);
+					Assert.not.instance('hello', String, genericFailMsg);
 				});
+			},
+
+			'`Assert.that(*).is.instance.of(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(new TestException()).is.instance.of(TestException);
+					Assert.that(new Object()).is.instance.of(Object);
+					Assert.that('hello').is.instance.of(String);
+					Assert.that(1).is.instance.of(Number);
+					Assert.that(true).is.instance.of(Boolean);
+				});
+			},
+			'`Assert.that(*).is.instance.of(*)` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that(1).is.instance.of(String);
+				}, 'Assert.instance - expected: String found: Number');
+			},
+			'`Assert.that(*).is.not.instance.of(*)` should pass for true conditions': function () {
+				assertAllPass(function () {
+					Assert.that(new Error()).is.not.instance.of(TestException);
+					Assert.that(new Object()).is.not.instance.of(Number);
+				});
+			},
+			'`Assert.that(*).is.not.instance.of(*)` should fail for false conditions': function () {
+				assertFails(function () {
+					Assert.that('hello').is.not.instance.of(String);
+				}, 'Assert.not.instance - expected: not String found: String');
 			}
 		}),
 
@@ -150,41 +314,70 @@ loadResources('TestFixture.js', 'TestRunner.js', 'HtmlTestHandler.js', 'assertio
 			},
 			'Assert.throws should fail if the wrong exception is thrown': function () {
 				assertFails(function () {
-					Assert.throws(function () { throw new Error() }, AssertException, genericFailMsg);
+					Assert.throws(function () { throw new Error() }, TestException, genericFailMsg);
 				});
 			},
 			'Assert.throws should return the defined exception, if thrown': function () {
 				var exception = Assert.throws(function () { throw new TestException(genericFailMsg) }, TestException);
 				Assert.equal(exception.message, genericFailMsg);
 			},
+
 			'Assert.not.throws should pass if the defined exception is not thrown': function () {
 				assertAllPass(function () {
 					Assert.not.throws(function () { }, Error)
 				});
 			},
-			'Assert.not.throws should pass if the wrong type of exception is thrown': function () {
+			'Assert.not.throws should pass if a different type of exception is thrown': function () {
 				assertAllPass(function () {
 					Assert.not.throws(function () { throw new TestException() }, Error)
 				});
 			},
 			'Assert.not.throws should fail if the defined exception is thrown': function () {
 				assertFails(function () {
-					Assert.not.throws(function () {
-						throw new Error()
-					}, Error, genericFailMsg);
+					Assert.not.throws(function () { throw new Error() }, Error, genericFailMsg);
 				});
 			},
-			'Assert.not.type should pass for true conditions': function () {
+
+			'`Assert.that(*).throws(*)` should fail if the defined exception is not thrown': function () {
+				assertFails(function () {
+					Assert.that(function () { }).throws(TestException);
+				}, 'TestException was never thrown');
+			},
+			'`Assert.that(*).throws(*)` should fail if the wrong exception is thrown': function () {
+				assertFails(function () {
+					Assert.that(function () { throw new Error() }).throws(TestException);
+				}, 'Assert.throws - expected: TestException found: Error');
+			},
+			'`Assert.that(*).throws(*)` should return the defined exception, if thrown': function () {
 				assertAllPass(function () {
-					Assert.not.type(null, genericFailMsg);
-					Assert.not.type(null, genericFailMsg);
+					var message = 'shit the bed';
+					var exception = Assert.that(function () { throw new TestException(message) }).throws(TestException);
+					Assert.that(exception.message).equals(message);
 				});
+			},
+
+			'`Assert.that(*).does.not.throw(*)` should pass if the defined exception is not thrown': function () {
+				assertAllPass(function () {
+					Assert.that(function () { }).does.not.throw(Error);
+				});
+			},
+			'`Assert.that(*).does.not.throw(*)` should pass if a different type of exception is thrown': function () {
+				assertAllPass(function () {
+					Assert.that(function () { throw new TestException() }).does.not.throw(Error);
+				});
+			},
+			'`Assert.that(*).does.not.throw(*)` should fail if the defined exception is thrown ': function () {
+				assertFails(function () {
+					Assert.that(function () { throw new Error() }).does.not.throw(Error);
+				}, 'Assert.not.throws - expected: Error not thrown found: Error was thrown');
 			}
 		})
 
 	];
 
-	for (var fixture in fixtures)
-		new TestRunner(fixtures[fixture]).run(new HtmlTestHandler());
+	for (var fixture in fixtures) {
+		var handler = new HtmlTestHandler()
+		new TestRunner(fixtures[fixture]).run(handler);
+	}
 
 });

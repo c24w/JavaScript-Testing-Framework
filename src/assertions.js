@@ -1,22 +1,22 @@
 function AssertThat(subject) {
 	var A = Assert;
 	var AN = A.not;
+	this.throws = function (exception) { A.throws(subject, exception) },
+	this.does = { not: { 'throw': function (exception) { AN.throws(subject, exception) } } },
+	this.equals = function (expected) { A.equal(subject, expected) },
 	this.is = {
 		'true': function () { A.true(subject) },
 		'false': function () { A.false(subject) },
 		'null': function () { A.null(subject) },
-		equal: { to: function (expected) { A.equal(subject, expected) } },
 		equiv: { to: function (expected) { A.equiv(subject, expected) } },
 		greater: { than: function (expected) { A.greater(subject, expected) } },
 		less: { than: function (expected) { A.less(subject, expected) } },
 		instance: { of: function (type) { A.instance(subject, type) } },
-		throws: function (exception) { A.throws(subject, exception) },
 		not: {
 			'null': function () { AN.null(subject) },
 			equal: { to: function (expected) { AN.equal(subject, expected) } },
 			equiv: { to: function (expected) { AN.equiv(subject, expected) } },
 			instance: { of: function (type) { AN.instance(subject, type) } },
-			throws: function (exception) { AN.throws(subject, exception) },
 		}
 	}
 }
@@ -66,8 +66,8 @@ var Assert = {
 	},
 
 	less: function (number1, number2, optionalInfo) {
-		assertIsNumber(number1);
-		assertIsNumber(number2);
+		assertIsNumber(number1, 'Assert.less - first argument');
+		assertIsNumber(number2, 'Assert.less - second argument');
 		var info = optionalInfo ? optionalInfo : 'Assert.less - {0} is not less than {1}'.format(number1, number2);
 		Assert.true(number1 < number2, info);
 	},
@@ -89,8 +89,8 @@ var Assert = {
 			func();
 		}
 		catch (e) {
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', typeof e, exception.name);
-			Assert.true(e instanceof exception, info);
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', e.name, exception.name);
+			Assert.instance(e, exception, info);
 			return e;
 		}
 		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
@@ -118,15 +118,10 @@ var Assert = {
 		},
 
 		instance: function (obj, type, optionalInfo) {
-			try {
-				Assert.false(obj instanceof type, info);
-			}
-			catch (e) {
-				var objToString = toString.call(obj);
-				var actualType = objToString.match(/\[object (.+)\]/)[1];
-				var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualType, 'not ' + type.name);
-				Assert.not.equal(actualType, type.name, info);
-			}
+			var objToString = toString.call(obj);
+			var actualType = objToString === '[object Function]' ? obj.name : objToString.match(/\[object (.+)\]/)[1];
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualType, 'not ' + type.name);
+			Assert.not.equal(actualType, type.name, info);
 		},
 
 		throws: function (func, exception, optionalInfo) {
@@ -134,8 +129,8 @@ var Assert = {
 				func();
 			}
 			catch (e) {
-				var info = optionalInfo ? optionalInfo : exception.name + ' was thrown because: ' + e.message;
-				Assert.false(e instanceof exception, info);
+				var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.throws', e.name + ' was thrown', exception.name + ' not thrown');
+				Assert.not.instance(e, exception, info);
 			}
 		}
 
@@ -144,7 +139,7 @@ var Assert = {
 }
 
 function assertIsNumber(object, prefix) {
-	Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, Number.name, typeof object));
+	Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), typeof object));
 }
 
 function buildMessage(assertType, actual, expected) {

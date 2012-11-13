@@ -180,3 +180,12 @@ expand all
 invert expanded
 
 timed refresh
+
+added Assert.that(subject).is.verb(expected), etc
+(cannot add custom message to these if they fail)
+
+add option to 'collapse' in console output
+
+cannot rely on !(A instanceof B) for primitives because !('hello' instanceof String) returns false!
+
+when Assert.that(subject).is.verb(expected), etc fails, message still relates to Asser.verb(subject, expected) equivalent
