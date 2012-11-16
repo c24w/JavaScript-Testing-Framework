@@ -1,3 +1,15 @@
+function loadHtmlResources(loadCallback) {
+	loadResources('HtmlTestHandler.js', 'style.css', loadCallback);
+}
+
+function loadFramework(loadCallback) {
+	loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', loadCallback);
+}
+
+function loadConsoleResources(loadCallback) {
+	loadResources('ConsoleTestHandler.js', loadCallback);
+}
+
 function loadResources(/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
 	var loadCount = 0;
 	var resourceCount = arguments.length - 1;
@@ -20,7 +32,7 @@ function loadResource(file, loadCallback) {
 	}
 
 	if (isLoading(file)) {
-		setTimeout(function () { loadResource(file, loadCallback) }, 100);
+		setTimeout(function () { loadResource(file, loadCallback) }, 50);
 		return;
 	}
 

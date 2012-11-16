@@ -179,13 +179,39 @@ collapse all
 expand all
 invert expanded
 
-timed refresh
+timed refresh on page? fixture?  needs to be tied to test runner, because requires reiterating over tests? but can't referesh for console, etc - needs to be in html handler really
 
-added Assert.that(subject).is.verb(expected), etc
-(cannot add custom message to these if they fail)
+crank load retry interval to 0ms and the fixtures load in random orders and sometimes bug!
 
+load in a particular order:
+
+loadResource(a, function(){
+	loadResource(b, function(){
+		loadResource(c, finishedCallback);
+	});
+});
+
+or:
+
+loadSpecificResource(function(){
+	loadSomeResource(function(){
+		loadOtherResource(finishedCallback);
+	});
+});
+
+Stuff I added
+-------------
 add option to 'collapse' in console output
+added Assert.that(subject).is.verb(expected), etc (cannot yet add custom message to these if they fail)
 
+
+
+Things I learneded
+------------------
 cannot rely on !(A instanceof B) for primitives because !('hello' instanceof String) returns false!
 
+
+
+Known issues
+------------
 when Assert.that(subject).is.verb(expected), etc fails, message still relates to Asser.verb(subject, expected) equivalent
