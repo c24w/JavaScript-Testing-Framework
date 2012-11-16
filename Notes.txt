@@ -183,6 +183,8 @@ timed refresh on page? fixture?  needs to be tied to test runner, because requir
 
 crank load retry interval to 0ms and the fixtures load in random orders and sometimes bug!
 
+many files all outputted to one page - tries to load the resources for each file - pull the loading into one initialiser and run tests in callback?
+
 load in a particular order:
 
 loadResource(a, function(){
