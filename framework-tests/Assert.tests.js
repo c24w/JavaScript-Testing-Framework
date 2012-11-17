@@ -323,8 +323,60 @@ loadFramework(function () {
 				},
 				'Assert.type should fail for false conditions': function () {
 					assertFails(function () {
-						Assert.type(1, String, genericFailMsg);
+						Assert.type(1, 'string', genericFailMsg);
 					});
+				},
+				'Assert.not.type should pass for true conditions': function () {
+					assertAllPass(function () {
+						Assert.not.type(TestException, 'object');
+						Assert.not.type(new TestException(), 'function');
+						Assert.not.type(null, 'string');
+						Assert.not.type('hello', 'number');
+						Assert.not.type(1, 'boolean');
+						Assert.not.type(true, 'object');
+						var undefinedVariable;
+						Assert.not.type(undefinedVariable, 'function');
+					});
+				},
+				'Assert.not.type should fail for false conditions': function () {
+					assertFails(function () {
+						Assert.not.type(1, 'number', genericFailMsg);
+					});
+				},
+
+				'`Assert.that(*).is.type(*)` should pass for true conditions': function () {
+					assertAllPass(function () {
+						Assert.that(TestException).is.type('function');
+						Assert.that(new TestException()).is.type('object');
+						Assert.that(null).is.type('object');
+						Assert.that('hello').is.type('string');
+						Assert.that(1).is.type('number');
+						Assert.that(true).is.type('boolean');
+						var undefinedVariable;
+						Assert.that(undefinedVariable).is.type('undefined');
+					});
+				},
+				'`Assert.that(*).is.type(*)` should fail for false conditions': function () {
+					assertFails(function () {
+						Assert.that(1).is.type('string');
+					}, 'Assert.type - expected: string found: number');
+				},
+				'`Assert.that(*).is.not.type(*)` should pass for true conditions': function () {
+					assertAllPass(function () {
+						Assert.that(TestException).is.not.type('object');
+						Assert.that(new TestException()).is.not.type('function');
+						Assert.that(null).is.not.type('string');
+						Assert.that('hello').is.not.type('number');
+						Assert.that(1).is.not.type('boolean');
+						Assert.that(true).is.not.type('object');
+						var undefinedVariable;
+						Assert.that(undefinedVariable).is.not.type('function');
+					});
+				},
+				'`Assert.that(*).is.not.type(*)` should fail for false conditions': function () {
+					assertFails(function () {
+						Assert.that(1).is.not.type('number');
+					}, 'Assert.type - expected: not number found: number');
 				}
 			}),
 

@@ -54,16 +54,17 @@ var Assert = {
 			Assert.true(obj instanceof objClass, info);
 		}
 		catch (e) {
-			var actualType = obj.constructor.name;
+			var actualClass = obj.constructor.name;
 			var expectedType = objClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualType, expectedType);
-			Assert.equal(actualType, expectedType, info);
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, expectedType);
+			Assert.equal(actualClass, expectedType, info);
 		}
 	},
 
 	type: function (obj, type, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', typeof obj, type);
-		Assert.equal(typeof obj, type, info);
+		var actualType = typeof obj;
+		var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', actualType, type);
+		Assert.equal(actualType, type, info);
 	},
 
 	throws: function (func, exception, optionalInfo) {
@@ -100,10 +101,16 @@ var Assert = {
 		},
 
 		instance: function (obj, objClass, optionalInfo) {
-			var actualType = obj.constructor.name;
+			var actualClass = obj.constructor.name;
 			var expectedNotType = objClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualType, 'not ' + expectedNotType);
-			Assert.not.equal(obj.constructor.name, objClass.name, info);
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualClass, 'not ' + expectedNotType);
+			Assert.not.equal(actualClass, expectedNotType, info);
+		},
+
+		type: function (obj, type, optionalInfo) {
+			var actualType = typeof obj;
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', actualType, 'not ' + type);
+			Assert.not.equal(actualType, type, info);
 		},
 
 		throws: function (func, exception, optionalInfo) {
@@ -147,11 +154,13 @@ function AssertThat(subject) {
 		greater: { than: function (expected) { A.greater(subject, expected) } },
 		less: { than: function (expected) { A.less(subject, expected) } },
 		instance: { of: function (objClass) { A.instance(subject, objClass) } },
+		type: function (type) { A.type(subject, type) },
 		not: {
 			'null': function () { AN.null(subject) },
 			equal: { to: function (expected) { AN.equal(subject, expected) } },
 			equiv: { to: function (expected) { AN.equiv(subject, expected) } },
 			instance: { of: function (objClass) { AN.instance(subject, objClass) } },
+			type: function (type) { AN.type(subject, type) },
 		}
 	}
 }
