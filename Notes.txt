@@ -201,6 +201,10 @@ loadSpecificResource(function(){
 	});
 });
 
+Assert.type case-sensitive, e.g. Assert.type(1, 'Number') fails; Assert.type(1, 'number') passes
+
+if test name is whitespace, doesn't display in html properly
+
 Stuff I added
 -------------
 add option to 'collapse' in console output
@@ -217,3 +221,6 @@ cannot rely on !(A instanceof B) for primitives because !('hello' instanceof Str
 Known issues
 ------------
 when Assert.that(subject).is.verb(expected), etc fails, message still relates to Asser.verb(subject, expected) equivalent
+
+
+Assert instance checks no longer using toString.call() with regex to extract type and still works for primitives.

@@ -1,5 +1,6 @@
 *
 {
+	font-size: 10pt;
     font-family: sans-serif;
 }
 
@@ -30,6 +31,7 @@ body
 
     .testfixture .header
     {
+        -webkit-user-select: none;
         cursor: pointer;
         padding: 0.5em;
         overflow: auto;
@@ -70,6 +72,7 @@ body
     .testfixture .header:hover
     {
         border-style: inset;
+        padding: 0.55em 0.45em 0.45em 0.55em;
     }
 
     .testfixture .header .description

@@ -99,7 +99,7 @@ loadFramework(function () {
 					Assert.equal(trace[i], 'TEST_SETUP');
 			}
 
-		})).run(new HtmlTestHandler());
+		})).run(new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.passes }));
 
 	});
 });

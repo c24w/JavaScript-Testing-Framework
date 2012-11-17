@@ -1,9 +1,9 @@
-function loadHtmlResources(loadCallback) {
-	loadResources('HtmlTestHandler.js', 'style.css', loadCallback);
+function loadFramework(loadCallback) {
+	loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
 }
 
-function loadFramework(loadCallback) {
-	loadResources('TestFixture.js', 'assertions.js', 'TestRunner.js', loadCallback);
+function loadHtmlResources(loadCallback) {
+	loadResources('HtmlTestHandler.js', 'style.css', loadCallback);
 }
 
 function loadConsoleResources(loadCallback) {

@@ -32,7 +32,7 @@ function TestRunner(testFixture) {
 		var tests = testFixture.getTests();
 
 		var fixtureSetup = tests.FIXTURE_SETUP;
-		var setup = tests.TEST_SETUP;
+		var testSetup = tests.TEST_SETUP;
 
 		if (fixtureSetup) {
 			fixtureSetup();
@@ -42,7 +42,7 @@ function TestRunner(testFixture) {
 		for (var testName in tests) {
 			try {
 				if (testName !== 'TEST_SETUP') {
-					if (setup) setup();
+					if (testSetup) testSetup();
 					var test = tests[testName];
 					test();
 					testEventHandler.handle(TEST_RUNNER_EVENT.PASS, testName);
