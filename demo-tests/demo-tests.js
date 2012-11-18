@@ -36,7 +36,7 @@ loadFramework(function () {
 						Assert.null('not null');
 					},
 					'Assert.null should fail with custom reason': function () {
-						Assert.null('not null', 'because this checks a non-`null` string for `null`');
+						Assert.null('not null', 'because this checks a non-null string for null');
 					}
 				}),
 
@@ -48,7 +48,7 @@ loadFramework(function () {
 						Assert.not.null(null);
 					},
 					'Assert.not.null should fail with custom reason': function () {
-						Assert.not.null(null, 'because this checks `null` for not `null`');
+						Assert.not.null(null, 'because this checks null for not null');
 					}
 				}),
 
@@ -147,7 +147,31 @@ loadFramework(function () {
 						Assert.not.instance(new String(), String);
 					},
 					'Assert.not.instance should fail with custom reason': function () {
-						Assert.not.instance(new Error(), Error, 'because this checks that a `new` Error is an instance of `Error`');
+						Assert.not.instance(new Error(), Error, 'because this checks that a new Error is an instance of Error');
+					}
+				}),
+
+				new TestFixture('Assert.type', {
+					'Assert.type should pass': function () {
+						Assert.type(new Number(123), 'object');
+					},
+					'Assert.type should fail with generated reason': function () {
+						Assert.type('abc', 'number');
+					},
+					'Assert.type should fail with custom reason': function () {
+						Assert.type(false, 'function', 'because a boolean is not a type of function');
+					}
+				}),
+
+				new TestFixture('Assert.not.type', {
+					'Assert.not.type should pass': function () {
+						Assert.not.type('string', 'number');
+					},
+					'Assert.not.type should fail with generated reason': function () {
+						Assert.not.type(Object, 'function');
+					},
+					'Assert.not.type should fail with custom reason': function () {
+						Assert.not.type(new Object(), 'object', 'because a new Object() is of type \'object\'');
 					}
 				}),
 
