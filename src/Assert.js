@@ -127,24 +127,11 @@ var Assert = {
 
 }
 
-function AssertThatXDoesNotThrow(subject, exception) {
-	Assert.not.throws(subject, exception);
-	this.because = function (info) {
-		Assert.not.throws(subject, exception, info)
-	};
-}
-
 function AssertThat(subject) {
 	var A = Assert;
 	var AN = A.not;
 	this.throws = function (exception) { return A.throws(subject, exception) },
-	this.does = {
-		not: {
-			'throw': function (exception) {
-				Assert.not.throws(subject, exception)
-			}
-		}
-	},
+	this.does = { not: { 'throw': function (exception) { Assert.not.throws(subject, exception) } } },
 	this.equals = function (expected) { A.equal(subject, expected) },
 	this.is = {
 		'true': function () { A.true(subject) },
