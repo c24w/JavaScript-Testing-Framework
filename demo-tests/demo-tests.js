@@ -2,213 +2,228 @@ loadFramework(function () {
 	loadHtmlResources(function () {
 		loadConsoleResources(function () {
 
+			function DemoException(message) { this.message = message };
+
 			var fixtures = [
 
 				new TestFixture('Assert.true', {
-					'Assert.true should pass': function () {
+					'Should pass': function () {
 						Assert.true(true);
 					},
-					'Assert.true should fail without reason': function () {
+					'Should fail without reason': function () {
 						Assert.true(false);
 					},
-					'Assert.true should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.true(false, 'because this checks Assert.true(false)');
 					}
 				}),
 
 				new TestFixture('Assert.false', {
-					'Assert.false should pass': function () {
+					'Should pass': function () {
 						Assert.false(false);
 					},
-					'Assert.false should fail without reason': function () {
+					'Should fail without reason': function () {
 						Assert.false(true);
 					},
-					'Assert.false should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.false(true, 'because this checks Assert.false(true)');
 					}
 				}),
 
 				new TestFixture('Assert.null', {
-					'Assert.null should pass': function () {
+					'Should pass': function () {
 						Assert.null(null);
 					},
-					'Assert.null should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.null('not null');
 					},
-					'Assert.null should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.null('not null', 'because this checks a non-null string for null');
 					}
 				}),
 
 				new TestFixture('Assert.not.null', {
-					'Assert.not.null should pass': function () {
+					'Should pass': function () {
 						Assert.not.null('not null');
 					},
-					'Assert.not.null should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.not.null(null);
 					},
-					'Assert.not.null should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.not.null(null, 'because this checks null for not null');
 					}
 				}),
 
 				new TestFixture('Assert.equal', {
-					'Assert.equal should pass': function () {
+					'Should pass': function () {
 						Assert.equal('a', "a");
 					},
-					'Assert.equal should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.equal(1, 2);
 					},
-					'Assert.equal should fail with generated reason including types': function () {
+					'Should fail with generated reason including types': function () {
 						Assert.equal(1, '1');
 					},
-					'Assert.equal should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.equal(1, true, 'because "1" and "true" are only equal with type-conversion, i.e. Assert.equiv');
 					}
 				}),
 
 				new TestFixture('Assert.not.equal', {
-					'Assert.not.equal should pass': function () {
+					'Should pass': function () {
 						Assert.not.equal('a', "b");
 					},
-					'Assert.not.equal should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.not.equal(1, 1);
 					},
-					'Assert.not.equal should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.not.equal('a', 'a', 'because \'a\' and \'a\' are exactly equal');
 					}
 				}),
 
 				new TestFixture('Assert.equiv', {
-					'Assert.equiv should pass': function () {
+					'Should pass': function () {
 						Assert.equiv(1, "1");
 					},
-					'Assert.equiv should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.equiv('a', 'b');
 					},
-					'Assert.equiv should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.equiv(0, true, 'because this compares "0" and "true"');
 					}
 				}),
 
 				new TestFixture('Assert.not.equiv', {
-					'Assert.not.equiv should pass': function () {
+					'Should pass': function () {
 						Assert.not.equiv(1, "true");
 					},
-					'Assert.not.equiv should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.not.equiv('a', "a");
 					},
-					'Assert.not.equiv should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.not.equiv(1, true, 'because 1 and true are equivalent');
 					}
 				}),
 
 				new TestFixture('Assert.greater', {
-					'Assert.greater should pass': function () {
+					'Should pass': function () {
 						Assert.greater(1, 0);
 					},
-					'Assert.greater should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.greater(0, 1);
 					},
-					'Assert.greater should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.greater(0, 1, 'because 1 is equal to 1');
 					}
 				}),
 
 				new TestFixture('Assert.less', {
-					'Assert.less should pass': function () {
+					'Should pass': function () {
 						Assert.less(0, 1);
 					},
-					'Assert.less should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.less(1, 0);
 					},
-					'Assert.less should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.less(1, 1, 'because 1 is equal to 1');
 					}
 				}),
 
 				new TestFixture('Assert.instance', {
-					'Assert.instance should pass': function () {
+					'Should pass': function () {
 						Assert.instance(new Number(123), Number);
 					},
-					'Assert.instance should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.instance('abc', Number);
 					},
-					'Assert.instance should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.instance(new Object(), Error, 'because an Object is not an instance of Error');
 					}
 				}),
 
 				new TestFixture('Assert.not.instance', {
-					'Assert.not.instance should pass': function () {
+					'Should pass': function () {
 						Assert.not.instance(new Number(123), String);
 					},
-					'Assert.not.instance should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.not.instance(new String(), String);
 					},
-					'Assert.not.instance should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.not.instance(new Error(), Error, 'because this checks that a new Error is an instance of Error');
 					}
 				}),
 
 				new TestFixture('Assert.type', {
-					'Assert.type should pass': function () {
+					'Should pass': function () {
 						Assert.type(new Number(123), 'object');
 					},
-					'Assert.type should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.type('abc', 'number');
 					},
-					'Assert.type should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.type(false, 'function', 'because a boolean is not a type of function');
 					}
 				}),
 
 				new TestFixture('Assert.not.type', {
-					'Assert.not.type should pass': function () {
+					'Should pass': function () {
 						Assert.not.type('string', 'number');
 					},
-					'Assert.not.type should fail with generated reason': function () {
+					'Should fail with generated reason': function () {
 						Assert.not.type(Object, 'function');
 					},
-					'Assert.not.type should fail with custom reason': function () {
+					'Should fail with custom reason': function () {
 						Assert.not.type(new Object(), 'object', 'because a new Object() is of type \'object\'');
 					}
 				}),
 
 				new TestFixture('Assert.throws', {
-					'Assert.throws should pass': function () {
+					'Should pass': function () {
 						var info = 'fail message';
-						var exception = Assert.throws(function () { throw new AssertException(info) }, AssertException);
+						var exception = Assert.throws(function () { throw new DemoException(info) }, DemoException);
 						Assert.equal(exception.message, info);
 					},
-					'Assert.throws should fail (when no exception is thrown) with generated reason': function () {
-						var exception = Assert.throws(function () { }, Error);
+					'Should fail (when no exception is thrown) with generated reason': function () {
+						var exception = Assert.throws(function () { }, DemoException);
 					},
-					'Assert.throws should fail (when a different exception is thrown) with generated reason': function () {
-						Assert.throws(function () { throw new Error() }, AssertException);
+					'Should fail (when a different exception is thrown) with generated reason': function () {
+						Assert.throws(function () { throw new DemoException() }, Error);
 					},
-					'Assert.throws should fail with custom reason': function () {
-						Assert.throws(function () { throw new Error() }, AssertException, 'because an Error is thrown in the callback, but an AssertException was expected');
-					},
-					'Assert.equal should fail (using the resulting exception of Assert.throws) with generated reason': function () {
-						var expectedMsg = 'error message';
-						var exception = Assert.throws(function () { throw new Error('omgwtfbbq') }, Error);
-						Assert.equal(exception.message, expectedMsg);
+					'Should fail with custom reason': function () {
+						Assert.throws(function () { throw new DemoException() }, Error, 'because a DemoException is thrown in the callback, but an Error was expected');
 					}
 				}),
 
 				new TestFixture('Assert.not.throws', {
-					'Assert.not.throws should pass (when no exception is thrown)': function () {
-						Assert.not.throws(function () { }, AssertException);
+					'Should pass (when no exception is thrown)': function () {
+						Assert.not.throws(function () { }, DemoException);
 					},
-					'Assert.not.throws should pass (when a different exception is thrown) with generated reason': function () {
-						var exception = Assert.not.throws(function () { throw new AssertException() }, Error);
+					'Should pass (when a different exception is thrown) with generated reason': function () {
+						var exception = Assert.not.throws(function () { throw new DemoException() }, Error);
 					},
-					'Assert.not.throws should fail with generated reason': function () {
-						Assert.not.throws(function () { throw new Error() }, Error);
+					'Should fail with generated reason': function () {
+						Assert.not.throws(function () { throw new DemoException() }, DemoException);
 					},
-					'Assert.not.throws should fail with custom reason': function () {
-						Assert.not.throws(function () { throw new Error() }, Error, 'because this asserts against an Error being thrown in the callback, but an Error was thrown');
+					'Should fail with custom reason': function () {
+						Assert.not.throws(function () { throw new DemoException() }, DemoException, 'because this asserts that an DemoException is not thrown in the callback, but an DemoException was thrown');
+					}
+				}),
+
+				new TestFixture('Composite assertions', {
+					'Should pass (using the returned exception from Assert.throws)': function () {
+						var message = 'error message';
+						var exception = Assert.throws(function () { throw new DemoException(message) }, DemoException);
+						Assert.equal(exception.message, message);
+					},
+					'Should fail (using the returned exception from Assert.throws) with generated reason': function () {
+						var message = 'error message';
+						var exception = Assert.throws(function () { throw new DemoException('omgwtfbbq') }, DemoException);
+						Assert.equal(exception.message, message);
+					},
+					'Should fail (using the returned exception from Assert.throws) with custom reason': function () {
+						var message = 'error message';
+						var exception = Assert.throws(function () { throw new DemoException('omgwtfbbq') }, DemoException);
+						Assert.equal(exception.message, message, 'because the message from the thrown DemoException doesn\'t match the expected message');
 					}
 				})
 

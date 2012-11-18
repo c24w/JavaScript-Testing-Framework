@@ -170,5 +170,5 @@ function areTheSameType(obj1, obj2) {
 
 function encloseInType(obj) {
 	if (obj === null || typeof obj === 'undefined') return obj;
-	return typeof obj + '(' + obj + ')';
+	return obj.constructor.name + '(' + obj + ')';
 }

@@ -155,7 +155,7 @@ loadFramework(function () {
 				'Assert.that(*).is.equiv.to(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(true).is.equiv.to(false);
-					}, 'Assert.equiv - expected: boolean(false) found: boolean(true)');
+					}, 'Assert.equiv - expected: Boolean(false) found: Boolean(true)');
 				}
 			}),
 
