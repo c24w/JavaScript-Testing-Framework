@@ -41,24 +41,24 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).is.true()` should pass for true conditions': function () {
+				'Assert.that(*).is.true() should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(true).is.true;
 						Assert.that(1 === 1).is.true;
 					});
 				},
-				'`Assert.that(*).is.true()` should fail for false conditions': function () {
+				'Assert.that(*).is.true() should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(false).is.true();
 					}, 'no additional information');
 				},
-				'`Assert.that(*).is.false()` should pass for false conditions': function () {
+				'Assert.that(*).is.false() should pass for false conditions': function () {
 					assertAllPass(function () {
 						Assert.that(false).is.false();
 						Assert.that(1 === 0).is.false();
 					});
 				},
-				'`Assert.that(*).is.false()` should fail for false conditions': function () {
+				'Assert.that(*).is.false() should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(true).is.false();
 					}, 'no additional information');
@@ -87,22 +87,22 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).is.null()` should pass for true conditions': function () {
+				'Assert.that(*).is.null() should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(null).is.null()
 					});
 				},
-				'`Assert.that(*).is.null()` should fail for false conditions': function () {
+				'Assert.that(*).is.null() should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that('not null', genericFailMsg).is.null()
 					}, 'Assert.null - argument was not null');
 				},
-				'`Assert.that(*).is.not.null()` should pass for true conditions': function () {
+				'Assert.that(*).is.not.null() should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that('not null').is.not.null()
 					});
 				},
-				'`Assert.that(*).is.not.null()` should fail for false conditions': function () {
+				'Assert.that(*).is.not.null() should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(null).is.not.null()
 					}, 'Assert.not.null - argument was null');
@@ -134,7 +134,7 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).equals(*)` should pass for true conditions': function () {
+				'Assert.that(*).equals(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(true).equals(true);
 						Assert.that(1).equals(1);
@@ -142,17 +142,17 @@ loadFramework(function () {
 						Assert.that('abc').equals("abc");
 					});
 				},
-				'`Assert.that(*).equals(*)` should fail for false conditions': function () {
+				'Assert.that(*).equals(*) should fail for false conditions': function () {
 					assertFails(function () { Assert.equal(true, false, genericFailMsg) });
 				},
-				'`Assert.that(*).is.equiv.to(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.equiv.to(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(true).is.equiv.to(1);
 						Assert.that(false).is.equiv.to("0");
 						Assert.that('1').is.equiv.to(1);
 					});
 				},
-				'`Assert.that(*).is.equiv.to(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.equiv.to(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(true).is.equiv.to(false);
 					}, 'Assert.equiv - expected: boolean(false) found: boolean(true)');
@@ -206,47 +206,47 @@ loadFramework(function () {
 					}, 'Assert.less - second argument: expected: number found: string');
 				},
 
-				'`Assert.that(*).is.greater.than(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.greater.than(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(1).is.greater.than(0);
 						Assert.that(1).is.greater.than(0.5);
 						Assert.that(1).is.greater.than(-1);
 					});
 				},
-				'`Assert.that(*).is.greater.than(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.greater.than(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(0).is.greater.than(1);
 					}, 'Assert.greater - 0 is not greater than 1');
 				},
-				'`Assert.that(*).is.greater.than(*)` should fail for non-numeric first value': function () {
+				'Assert.that(*).is.greater.than(*) should fail for non-numeric first value': function () {
 					assertFails(function () {
 						Assert.that(false).is.greater.than(1);
 					}, 'Assert.greater - first argument: expected: number found: boolean');
 				},
-				'`Assert.that(*).is.greater.than(*)` should fail for non-numeric second value': function () {
+				'Assert.that(*).is.greater.than(*) should fail for non-numeric second value': function () {
 					assertFails(function () {
 						Assert.that(2).is.greater.than('one');
 					}, 'Assert.greater - second argument: expected: number found: string');
 				},
 
-				'`Assert.that(*).is.less.than(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.less.than(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(0).is.less.than(1);
 						Assert.that(0.5).is.less.than(1);
 						Assert.that(-1).is.less.than(1);
 					});
 				},
-				'`Assert.that(*).is.less.than(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.less.than(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(1).is.less.than(0);
 					}, 'Assert.less - 1 is not less than 0');
 				},
-				'`Assert.that(*).is.less.than(*)` should fail for non-numeric first value': function () {
+				'Assert.that(*).is.less.than(*) should fail for non-numeric first value': function () {
 					assertFails(function () {
 						Assert.that(false).is.less.than(1);
 					}, 'Assert.less - first argument: expected: number found: boolean');
 				},
-				'`Assert.that(*).is.less.than(*)` should fail for non-numeric second value': function () {
+				'Assert.that(*).is.less.than(*) should fail for non-numeric second value': function () {
 					assertFails(function () {
 						Assert.that(2).is.less.than('one');
 					}, 'Assert.less - second argument: expected: number found: string');
@@ -283,7 +283,7 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).is.instance.of(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.instance.of(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(new TestException()).is.instance.of(TestException);
 						Assert.that(new Object()).is.instance.of(Object);
@@ -292,18 +292,18 @@ loadFramework(function () {
 						Assert.that(true).is.instance.of(Boolean);
 					});
 				},
-				'`Assert.that(*).is.instance.of(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.instance.of(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(1).is.instance.of(String);
 					}, 'Assert.instance - expected: String found: Number');
 				},
-				'`Assert.that(*).is.not.instance.of(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.not.instance.of(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(new Error()).is.not.instance.of(TestException);
 						Assert.that(new Object()).is.not.instance.of(Number);
 					});
 				},
-				'`Assert.that(*).is.not.instance.of(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.not.instance.of(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that('hello').is.not.instance.of(String);
 					}, 'Assert.not.instance - expected: not String found: String');
@@ -344,7 +344,7 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).is.type(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.type(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(TestException).is.type('function');
 						Assert.that(new TestException()).is.type('object');
@@ -356,12 +356,12 @@ loadFramework(function () {
 						Assert.that(undefinedVariable).is.type('undefined');
 					});
 				},
-				'`Assert.that(*).is.type(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.type(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(1).is.type('string');
 					}, 'Assert.type - expected: string found: number');
 				},
-				'`Assert.that(*).is.not.type(*)` should pass for true conditions': function () {
+				'Assert.that(*).is.not.type(*) should pass for true conditions': function () {
 					assertAllPass(function () {
 						Assert.that(TestException).is.not.type('object');
 						Assert.that(new TestException()).is.not.type('function');
@@ -373,7 +373,7 @@ loadFramework(function () {
 						Assert.that(undefinedVariable).is.not.type('function');
 					});
 				},
-				'`Assert.that(*).is.not.type(*)` should fail for false conditions': function () {
+				'Assert.that(*).is.not.type(*) should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.that(1).is.not.type('number');
 					}, 'Assert.type - expected: not number found: number');
@@ -412,34 +412,34 @@ loadFramework(function () {
 					});
 				},
 
-				'`Assert.that(*).throws(*)` should fail if the defined exception is not thrown': function () {
+				'Assert.that(*).throws(*) should fail if the defined exception is not thrown': function () {
 					assertFails(function () {
 						Assert.that(function () { }).throws(TestException);
 					}, 'TestException was never thrown');
 				},
-				'`Assert.that(*).throws(*)` should fail if the wrong exception is thrown': function () {
+				'Assert.that(*).throws(*) should fail if the wrong exception is thrown': function () {
 					assertFails(function () {
 						Assert.that(function () { throw new Error() }).throws(TestException);
 					}, 'Assert.throws - expected: TestException found: Error');
 				},
-				'`Assert.that(*).throws(*)` should return the defined exception, if thrown': function () {
+				'Assert.that(*).throws(*) should return the defined exception, if thrown': function () {
 					assertAllPass(function () {
 						var exception = Assert.that(function () { throw new TestException(genericFailMsg) }).throws(TestException);
 						Assert.that(exception.message).equals(genericFailMsg);
 					});
 				},
 
-				'`Assert.that(*).does.not.throw(*)` should pass if the defined exception is not thrown': function () {
+				'Assert.that(*).does.not.throw(*) should pass if the defined exception is not thrown': function () {
 					assertAllPass(function () {
 						Assert.that(function () { }).does.not.throw(Error);
 					});
 				},
-				'`Assert.that(*).does.not.throw(*)` should pass if a different type of exception is thrown': function () {
+				'Assert.that(*).does.not.throw(*) should pass if a different type of exception is thrown': function () {
 					assertAllPass(function () {
 						Assert.that(function () { throw new TestException() }).does.not.throw(Error);
 					});
 				},
-				'`Assert.that(*).does.not.throw(*)` should fail if the defined exception is thrown ': function () {
+				'Assert.that(*).does.not.throw(*) should fail if the defined exception is thrown ': function () {
 					assertFails(function () {
 						Assert.that(function () { throw new Error() }).does.not.throw(Error);
 					}, 'Assert.not.throws - expected: Error not thrown found: Error was thrown');

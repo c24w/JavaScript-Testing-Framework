@@ -90,11 +90,11 @@ loadFramework(function () {
 				Assert.true(mockTestHandler.receivedEvents.end, 'end was not called in TestHandler');
 			},
 
-			'TestRunner should call `FIXTURE_SETUP` once before any tests are run': function () {
+			'TestRunner should call FIXTURE_SETUP once before any tests are run': function () {
 				Assert.equal(trace[0], 'FIXTURE_SETUP');
 			},
 
-			'TestRunner should call `TEST_SETUP` once before each test is run': function () {
+			'TestRunner should call TEST_SETUP once before each test is run': function () {
 				for (var i = 1; i < trace.length; i += 2)
 					Assert.equal(trace[i], 'TEST_SETUP');
 			}
