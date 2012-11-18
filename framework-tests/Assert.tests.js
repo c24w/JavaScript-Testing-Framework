@@ -448,10 +448,8 @@ loadFramework(function () {
 
 		];
 
-		for (var fixture in fixtures) {
-			var handler = new HtmlTestHandler({ showpasses: true, autocollapse: 1 })
-			new TestRunner(fixtures[fixture]).run(handler);
-		}
+		var handler = new HtmlTestHandler({ showpasses: true, autocollapse: htmlTestHandlerConfig.autocollapse.all })
+		new BatchTestRunner(fixtures).run(handler);
 
 	});
 });

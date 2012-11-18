@@ -229,14 +229,9 @@ loadFramework(function () {
 
 			];
 
-
-			for (var f in fixtures) {
-				var fixture = fixtures[f];
-				var runner = new TestRunner(fixture);
-				runner.run(new ConsoleTestHandler());
-				var handler = new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.all });
-				runner.run(handler);
-			}
+			var runner = new BatchTestRunner(fixtures);
+			runner.run(new ConsoleTestHandler());
+			runner.run(new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.none }));
 
 		});
 	});

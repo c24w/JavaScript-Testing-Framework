@@ -61,3 +61,12 @@ function TestRunner(testFixture) {
 	}
 
 }
+
+function BatchTestRunner(testFixtures) {
+
+	this.run = function (testEventHandler) {
+		for (var fixture in testFixtures)
+			new TestRunner(testFixtures[fixture]).run(testEventHandler);
+	}
+
+}

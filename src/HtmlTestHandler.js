@@ -1,7 +1,5 @@
 htmlTestHandlerConfig = {
-	autocollapse: {
-		none: 0, passes: 1, all: 2
-	},
+	autocollapse: { none: 0, passes: 1, all: 2 },
 }
 
 var defaultConfig = {
@@ -51,6 +49,10 @@ function HtmlTestHandler(configuration) {
 		if (document.body.children.length === 0)
 			addControls();
 		fixture = makeDiv('testfixture');
+		header = makeDiv('header');
+		testsContainer = makeDiv('tests');
+		addTo(fixture, header);
+		addTo(fixture, testsContainer);
 		addTo(document.body, fixture);
 	}
 
@@ -122,11 +124,9 @@ function HtmlTestHandler(configuration) {
 	}
 
 	function createFixtureHeader(description) {
-		header = makeDiv('header');
 		var desc = makeDiv('description');
 		desc.innerHTML = formatCodeParts(description);
 		addTo(header, desc);
-		addTo(fixture, header);
 	}
 
 	function statsOutputter(passes, fails) {
@@ -161,15 +161,17 @@ function HtmlTestHandler(configuration) {
 			info.innerHTML = formatCodeParts(msg);
 			addTo(test, info);
 		}
-		if (!testsContainer) {
-			testsContainer = makeDiv('tests');
-			header.onclick = function () {
-				var cn = testsContainer.className;
-				testsContainer.className = 'tests' + (cn === 'tests' ? ' collapsed' : '');
-			}
-			addTo(fixture, testsContainer);
-		}
+
+		header.onclick = headerOnclickClosure(testsContainer);
+
 		addTo(testsContainer, test);
+	}
+}
+
+function headerOnclickClosure(testsContainer) {
+	return function () {
+		var cn = testsContainer.className;
+		testsContainer.className = 'tests' + (cn === 'tests' ? ' collapsed' : '');
 	}
 }
 
