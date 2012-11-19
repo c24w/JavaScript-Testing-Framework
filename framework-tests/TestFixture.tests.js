@@ -1,5 +1,5 @@
-loadFramework(function () {
-	loadHtmlResources(function () {
+JTF.loadFramework(function () {
+	JTF.loadHtmlResources(function () {
 
 		var expectedDesc, testFixture;
 
@@ -16,20 +16,20 @@ loadFramework(function () {
 
 			'getDescription should return the expected string, if defined': function () {
 				var actual = testFixture.getDescription();
-				Assert.instance(actual, String);
-				Assert.equal(actual, expectedDesc);
+				JTF.Assert.instance(actual, String);
+				JTF.Assert.equal(actual, expectedDesc);
 			},
 
 			'getDescription should return a default value, if undefined': function () {
 				testFixture = new TestFixture();
-				Assert.equal(testFixture.getDescription(), TestFixture.DefaultDescription);
+				JTF.Assert.equal(testFixture.getDescription(), TestFixture.DefaultDescription);
 			},
 
 			'getTests should return the expected object': function () {
 				var tests = testFixture.getTests();
 				var testNo = 1;
 				for (var t in tests)
-					Assert.equal(t, 'expected test ' + testNo++);
+					JTF.Assert.equal(t, 'expected test ' + testNo++);
 			},
 
 		})).run(new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.none }));
