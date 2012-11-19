@@ -18,7 +18,7 @@ JTF.loadFramework(function () {
 
 		var fixtures = [
 
-			new TestFixture('Conditions', {
+			new JTF.TestFixture('Conditions', {
 				'Assert.true should pass for true conditions': function () {
 					assertAllPass(function () {
 						JTF.Assert.true(true);
@@ -66,7 +66,7 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new TestFixture('null checks', {
+			new JTF.TestFixture('null checks', {
 				'Assert.null should pass for true conditions': function () {
 					assertAllPass(function () {
 						JTF.Assert.null(null)
@@ -110,7 +110,7 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new TestFixture('Equality', {
+			new JTF.TestFixture('Equality', {
 				'Assert.equal should pass for true conditions': function () {
 					assertAllPass(function () {
 						JTF.Assert.equal(true, true);
@@ -160,7 +160,7 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new TestFixture('Number comparisons', {
+			new JTF.TestFixture('Number comparisons', {
 				'Assert.greater should pass for true conditions': function () {
 					assertAllPass(function () {
 						JTF.Assert.greater(1, 0);
@@ -254,7 +254,7 @@ JTF.loadFramework(function () {
 				},
 			}),
 
-			new TestFixture('Object types / instances', {
+			new JTF.TestFixture('Object types / instances', {
 				'Assert.instance should pass for true conditions': function () {
 					assertAllPass(function () {
 						JTF.Assert.instance(new TestException(), TestException);
@@ -381,7 +381,7 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new TestFixture('Exception handling', {
+			new JTF.TestFixture('Exception handling', {
 				'Assert.throws should fail if the defined exception is not thrown': function () {
 					assertFails(function () {
 						JTF.Assert.throws(function () { }, TestException, genericFailMsg);
@@ -449,7 +449,7 @@ JTF.loadFramework(function () {
 
 		];
 
-		var handler = new HtmlTestHandler({ showpasses: true, autocollapse: htmlTestHandlerConfig.autocollapse.passes })
+		var handler = new JTF.Html.TestHandler({ showpasses: true, autocollapse: JTF.Html.TestHandlerConfig.autocollapse.passes })
 		new BatchTestRunner(fixtures).run(handler);
 
 	});

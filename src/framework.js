@@ -1,4 +1,23 @@
-window.JTF = window.JTF || (new function () {
+(new function (ctx) {
+
+	this.makeNamespace = function (hierarchyString) {
+		var parts = hierarchyString.split('.');
+		var partsRootNode = window[parts[0]];
+		var currentNode = window;
+
+		if (partsRootNode) {
+			currentNode = partsRootNode;
+			parts = parts.slice(1);
+		}
+
+		for (var i = 0; i < parts.length; i++) {
+			var nextNode = currentNode[parts[i]];
+			nextNode = nextNode || {};
+			currentNode = nextNode;
+			if (i === parts.length - 1)
+				return currentNode;
+		}
+	}
 
 	this.loadFramework = function (loadCallback) {
 		this.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
@@ -103,4 +122,4 @@ window.JTF = window.JTF || (new function () {
 		return file.endsWith('.css');
 	}
 
-});
+})(window.JTF = window.JTF || {});

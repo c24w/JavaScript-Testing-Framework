@@ -32,7 +32,7 @@ JTF.loadFramework(function () {
 					JTF.Assert.equal(t, 'expected test ' + testNo++);
 			},
 
-		})).run(new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.none }));
+		})).run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));
 
 	});
 });

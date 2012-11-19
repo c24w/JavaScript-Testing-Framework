@@ -1,5 +1,5 @@
-window.JTF.Assert = window.JTF.Assert || (new function () {
-
+(new function (ctx) {
+	console.log(ctx);
 	function buildMessage(assertType, actual, expected) {
 		return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
 	}
@@ -42,13 +42,13 @@ window.JTF.Assert = window.JTF.Assert || (new function () {
 		this.message = message;
 	}
 
-	this.AssertException = AssertException;
+	ctx.AssertException = AssertException;
 
-	this.that = function (subject) {
+	ctx.that = function (subject) {
 		return new AssertThat(subject);
 	}
 
-	this['true'] = function (condition, optionalInfo) {
+	ctx['true'] = function (condition, optionalInfo) {
 		if (condition === null)
 			throw new AssertException('assert condition was null');
 		if (!condition) {
@@ -57,71 +57,71 @@ window.JTF.Assert = window.JTF.Assert || (new function () {
 		}
 	}
 
-	this['false'] = function (condition, optionalInfo) {
-		this.true(!condition, optionalInfo);
+	ctx['false'] = function (condition, optionalInfo) {
+		ctx.true(!condition, optionalInfo);
 	}
 
-	this['null'] = function (obj, optionalInfo) {
+	ctx['null'] = function (obj, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : 'Assert.null - argument was not null';
-		this.true(obj === null, info);
+		ctx.true(obj === null, info);
 	}
 
-	this.equal = function (actual, expected, optionalInfo) {
+	ctx.equal = function (actual, expected, optionalInfo) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
 		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equal', act, exp);
-		this.true(actual === expected, info);
+		ctx.true(actual === expected, info);
 	}
 
-	this.equiv = function (actual, expected, optionalInfo) {
+	ctx.equiv = function (actual, expected, optionalInfo) {
 		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equiv', encloseInType(actual), encloseInType(expected));
-		this.true(actual == expected, info);
+		ctx.true(actual == expected, info);
 	}
 
 	function assertIsNumber(object, prefix) {
 		JTF.Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), typeof object));
 	}
 
-	this.greater = function (number1, number2, optionalInfo) {
+	ctx.greater = function (number1, number2, optionalInfo) {
 		assertIsNumber(number1, 'Assert.greater - first argument');
 		assertIsNumber(number2, 'Assert.greater - second argument');
 		var info = optionalInfo ? optionalInfo : 'Assert.greater - {0} is not greater than {1}'.format(number1, number2);
-		this.true(number1 > number2, info);
+		ctx.true(number1 > number2, info);
 	}
 
-	this.less = function (number1, number2, optionalInfo) {
+	ctx.less = function (number1, number2, optionalInfo) {
 		assertIsNumber(number1, 'Assert.less - first argument');
 		assertIsNumber(number2, 'Assert.less - second argument');
 		var info = optionalInfo ? optionalInfo : 'Assert.less - {0} is not less than {1}'.format(number1, number2);
-		this.true(number1 < number2, info);
+		ctx.true(number1 < number2, info);
 	}
 
-	this.instance = function (obj, objClass, optionalInfo) {
+	ctx.instance = function (obj, objClass, optionalInfo) {
 		try {
-			this.true(obj instanceof objClass, info);
+			ctx.true(obj instanceof objClass, info);
 		}
 		catch (e) {
 			var actualClass = obj.constructor.name;
 			var expectedType = objClass.name;
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, expectedType);
-			this.equal(actualClass, expectedType, info);
+			ctx.equal(actualClass, expectedType, info);
 		}
 	}
 
-	this.type = function (obj, type, optionalInfo) {
+	ctx.type = function (obj, type, optionalInfo) {
 		var actualType = typeof obj;
 		var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', actualType, type);
-		this.equal(actualType, type, info);
+		ctx.equal(actualType, type, info);
 	}
 
-	this.throws = function (func, exception, optionalInfo) {
+	ctx.throws = function (func, exception, optionalInfo) {
 		try {
 			func();
 		}
 		catch (e) {
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', e.name, exception.name);
-			this.instance(e, exception, info);
+			ctx.instance(e, exception, info);
 			return e;
 		}
 		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
@@ -130,51 +130,51 @@ window.JTF.Assert = window.JTF.Assert || (new function () {
 
 	var Assert = this;
 
-	this.not = (new function () {
+	ctx.not = (new function () {
 
-		this.AssertException = Assert.AssertException;
+		ctx.AssertException = Assert.AssertException;
 
-		this['null'] = function (obj, optionalInfo) {
+		ctx['null'] = function (obj, optionalInfo) {
 			var info = optionalInfo ? optionalInfo : 'Assert.not.null - argument was null';
 			Assert.false(obj === null, info);
 		}
 
-		this.equal = function (actual, expected, optionalInfo) {
+		ctx.equal = function (actual, expected, optionalInfo) {
 			var sameType = areTheSameType(actual, expected);
 			var act = sameType ? actual : encloseInType(actual);
 			var exp = sameType ? expected : encloseInType(expected);
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.equal', act, 'not ' + exp);
-			Assert.false(actual === expected, info);
+			ctx.false(actual === expected, info);
 		}
 
-		this.equiv = function (actual, expected, optionalInfo) {
+		ctx.equiv = function (actual, expected, optionalInfo) {
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.equiv', encloseInType(actual), encloseInType(expected));
-			Assert.false(actual == expected, info);
+			ctx.false(actual == expected, info);
 		}
 
-		this.instance = function (obj, objClass, optionalInfo) {
+		ctx.instance = function (obj, objClass, optionalInfo) {
 			var actualClass = obj.constructor.name;
 			var expectedNotType = objClass.name;
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualClass, 'not ' + expectedNotType);
-			Assert.not.equal(actualClass, expectedNotType, info);
+			ctx.not.equal(actualClass, expectedNotType, info);
 		}
 
-		this.type = function (obj, type, optionalInfo) {
+		ctx.type = function (obj, type, optionalInfo) {
 			var actualType = typeof obj;
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', actualType, 'not ' + type);
-			Assert.not.equal(actualType, type, info);
+			ctx.not.equal(actualType, type, info);
 		}
 
-		this.throws = function (func, exception, optionalInfo) {
+		ctx.throws = function (func, exception, optionalInfo) {
 			try {
 				func();
 			}
 			catch (e) {
 				var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.throws', e.constructor.name + ' was thrown', exception.name + ' not thrown');
-				Assert.not.instance(e, exception, info);
+				ctx.not.instance(e, exception, info);
 			}
 		}
 
 	});
 
-});
+})(window.JTF.Assert = window.JTF.Assert || {});

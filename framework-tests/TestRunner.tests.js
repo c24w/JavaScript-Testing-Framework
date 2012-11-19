@@ -97,7 +97,7 @@ JTF.loadFramework(function () {
 					JTF.Assert.equal(trace[i], 'TEST_SETUP');
 			}
 
-		})).run(new HtmlTestHandler({ autocollapse: htmlTestHandlerConfig.autocollapse.none }));
+		})).run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));
 
 	});
 });
