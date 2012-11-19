@@ -1,5 +1,18 @@
 window.JTF.Assert = window.JTF.Assert || (new function () {
 
+	function buildMessage(assertType, actual, expected) {
+		return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
+	}
+
+	function areTheSameType(obj1, obj2) {
+		return typeof obj1 === typeof obj2;
+	}
+
+	function encloseInType(obj) {
+		if (obj === null || typeof obj === 'undefined') return obj;
+		return obj.constructor.name + '(' + obj + ')';
+	}
+
 	function AssertThat(subject) {
 		var A = Assert;
 		var AN = A.not;
@@ -66,9 +79,13 @@ window.JTF.Assert = window.JTF.Assert || (new function () {
 		this.true(actual == expected, info);
 	}
 
+	function assertIsNumber(object, prefix) {
+		JTF.Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), typeof object));
+	}
+
 	this.greater = function (number1, number2, optionalInfo) {
-				assertIsNumber(number1, 'Assert.greater - first argument');
-				assertIsNumber(number2, 'Assert.greater - second argument');
+		assertIsNumber(number1, 'Assert.greater - first argument');
+		assertIsNumber(number2, 'Assert.greater - second argument');
 		var info = optionalInfo ? optionalInfo : 'Assert.greater - {0} is not greater than {1}'.format(number1, number2);
 		this.true(number1 > number2, info);
 	}
@@ -161,21 +178,3 @@ window.JTF.Assert = window.JTF.Assert || (new function () {
 	});
 
 });
-
-function assertIsNumber(object, prefix) {
-	JTF.Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), typeof object));
-}
-
-function buildMessage(assertType, actual, expected) {
-	return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
-}
-
-
-function areTheSameType(obj1, obj2) {
-	return typeof obj1 === typeof obj2;
-}
-
-function encloseInType(obj) {
-	if (obj === null || typeof obj === 'undefined') return obj;
-	return obj.constructor.name + '(' + obj + ')';
-}

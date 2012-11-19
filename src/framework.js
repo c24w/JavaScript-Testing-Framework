@@ -5,11 +5,11 @@ window.JTF = window.JTF || (new function () {
 	}
 
 	this.loadHtmlResources = function (loadCallback) {
-		this.loadResources('HtmlTestHandler.js', 'style.css', loadCallback);
+		this.loadResources('HtmlTestEventHandler.js', 'style.css', loadCallback);
 	}
 
 	this.loadConsoleResources = function (loadCallback) {
-		this.loadResources('ConsoleTestHandler.js', loadCallback);
+		this.loadResources('ConsoleTestEventHandler.js', loadCallback);
 	}
 
 	this.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {

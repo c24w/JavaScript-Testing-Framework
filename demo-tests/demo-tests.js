@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 
 			var fixtures = [
 
-				new TestFixture('JTF.Assert.true', {
+				new TestFixture('Assert.true', {
 					'Should pass': function () {
 						JTF.Assert.true(true);
 					},
@@ -18,7 +18,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.false', {
+				new TestFixture('.false', {
 					'Should pass': function () {
 						JTF.Assert.false(false);
 					},
@@ -30,7 +30,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.null', {
+				new TestFixture('Assert.null', {
 					'Should pass': function () {
 						JTF.Assert.null(null);
 					},
@@ -42,7 +42,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.null', {
+				new TestFixture('Assert.not.null', {
 					'Should pass': function () {
 						JTF.Assert.not.null('not null');
 					},
@@ -54,7 +54,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.equal', {
+				new TestFixture('Assert.equal', {
 					'Should pass': function () {
 						JTF.Assert.equal('a', "a");
 					},
@@ -69,7 +69,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.equal', {
+				new TestFixture('Assert.not.equal', {
 					'Should pass': function () {
 						JTF.Assert.not.equal('a', "b");
 					},
@@ -81,7 +81,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.equiv', {
+				new TestFixture('Assert.equiv', {
 					'Should pass': function () {
 						JTF.Assert.equiv(1, "1");
 					},
@@ -93,7 +93,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.equiv', {
+				new TestFixture('Assert.not.equiv', {
 					'Should pass': function () {
 						JTF.Assert.not.equiv(1, "true");
 					},
@@ -105,7 +105,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.greater', {
+				new TestFixture('Assert.greater', {
 					'Should pass': function () {
 						JTF.Assert.greater(1, 0);
 					},
@@ -117,7 +117,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.less', {
+				new TestFixture('Assert.less', {
 					'Should pass': function () {
 						JTF.Assert.less(0, 1);
 					},
@@ -129,7 +129,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.instance', {
+				new TestFixture('Assert.instance', {
 					'Should pass': function () {
 						JTF.Assert.instance(new Number(123), Number);
 					},
@@ -141,7 +141,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.instance', {
+				new TestFixture('Assert.not.instance', {
 					'Should pass': function () {
 						JTF.Assert.not.instance(new Number(123), String);
 					},
@@ -153,7 +153,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.type', {
+				new TestFixture('Assert.type', {
 					'Should pass': function () {
 						JTF.Assert.type(new Number(123), 'object');
 					},
@@ -165,7 +165,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.type', {
+				new TestFixture('Assert.not.type', {
 					'Should pass': function () {
 						JTF.Assert.not.type('string', 'number');
 					},
@@ -177,7 +177,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.throws', {
+				new TestFixture('Assert.throws', {
 					'Should pass': function () {
 						var info = 'fail message';
 						var exception = JTF.Assert.throws(function () { throw new DemoException(info) }, DemoException);
@@ -194,7 +194,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('JTF.Assert.not.throws', {
+				new TestFixture('Assert.not.throws', {
 					'Should pass (when no exception is thrown)': function () {
 						JTF.Assert.not.throws(function () { }, DemoException);
 					},
@@ -209,7 +209,7 @@ JTF.loadFramework(function () {
 					}
 				}),
 
-				new TestFixture('Composite JTF.Assertions', {
+				new TestFixture('Composite assertions', {
 					'Should pass (using the returned exception from JTF.Assert.throws)': function () {
 						var message = 'error message';
 						var exception = JTF.Assert.throws(function () { throw new DemoException(message) }, DemoException);

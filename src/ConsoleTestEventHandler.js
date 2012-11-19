@@ -1,3 +1,5 @@
+//window.JTF.Console = window.JTF.Console || (new function () {
+
 var spacer = '\u0020';
 var descPrefix = '\u250C' + spacer;
 var testPrefix = '|' + spacer;
@@ -62,3 +64,5 @@ function ConsoleTestHandler() {
 	}
 
 }
+
+//});
