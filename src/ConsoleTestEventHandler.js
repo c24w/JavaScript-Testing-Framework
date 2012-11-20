@@ -23,21 +23,21 @@
 		this.handle = function (handleType /*, args */) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TestRunner.EVENT.START:
+				case TestRunner.EVENT.FIXTURE.START:
 					break;
-				case TestRunner.EVENT.DESC:
+				case TestRunner.EVENT.FIXTURE.DESC:
 					descOutputter(args[0]);
 					break;
-				case TestRunner.EVENT.PASS:
+				case TestRunner.EVENT.FIXTURE.PASS:
 					testOutputter(true, true, args[0]);
 					break;
-				case TestRunner.EVENT.FAIL:
+				case TestRunner.EVENT.FIXTURE.FAIL:
 					testOutputter(true, false, args[0], args[1]);
 					break;
-				case TestRunner.EVENT.STATS:
+				case TestRunner.EVENT.FIXTURE.STATS:
 					statsOutputter(args[0], args[1]);
 					break;
-				case TestRunner.EVENT.END:
+				case TestRunner.EVENT.FIXTURE.FIXTURE_END:
 					break;
 			}
 		}

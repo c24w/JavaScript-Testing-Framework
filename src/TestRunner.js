@@ -12,15 +12,15 @@
 		return !s || s.isWhitespace();
 	}
 
-	ctx.TestRunner = function (testFixture) {
+	function SingleTestRunner(testFixture) {
 
 		this.run = function (testEventHandler) {
 
-			testEventHandler.handle(ctx.TestRunner.EVENT.START);
+			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.START);
 
 			var passes = 0, fails = 0;
 			var desc = formatDesc(testFixture.getDescription());
-			testEventHandler.handle(ctx.TestRunner.EVENT.DESC, desc);
+			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.DESC, desc);
 
 			var tests = testFixture.getTests();
 
@@ -38,30 +38,21 @@
 						if (testSetup) testSetup();
 						var test = tests[testName];
 						test();
-						testEventHandler.handle(ctx.TestRunner.EVENT.PASS, testName);
+						testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.PASS, testName);
 						passes++;
 					}
 				}
 				catch (e) {
-					testEventHandler.handle(ctx.TestRunner.EVENT.FAIL, testName, formatMsg(e.message));
+					testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
 					fails++;
 				}
 			}
 
-			testEventHandler.handle(ctx.TestRunner.EVENT.STATS, passes, fails);
-			testEventHandler.handle(ctx.TestRunner.EVENT.END);
+			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.STATS, passes, fails);
+			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.FIXTURE_END);
 
 		}
 
-	}
-
-	ctx.TestRunner.EVENT = {
-		START: 1,
-		DESC: 2,
-		PASS: 3,
-		FAIL: 4,
-		STATS: 5,
-		END: 6,
 	}
 
 	ctx.BatchTestRunner = function (testFixtures) {
@@ -69,8 +60,32 @@
 		this.run = function (testEventHandler) {
 			for (var f in testFixtures)
 				new ctx.TestRunner(testFixtures[f]).run(testEventHandler);
+			testEventHandler.handle(ctx.TestRunner.EVENT.BATCH.END);
 		}
 
+	}
+
+	ctx.TestRunner = function (testFixtures) {
+
+		this.run = function (testEventHandler) {
+			new SingleTestRunner(testFixtures).run(testEventHandler);
+			testEventHandler.handle(ctx.TestRunner.EVENT.BATCH.END);
+		}
+
+	}
+
+	ctx.TestRunner.EVENT = {
+		FIXTURE: {
+			START: 0,
+			DESC: 1,
+			PASS: 2,
+			FAIL: 3,
+			STATS: 4,
+			END: 5
+		},
+		BATCH: {
+			END: 6
+		}
 	}
 
 })(window.JTF = window.JTF || {});

@@ -34,26 +34,26 @@ JTF.loadFramework(function () {
 					handle: function (handleType) {
 						var args = Array.prototype.slice.call(arguments, 1);
 						switch (handleType) {
-							case TestRunner.EVENT.START:
+							case TestRunner.EVENT.FIXTURE.START:
 								this.receivedEvents.start = true;
 								break;
-							case TestRunner.EVENT.DESC:
+							case TestRunner.EVENT.FIXTURE.DESC:
 								this.receivedData.desc = args;
 								break;
-							case TestRunner.EVENT.PASS:
+							case TestRunner.EVENT.FIXTURE.PASS:
 								var index = this.receivedData.passedTestNames.length;
 								this.receivedData.passedTestNames[index] = args[0];
 								break;
-							case TestRunner.EVENT.FAIL:
+							case TestRunner.EVENT.FIXTURE.FAIL:
 								var index = this.receivedData.failedTestsNames.length;
 								this.receivedData.failedTestsNames[index] = args[0];
 								this.receivedData.failedTestsMsgs[index] = args[1];
 								break;
-							case TestRunner.EVENT.STATS:
+							case TestRunner.EVENT.FIXTURE.STATS:
 								this.receivedData.noPasses = args[0];
 								this.receivedData.noFails = args[1];
 								break;
-							case TestRunner.EVENT.END:
+							case TestRunner.EVENT.FIXTURE.FIXTURE_END:
 								this.receivedEvents.end = true;
 								break;
 						}
@@ -111,7 +111,7 @@ JTF.loadFramework(function () {
 					Assert.equal(trace[i], 'TEST_SETUP');
 			}
 
-		})).run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));
+		})).run(new JTF.Html.TestHandler({ showPasses: true, collapse: JTF.Html.TestHandlerConfig.collapse.passes, notifyOnFail: true, refresh: 5000 }));
 
 	});
 });

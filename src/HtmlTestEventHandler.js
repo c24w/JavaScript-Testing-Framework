@@ -2,13 +2,17 @@
 
 	var TestRunner = JTF.TestRunner;
 
+	var totalFails = 0;
+
 	var TestHandlerConfig = ctx.TestHandlerConfig = {
-		autocollapse: { none: 0, passes: 1, all: 2 },
+		collapse: { none: 0, passes: 1, all: 2 },
 	}
 
 	var DefaultConfig = {
-		autocollapse: TestHandlerConfig.autocollapse.passes,
-		showpasses: true
+		collapse: TestHandlerConfig.collapse.passes,
+		showPasses: true,
+		refresh: 0,
+		notifyOnFail: false
 	}
 
 	function addMissingConfigurations(config) {
@@ -29,24 +33,36 @@
 		this.handle = function (handleType) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TestRunner.EVENT.START:
+				case TestRunner.EVENT.FIXTURE.START:
 					startOutputter();
 					break;
-				case TestRunner.EVENT.DESC:
+				case TestRunner.EVENT.FIXTURE.DESC:
 					createFixtureHeader(args[0]);
 					break;
-				case TestRunner.EVENT.PASS:
+				case TestRunner.EVENT.FIXTURE.PASS:
 					appendTestToHtml(true, args[0], args[1]);
 					break;
-				case TestRunner.EVENT.FAIL:
+				case TestRunner.EVENT.FIXTURE.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
-				case TestRunner.EVENT.STATS:
+				case TestRunner.EVENT.FIXTURE.STATS:
 					statsOutputter(args[0], args[1]);
 					break;
-				case TestRunner.EVENT.END:
+				case TestRunner.EVENT.FIXTURE.END:
+					break;
+				case TestRunner.EVENT.BATCH.END:
+					batchEnd();
 					break;
 			}
+		}
+
+		function batchEnd() {
+			if (totalFails > 0) {
+				config.refresh = 0;
+				alert('Some tests failed');
+			}
+			if (config.refresh > 0)
+				setTimeout(function () { window.location.reload() }, config.refresh);
 		}
 
 		function startOutputter() {
@@ -96,7 +112,7 @@
 				setClass('.testfixture.failed .tests', 'tests collapsed');
 			}));
 
-			if (config.showpasses) {
+			if (config.showPasses) {
 				var btn = makeControlButton('Hide Passes', function () {
 					setClass('.testfixture.passed', 'testfixture passed hidden');
 					this.style.visibility = 'hidden';
@@ -137,19 +153,22 @@
 			if (shouldBeCollapsed(fails))
 				testsContainer.className += ' collapsed';
 			fixture.className += fails > 0 ? ' failed' : ' passed';
-			if (fails === 0 && !config.showpasses)
+			if (fails === 0 && !config.showPasses)
 				fixture.className += ' hidden';
 			var result = makeDiv('result');
 			addText(result, getResultMessage(passes, fails));
 			addTo(header, result);
+			if (config.notifyOnFail && fails > 0) {
+				totalFails += fails;
+			}
 		}
 
 		function shouldBeCollapsed(numFails) {
-			if (config.autocollapse === TestHandlerConfig.autocollapse.none)
+			if (config.collapse === TestHandlerConfig.collapse.none)
 				return false;
-			if (config.autocollapse === TestHandlerConfig.autocollapse.all)
+			if (config.collapse === TestHandlerConfig.collapse.all)
 				return true;
-			if (TestHandlerConfig.autocollapse.passes && numFails === 0)
+			if (TestHandlerConfig.collapse.passes && numFails === 0)
 				return true;
 		}
 
