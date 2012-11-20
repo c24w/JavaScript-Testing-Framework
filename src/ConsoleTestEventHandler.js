@@ -1,4 +1,4 @@
-window.JTF.Console = window.JTF.Console || (new function () {
+(function (ctx) {
 
 	var spacer = '\u0020';
 	var descPrefix = '\u250C' + spacer;
@@ -18,7 +18,7 @@ window.JTF.Console = window.JTF.Console || (new function () {
 			return failed + '/' + total + ' failed';
 	}
 
-	this.TestHandler = function () {
+	ctx.TestHandler = function () {
 
 		this.handle = function (handleType /*, args */) {
 			var args = Array.prototype.slice.call(arguments, 1);
@@ -67,4 +67,4 @@ window.JTF.Console = window.JTF.Console || (new function () {
 
 	}
 
-});
+})(window.JTF.Console = window.JTF.Console || {});
