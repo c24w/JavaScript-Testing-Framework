@@ -59,7 +59,7 @@
 
 		this.run = function (testEventHandler) {
 			for (var f in testFixtures)
-				new ctx.TestRunner(testFixtures[f]).run(testEventHandler);
+				new SingleTestRunner(testFixtures[f]).run(testEventHandler);
 			testEventHandler.handle(ctx.TestRunner.EVENT.BATCH.END);
 		}
 

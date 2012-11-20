@@ -11,7 +11,7 @@
 	var DefaultConfig = {
 		collapse: TestHandlerConfig.collapse.passes,
 		showPasses: true,
-		refresh: 0,
+		runInterval: 0,
 		notifyOnFail: false
 	}
 
@@ -58,11 +58,26 @@
 
 		function batchEnd() {
 			if (totalFails > 0) {
-				config.refresh = 0;
-				alert('Some tests failed');
+				if (isSetToReRun()) {
+					if (shouldCancelReRuns())
+						config.runInterval = 0;
+				}
+				else showFailsAlert();
 			}
-			if (config.refresh > 0)
-				setTimeout(function () { window.location.reload() }, config.refresh);
+			if (config.runInterval > 0)
+				setTimeout(function () { window.location.reload() }, config.runInterval);
+		}
+
+		function shouldCancelReRuns() {
+			return confirm('Tests failed\n\nOK = review tests\n(stop further re-runs)\n\nCancel = ignore & continue')
+		}
+
+		function showFailsAlert() {
+			return !confirm('Tests failed\n\nOK = ignore & continue\n\nCancel = review tests')
+		}
+
+		function isSetToReRun() {
+			return config.runInterval > 0;
 		}
 
 		function startOutputter() {
