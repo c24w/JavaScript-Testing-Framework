@@ -1,5 +1,19 @@
 (function (ctx) {
 
+	ctx.EVENT = {
+		FIXTURE: {
+			START: 0,
+			DESC: 1,
+			PASS: 2,
+			FAIL: 3,
+			STATS: 4,
+			END: 5
+		},
+		BATCH: {
+			END: 6
+		}
+	}
+
 	function formatMsg(msg) {
 		return isUselessString(msg) ? 'no additional information' : msg;
 	}
@@ -12,15 +26,15 @@
 		return !s || s.isWhitespace();
 	}
 
-	function SingleTestRunner(testFixture) {
+	function TestRunner(testFixture) {
 
 		this.run = function (testEventHandler) {
 
-			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.START);
+			testEventHandler.handle(ctx.EVENT.FIXTURE.START);
 
 			var passes = 0, fails = 0;
 			var desc = formatDesc(testFixture.getDescription());
-			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.DESC, desc);
+			testEventHandler.handle(ctx.EVENT.FIXTURE.DESC, desc);
 
 			var tests = testFixture.getTests();
 
@@ -38,54 +52,40 @@
 						if (testSetup) testSetup();
 						var test = tests[testName];
 						test();
-						testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.PASS, testName);
+						testEventHandler.handle(ctx.EVENT.FIXTURE.PASS, testName);
 						passes++;
 					}
 				}
 				catch (e) {
-					testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
+					testEventHandler.handle(ctx.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
 					fails++;
 				}
 			}
 
-			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.STATS, passes, fails);
-			testEventHandler.handle(ctx.TestRunner.EVENT.FIXTURE.FIXTURE_END);
+			testEventHandler.handle(ctx.EVENT.FIXTURE.STATS, passes, fails);
+			testEventHandler.handle(ctx.EVENT.FIXTURE.FIXTURE_END);
 
 		}
 
 	}
 
-	ctx.BatchTestRunner = function (testFixtures) {
+	ctx.Batch = function (testFixtures) {
 
 		this.run = function (testEventHandler) {
 			for (var f in testFixtures)
-				new SingleTestRunner(testFixtures[f]).run(testEventHandler);
-			testEventHandler.handle(ctx.TestRunner.EVENT.BATCH.END);
+				new TestRunner(testFixtures[f]).run(testEventHandler);
+			testEventHandler.handle(ctx.EVENT.BATCH.END);
 		}
 
 	}
 
-	ctx.TestRunner = function (testFixtures) {
+	ctx.Single = function (testFixture) {
 
 		this.run = function (testEventHandler) {
-			new SingleTestRunner(testFixtures).run(testEventHandler);
-			testEventHandler.handle(ctx.TestRunner.EVENT.BATCH.END);
+			new TestRunner(testFixture).run(testEventHandler);
+			testEventHandler.handle(ctx.EVENT.BATCH.END);
 		}
 
 	}
 
-	ctx.TestRunner.EVENT = {
-		FIXTURE: {
-			START: 0,
-			DESC: 1,
-			PASS: 2,
-			FAIL: 3,
-			STATS: 4,
-			END: 5
-		},
-		BATCH: {
-			END: 6
-		}
-	}
-
-})(window.JTF = window.JTF || {});
+})(window.JTF.TestRunner = window.JTF.TestRunner || {});

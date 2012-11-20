@@ -9,7 +9,7 @@
 	}
 
 	var DefaultConfig = {
-		collapse: TestHandlerConfig.collapse.passes,
+		collapse: TestHandlerConfig.collapse.none,
 		showPasses: true,
 		runInterval: 0,
 		notifyOnFail: false
@@ -19,8 +19,7 @@
 		if (!config) return DefaultConfig;
 		else {
 			for (var option in DefaultConfig) {
-				if (typeof config[option] === 'undefined')
-					config[option] = DefaultConfig[option];
+				config[option] = config[option] || DefaultConfig[option];
 			}
 		}
 		return config;

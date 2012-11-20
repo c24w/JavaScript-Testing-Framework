@@ -1,16 +1,17 @@
-function somethingWentWrong(msg) {
-	alert('Something went wrong' + (msg ? '\n\n' + msg : ''))
+window.onerror = function (msg) { alert('Something went wrong' + (msg ? '\n\n' + msg : '')) }
+
+function resourceErrorFromEvent(event) {
+	var file = (typeof info === 'string') ? info : (event.srcElement.attributes.src || event.srcElement.attributes.href).value
+	resourceErrorMsg(file);
 }
 
-function scriptResourceError(event) {
-	alert('Script didn\'t load properly:\n\n' + event.srcElement.attributes.src.value);
+function resourceErrorMsg(info) {
+	alert('Resource didn\'t load properly:\n\n' + info);
 }
 
-function stylesheetResourceError(event) {
-	alert('Stylesheet didn\'t load properly:\n\n' + event.srcElement.attributes.href.value);
-}
+function setErrorState() {
 
-window.onerror = somethingWentWrong;
+}
 
 (function (ctx) {
 	/*
@@ -77,13 +78,15 @@ window.onerror = somethingWentWrong;
 			loadScript(file, loadCallback);
 		else if (isStylesheet(file))
 			loadStylesheet(file, loadCallback);
+		else
+			resourceErrorMsg('Cannot handle resource type \'' + file.substring(file.lastIndexOf('.')) + '\' (' + file + ')');
 	}
 
 	function loadScript(file, loadCallback) {
 		var script = document.createElement('script');
 		script.src = frameworkBaseURL + file;
 		script.type = 'text/javascript';
-		script.onerror = scriptResourceError;
+		script.onerror = resourceErrorFromEvent;
 		document.head.appendChild(script);
 		script.onload = function () {
 			setLoaded(file);
@@ -96,7 +99,7 @@ window.onerror = somethingWentWrong;
 		var stylesheet = document.createElement('link');
 		stylesheet.rel = 'stylesheet';
 		stylesheet.href = frameworkBaseURL + file;
-		stylesheet.onerror = stylesheetResourceError;
+		stylesheet.onerror = resourceErrorFromEvent;
 		document.head.appendChild(stylesheet);
 		stylesheet.onload = function () {
 			setLoaded(file);

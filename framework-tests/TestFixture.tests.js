@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 		var Assert = JTF.Assert;
 		var expectedDesc, testFixture;
 
-		new TestRunner(new TestFixture('TestFixture tests', {
+		new TestRunner.Single(new TestFixture('TestFixture tests', {
 
 			FIXTURE_SETUP: function () {
 				expectedDesc = 'test fixture description';
@@ -38,7 +38,12 @@ JTF.loadFramework(function () {
 					Assert.equal(t, 'expected test ' + testNo++);
 			},
 
-		})).run(new JTF.html.TestHandler({ showPasses: true, collapse: JTF.html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 }));
+		})).run(new JTF.html.TestHandler({
+			collapse: JTF.html.TestHandlerConfig.collapse.passes,
+			showPasses: true,
+			notifyOnFail: true,
+			runInterval: 5000
+		}));
 
 	});
 });

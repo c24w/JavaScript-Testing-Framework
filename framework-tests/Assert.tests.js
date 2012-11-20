@@ -2,10 +2,8 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
 		var Assert = JTF.Assert;
-
-		function TestException(message) { this.message = message }
-
 		var genericFailMsg = 'Should fail';
+		function TestException(message) { this.message = message }
 
 		function assertAllPass(assertCollection) {
 			Assert.not.throws(assertCollection, Assert.AssertException);
@@ -450,7 +448,14 @@ JTF.loadFramework(function () {
 
 		];
 
-		var handler = new JTF.html.TestHandler({ showPasses: true, collapse: JTF.html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 })
-		new JTF.BatchTestRunner(fixtures).run(handler);
+		var handler = new JTF.html.TestHandler({
+			collapse: JTF.html.TestHandlerConfig.collapse.passes,
+			showPasses: true,
+			notifyOnFail: true,
+			runInterval: 5000
+		})
+
+		new JTF.TestRunner.Batch(fixtures).run(handler);
+
 	});
 });

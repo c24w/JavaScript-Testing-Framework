@@ -1,9 +1,9 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
+		var TestRunner = JTF.TestRunner;
 		var TestFixture = JTF.TestFixture;
 		var Assert = JTF.Assert;
-		var TestRunner = JTF.TestRunner;
 
 		var MockTestFixture, MockTestHandler, trace;
 		function addTrace(t) { trace[trace.length] = t }
@@ -12,7 +12,7 @@ JTF.loadFramework(function () {
 			return 'wrong amount of {0} data received'.format(type);
 		}
 
-		new TestRunner(new TestFixture('TestRunner tests', {
+		new TestRunner.Single(new TestFixture('TestRunner tests', {
 
 			FIXTURE_SETUP: function () {
 				trace = [];
@@ -60,7 +60,7 @@ JTF.loadFramework(function () {
 					}
 				};
 
-				new TestRunner(MockTestFixture).run(MockTestHandler);
+				new TestRunner.Single(MockTestFixture).run(MockTestHandler);
 			},
 
 			'TestRunner should send test start event to the TestHandler': function () {
