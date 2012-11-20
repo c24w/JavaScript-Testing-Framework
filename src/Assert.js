@@ -1,4 +1,6 @@
 (function (ctx) {
+	var Assert = ctx;
+
 	function buildMessage(assertType, actual, expected) {
 		return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
 	}
@@ -128,8 +130,6 @@
 		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
 		throw new AssertException(info);
 	}
-
-	var Assert = ctx;
 
 	ctx.not = (new function () {
 

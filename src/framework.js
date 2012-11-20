@@ -1,3 +1,17 @@
+function somethingWentWrong(msg) {
+	alert('Something went wrong' + (msg ? '\n\n' + msg : ''))
+}
+
+function scriptResourceError(event) {
+	alert('Script didn\'t load properly:\n\n' + event.srcElement.attributes.src.value);
+}
+
+function stylesheetResourceError(event) {
+	alert('Stylesheet didn\'t load properly:\n\n' + event.srcElement.attributes.href.value);
+}
+
+window.onerror = somethingWentWrong;
+
 (function (ctx) {
 	/*
 	ctx.makeNamespace = function (hierarchyString) {
@@ -25,11 +39,11 @@
 	}
 
 	ctx.loadHtmlResources = function (loadCallback) {
-		ctx.loadResources('HtmlTestEventHandler.js', 'style.css', loadCallback);
+		ctx.loadResources('html.js', 'style.css', loadCallback);
 	}
 
 	ctx.loadConsoleResources = function (loadCallback) {
-		ctx.loadResources('ConsoleTestEventHandler.js', loadCallback);
+		ctx.loadResources('console.js', loadCallback);
 	}
 
 	ctx.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
@@ -69,6 +83,7 @@
 		var script = document.createElement('script');
 		script.src = frameworkBaseURL + file;
 		script.type = 'text/javascript';
+		script.onerror = scriptResourceError;
 		document.head.appendChild(script);
 		script.onload = function () {
 			setLoaded(file);
@@ -81,6 +96,7 @@
 		var stylesheet = document.createElement('link');
 		stylesheet.rel = 'stylesheet';
 		stylesheet.href = frameworkBaseURL + file;
+		stylesheet.onerror = stylesheetResourceError;
 		document.head.appendChild(stylesheet);
 		stylesheet.onload = function () {
 			setLoaded(file);

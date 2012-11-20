@@ -38,7 +38,7 @@ JTF.loadFramework(function () {
 					Assert.equal(t, 'expected test ' + testNo++);
 			},
 
-		})).run(new JTF.Html.TestHandler({ showPasses: true, collapse: JTF.Html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 }));
+		})).run(new JTF.html.TestHandler({ showPasses: true, collapse: JTF.html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 }));
 
 	});
 });

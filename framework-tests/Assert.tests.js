@@ -450,7 +450,7 @@ JTF.loadFramework(function () {
 
 		];
 
-		var handler = new JTF.Html.TestHandler({ showPasses: true, collapse: JTF.Html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 })
+		var handler = new JTF.html.TestHandler({ showPasses: true, collapse: JTF.html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 })
 		new JTF.BatchTestRunner(fixtures).run(handler);
 	});
 });

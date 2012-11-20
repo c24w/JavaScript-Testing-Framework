@@ -67,4 +67,4 @@
 
 	}
 
-})(window.JTF.Console = window.JTF.Console || {});
+})(window.JTF.console = window.JTF.console || {});

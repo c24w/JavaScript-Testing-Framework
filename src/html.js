@@ -273,4 +273,4 @@
 		}
 	}
 
-})(window.JTF.Html = window.JTF.Html || {});
+})(window.JTF.html = window.JTF.html || {});
