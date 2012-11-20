@@ -1,5 +1,7 @@
 window.JTF.Html = window.JTF.Html || (new function () {
 
+	var TestRunner = JTF.TestRunner;
+
 	var TestHandlerConfig = this.TestHandlerConfig = {
 		autocollapse: { none: 0, passes: 1, all: 2 },
 	}
@@ -21,29 +23,28 @@ window.JTF.Html = window.JTF.Html || (new function () {
 	}
 
 	this.TestHandler = function (configuration) {
-
 		var config = addMissingConfigurations(configuration);
 		var fixture, header, testsContainer;
 
 		this.handle = function (handleType) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TEST_RUNNER_EVENT.START:
+				case TestRunner.EVENT.START:
 					startOutputter();
 					break;
-				case TEST_RUNNER_EVENT.DESC:
+				case TestRunner.EVENT.DESC:
 					createFixtureHeader(args[0]);
 					break;
-				case TEST_RUNNER_EVENT.PASS:
+				case TestRunner.EVENT.PASS:
 					appendTestToHtml(true, args[0], args[1]);
 					break;
-				case TEST_RUNNER_EVENT.FAIL:
+				case TestRunner.EVENT.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
-				case TEST_RUNNER_EVENT.STATS:
+				case TestRunner.EVENT.STATS:
 					statsOutputter(args[0], args[1]);
 					break;
-				case TEST_RUNNER_EVENT.END:
+				case TestRunner.EVENT.END:
 					break;
 			}
 		}

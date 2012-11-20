@@ -1,8 +1,16 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
+		var TestFixture = JTF.TestFixture;
+		var Assert = JTF.Assert;
+		var TestRunner = JTF.TestRunner;
+
 		var MockTestFixture, MockTestHandler, trace;
 		function addTrace(t) { trace[trace.length] = t }
+
+		function dataLengthError(type) {
+			return 'wrong amount of {0} data received'.format(type);
+		}
 
 		new TestRunner(new TestFixture('TestRunner tests', {
 
@@ -22,29 +30,30 @@ JTF.loadFramework(function () {
 
 				MockTestHandler = {
 					receivedEvents: { start: false, end: false },
-					receivedData: { desc: [], passedTests: [], failedTests: [], noPasses: [], noFails: [] },
+					receivedData: { desc: [], passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], noPasses: [], noFails: [] },
 					handle: function (handleType) {
 						var args = Array.prototype.slice.call(arguments, 1);
 						switch (handleType) {
-							case TEST_RUNNER_EVENT.START:
+							case TestRunner.EVENT.START:
 								this.receivedEvents.start = true;
 								break;
-							case TEST_RUNNER_EVENT.DESC:
+							case TestRunner.EVENT.DESC:
 								this.receivedData.desc = args;
 								break;
-							case TEST_RUNNER_EVENT.PASS:
-								var index = this.receivedData.passedTests.length;
-								this.receivedData.passedTests[index] = args[0];
+							case TestRunner.EVENT.PASS:
+								var index = this.receivedData.passedTestNames.length;
+								this.receivedData.passedTestNames[index] = args[0];
 								break;
-							case TEST_RUNNER_EVENT.FAIL:
-								var index = this.receivedData.failedTests.length;
-								this.receivedData.failedTests[index] = args[0];
+							case TestRunner.EVENT.FAIL:
+								var index = this.receivedData.failedTestsNames.length;
+								this.receivedData.failedTestsNames[index] = args[0];
+								this.receivedData.failedTestsMsgs[index] = args[1];
 								break;
-							case TEST_RUNNER_EVENT.STATS:
+							case TestRunner.EVENT.STATS:
 								this.receivedData.noPasses = args[0];
 								this.receivedData.noFails = args[1];
 								break;
-							case TEST_RUNNER_EVENT.END:
+							case TestRunner.EVENT.END:
 								this.receivedEvents.end = true;
 								break;
 						}
@@ -55,46 +64,51 @@ JTF.loadFramework(function () {
 			},
 
 			'TestRunner should send test start event to the TestHandler': function () {
-				JTF.Assert.true(MockTestHandler.receivedEvents.start, 'start was not called in TestHandler');
+				JTF.Assert.true(MockTestHandler.receivedEvents.start, 'start event was not received/processed in TestHandler');
 			},
 
 			'TestRunner should send test description event and data to the TestHandler': function () {
 				var fixtureName = 'Mock test fixture';
 				var data = MockTestHandler.receivedData.desc;
-				JTF.Assert.equal(data.length, 1);
-				JTF.Assert.equal(data[0], fixtureName);
+				Assert.equal(data.length, 1, dataLengthError('description'));
+				Assert.equal(data[0], fixtureName);
 			},
 
 			'TestRunner should send test pass event and data to the TestHandler': function () {
-				var data = MockTestHandler.receivedData.passedTests;
-				JTF.Assert.equal(data.length, 3);
+				var data = MockTestHandler.receivedData.passedTestNames;
+				Assert.equal(data.length, 3, dataLengthError('passed test'));
 				for (var i = 0; i < data.length;)
-					JTF.Assert.equal(data[i], 'Passing test ' + (++i));
+					Assert.equal(data[i], 'Passing test ' + (++i));
 			},
 
 			'TestRunner should send test fail event and data to the TestHandler': function () {
-				var data = MockTestHandler.receivedData.failedTests;
-				JTF.Assert.equal(data.length, 3);
-				for (var i = 0; i < data.length;)
-					JTF.Assert.equal(data[i], 'Failing test ' + (++i));
+				var testNames = MockTestHandler.receivedData.failedTestsNames;
+				var testMsgs = MockTestHandler.receivedData.failedTestsMsgs;
+				Assert.equal(testNames.length, 3, dataLengthError('failed test names'));
+				Assert.equal(testMsgs.length, 3, dataLengthError('failed test messages'));
+				for (var i = 0; i < 3; i++) {
+					var testNo = i + 1;
+					Assert.equal(testNames[i], 'Failing test ' + testNo);
+					Assert.equal(testMsgs[i], Assert.DEFAULT_FAIL_MESSAGE);
+				}
 			},
 
 			'TestRunner should send test stats event and data to the TestHandler': function () {
-				JTF.Assert.equal(MockTestHandler.receivedData.noPasses, 3);
-				JTF.Assert.equal(MockTestHandler.receivedData.noFails, 3);
+				Assert.equal(MockTestHandler.receivedData.noPasses, 3, dataLengthError('number of passes'));
+				Assert.equal(MockTestHandler.receivedData.noFails, 3, dataLengthError('number of fails'));
 			},
 
 			'TestRunner should send end stats event and data to the TestHandler': function () {
-				JTF.Assert.true(MockTestHandler.receivedEvents.end, 'end was not called in TestHandler');
+				Assert.true(MockTestHandler.receivedEvents.end, 'end event was not received/processed in TestHandler');
 			},
 
 			'TestRunner should call FIXTURE_SETUP once before any tests are run': function () {
-				JTF.Assert.equal(trace[0], 'FIXTURE_SETUP');
+				Assert.equal(trace[0], 'FIXTURE_SETUP');
 			},
 
 			'TestRunner should call TEST_SETUP once before each test is run': function () {
 				for (var i = 1; i < trace.length; i += 2)
-					JTF.Assert.equal(trace[i], 'TEST_SETUP');
+					Assert.equal(trace[i], 'TEST_SETUP');
 			}
 
 		})).run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));

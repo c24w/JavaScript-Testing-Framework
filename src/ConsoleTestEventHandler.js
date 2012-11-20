@@ -6,6 +6,8 @@ window.JTF.Console = window.JTF.Console || (new function () {
 	var nonFailPadding = spacer + spacer;
 	var bottomLine = '\u2514' + spacer;
 
+	var TestRunner = JTF.TestRunner;
+
 	function getResultMessage(passed, failed) {
 		var total = passed + failed;
 		if (failed == 0)
@@ -21,21 +23,21 @@ window.JTF.Console = window.JTF.Console || (new function () {
 		this.handle = function (handleType /*, args */) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TEST_RUNNER_EVENT.START:
+				case TestRunner.EVENT.START:
 					break;
-				case TEST_RUNNER_EVENT.DESC:
+				case TestRunner.EVENT.DESC:
 					descOutputter(args[0]);
 					break;
-				case TEST_RUNNER_EVENT.PASS:
+				case TestRunner.EVENT.PASS:
 					testOutputter(true, true, args[0]);
 					break;
-				case TEST_RUNNER_EVENT.FAIL:
+				case TestRunner.EVENT.FAIL:
 					testOutputter(true, false, args[0], args[1]);
 					break;
-				case TEST_RUNNER_EVENT.STATS:
-					statsOutputter(args[1], args[1]);
+				case TestRunner.EVENT.STATS:
+					statsOutputter(args[0], args[1]);
 					break;
-				case TEST_RUNNER_EVENT.END:
+				case TestRunner.EVENT.END:
 					break;
 			}
 		}

@@ -1,6 +1,6 @@
-(new function (ctx) {
-
-	this.makeNamespace = function (hierarchyString) {
+(function (ctx) {
+	/*
+	ctx.makeNamespace = function (hierarchyString) {
 		var parts = hierarchyString.split('.');
 		var partsRootNode = window[parts[0]];
 		var currentNode = window;
@@ -11,33 +11,34 @@
 		}
 
 		for (var i = 0; i < parts.length; i++) {
+			currentNode[parts[i]] = currentNode[parts[i]];
 			var nextNode = currentNode[parts[i]];
 			nextNode = nextNode || {};
 			currentNode = nextNode;
 			if (i === parts.length - 1)
 				return currentNode;
 		}
+	}*/
+
+	ctx.loadFramework = function (loadCallback) {
+		ctx.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
 	}
 
-	this.loadFramework = function (loadCallback) {
-		this.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
+	ctx.loadHtmlResources = function (loadCallback) {
+		ctx.loadResources('HtmlTestEventHandler.js', 'style.css', loadCallback);
 	}
 
-	this.loadHtmlResources = function (loadCallback) {
-		this.loadResources('HtmlTestEventHandler.js', 'style.css', loadCallback);
+	ctx.loadConsoleResources = function (loadCallback) {
+		ctx.loadResources('ConsoleTestEventHandler.js', loadCallback);
 	}
 
-	this.loadConsoleResources = function (loadCallback) {
-		this.loadResources('ConsoleTestEventHandler.js', loadCallback);
-	}
-
-	this.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
+	ctx.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
 		var loadCount = 0;
 		var resourceCount = arguments.length - 1;
 		var batchLoadCallback = arguments[arguments.length - 1];
 
 		for (var i = 0; i < resourceCount; i++) {
-			this.loadResource(arguments[i], function () {
+			ctx.loadResource(arguments[i], function () {
 				if (++loadCount === resourceCount && typeof batchLoadCallback !== 'undefined') {
 					batchLoadCallback();
 				}
@@ -45,7 +46,7 @@
 		}
 	}
 
-	this.loadResource = function (file, loadCallback) {
+	ctx.loadResource = function (file, loadCallback) {
 		if (isLoaded(file)) {
 			if (typeof loadCallback !== 'undefined')
 				loadCallback();

@@ -2,6 +2,9 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 		JTF.loadConsoleResources(function () {
 
+			var TestFixture = JTF.TestFixture;
+			var Assert = JTF.Assert;
+
 			function DemoException(message) { this.message = message };
 
 			var fixtures = [
@@ -229,7 +232,7 @@ JTF.loadFramework(function () {
 
 			];
 
-			var runner = new BatchTestRunner(fixtures);
+			var runner = new JTF.BatchTestRunner(fixtures);
 			runner.run(new JTF.Console.TestHandler());
 			runner.run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));
 

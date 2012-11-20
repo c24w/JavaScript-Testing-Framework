@@ -1,6 +1,9 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
+		var TestFixture = JTF.TestFixture;
+		var TestRunner = JTF.TestRunner;
+		var Assert = JTF.Assert;
 		var expectedDesc, testFixture;
 
 		new TestRunner(new TestFixture('TestFixture tests', {
@@ -14,22 +17,25 @@ JTF.loadFramework(function () {
 				});
 			},
 
+			'getDescription should return a default value, if undefined': function () {
+				Assert.equal(new TestFixture().getDescription(), TestFixture.DefaultDescription);
+			},
+
 			'getDescription should return the expected string, if defined': function () {
 				var actual = testFixture.getDescription();
-				JTF.Assert.instance(actual, String);
-				JTF.Assert.equal(actual, expectedDesc);
+				Assert.instance(actual, String);
+				Assert.equal(actual, expectedDesc);
 			},
 
-			'getDescription should return a default value, if undefined': function () {
-				testFixture = new TestFixture();
-				JTF.Assert.equal(testFixture.getDescription(), TestFixture.DefaultDescription);
+			'getTests should return an empty object, if undefined': function () {
+				Assert.equal(Object.keys(new TestFixture().getTests()).length, 0);
 			},
 
-			'getTests should return the expected object': function () {
+			'getTests should return the expected object, if defined': function () {
 				var tests = testFixture.getTests();
 				var testNo = 1;
 				for (var t in tests)
-					JTF.Assert.equal(t, 'expected test ' + testNo++);
+					Assert.equal(t, 'expected test ' + testNo++);
 			},
 
 		})).run(new JTF.Html.TestHandler({ autocollapse: JTF.Html.TestHandlerConfig.autocollapse.none }));
