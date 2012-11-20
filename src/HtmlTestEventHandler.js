@@ -1,8 +1,8 @@
-window.JTF.Html = window.JTF.Html || (new function () {
+(function (ctx) {
 
 	var TestRunner = JTF.TestRunner;
 
-	var TestHandlerConfig = this.TestHandlerConfig = {
+	var TestHandlerConfig = ctx.TestHandlerConfig = {
 		autocollapse: { none: 0, passes: 1, all: 2 },
 	}
 
@@ -22,7 +22,7 @@ window.JTF.Html = window.JTF.Html || (new function () {
 		return config;
 	}
 
-	this.TestHandler = function (configuration) {
+	ctx.TestHandler = function (configuration) {
 		var config = addMissingConfigurations(configuration);
 		var fixture, header, testsContainer;
 
@@ -239,4 +239,4 @@ window.JTF.Html = window.JTF.Html || (new function () {
 		}
 	}
 
-});
+})(window.JTF.Html = window.JTF.Html || {});
