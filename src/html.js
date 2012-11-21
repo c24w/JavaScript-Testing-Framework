@@ -35,10 +35,11 @@
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
 				case TestRunner.EVENT.FIXTURE.START:
-					startOutputter();
+					addControls();
+					createFixture();
 					break;
 				case TestRunner.EVENT.FIXTURE.DESC:
-					createFixtureHeader(args[0]);
+					setHeader(args[0]);
 					break;
 				case TestRunner.EVENT.FIXTURE.PASS:
 					appendTestToHtml(true, args[0], args[1]);
@@ -55,6 +56,35 @@
 					batchEnd();
 					break;
 			}
+		}
+
+		function createFixture() {
+			fixture = html.makeDiv('testfixture');
+			header = html.makeDiv('header');
+			testsContainer = html.makeDiv('tests');
+			ctx.addTo(fixture, header);
+			ctx.addTo(fixture, testsContainer);
+			ctx.addTo(document.body, fixture);
+		}
+
+		function setHeader(description) {
+			var desc = html.makeDiv('description');
+			desc.innerHTML = formatCodeParts(description);
+			ctx.addTo(header, desc);
+		}
+
+		function appendTestToHtml(testPassed, testName, msg) {
+			var className = getTestClassName(testPassed);
+			var test = html.makeDiv(className);
+			var name = html.makeDiv('name');
+			name.innerHTML = formatCodeParts(testName);
+			ctx.addTo(test, name);
+			if (typeof msg !== 'undefined') {
+				var info = html.makeDiv('info');
+				info.innerHTML = formatCodeParts(msg);
+				ctx.addTo(test, info);
+			}
+			ctx.addTo(testsContainer, test);
 		}
 
 		function batchEnd() {
@@ -81,50 +111,42 @@
 			return currentConfig.runInterval > 0;
 		}
 
-		function startOutputter() {
-			if (document.body.children.length === 0)
-				addControls();
-			fixture = html.makeDiv('testfixture');
-			header = html.makeDiv('header');
-			testsContainer = html.makeDiv('tests');
-			addTo(fixture, header);
-			addTo(fixture, testsContainer);
-			addTo(document.body, fixture);
-		}
-
 		function addControls() {
+			if (document.body.children.length > 0)
+				return;
+
 			var controls = html.makeDiv('controls');
-			var text = html.makeEl('span');
-			addText(text, 'Expand:')
+			var label = html.makeEl('span');
+			ctx.addTextTo(label, 'Expand:')
 
-			addTo(controls, text);
+			ctx.addTo(controls, label);
 
-			addTo(controls, html.makeOnClickButton('All', function () {
+			ctx.addTo(controls, html.makeOnClickButton('All', function () {
 				html.removeClassFromMany('.testfixture.collapsed', 'collapsed');
 			}));
 
-			addTo(controls, html.makeOnClickButton('Passes', function () {
+			ctx.addTo(controls, html.makeOnClickButton('Passes', function () {
 				html.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
 			}));
 
-			addTo(controls, html.makeOnClickButton('Fails', function () {
+			ctx.addTo(controls, html.makeOnClickButton('Fails', function () {
 				html.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
 			}));
 
-			text = html.makeEl('span');
-			text.style.marginLeft = '2em';
-			addText(text, 'Collapse:')
-			addTo(controls, text);
+			label = html.makeEl('span');
+			label.style.marginLeft = '2em';
+			ctx.addTextTo(label, 'Collapse:')
+			ctx.addTo(controls, label);
 
-			addTo(controls, html.makeOnClickButton('All', function () {
+			ctx.addTo(controls, html.makeOnClickButton('All', function () {
 				html.addClassToMany('.testfixture', 'collapsed');
 			}));
 
-			addTo(controls, html.makeOnClickButton('Passes', function () {
+			ctx.addTo(controls, html.makeOnClickButton('Passes', function () {
 				html.addClassToMany('.testfixture.passed', 'collapsed');
 			}));
 
-			addTo(controls, html.makeOnClickButton('Fails', function () {
+			ctx.addTo(controls, html.makeOnClickButton('Fails', function () {
 				html.addClassToMany('.testfixture.failed', 'collapsed');
 			}));
 
@@ -134,7 +156,7 @@
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
-				addTo(controls, btn);
+				ctx.addTo(controls, btn);
 			}
 
 			if (currentConfig.runInterval > 0) {
@@ -143,23 +165,19 @@
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
-				addTo(controls, btn);
+				ctx.addTo(controls, btn);
 			}
 
 			var btn = html.makeOnClickButton('Reload', function () {
 				window.location.reload();
 			});
 			btn.style.marginLeft = '2em';
-			addTo(controls, btn);
+			ctx.addTo(controls, btn);
 
-			addTo(document.body, controls);
+			ctx.addTo(document.body, controls);
 		}
 
-		function createFixtureHeader(description) {
-			var desc = html.makeDiv('description');
-			desc.innerHTML = formatCodeParts(description);
-			addTo(header, desc);
-		}
+
 
 		function statsOutputter(passes, fails) {
 			if (fixtureShouldBeCollapsed(fails > 0))
@@ -168,8 +186,8 @@
 			if (fails === 0 && !currentConfig.showPasses)
 				fixture.className += ' hidden';
 			var result = html.makeDiv('result');
-			addText(result, getResultMessage(passes, fails));
-			addTo(header, result);
+			ctx.addTextTo(result, getResultMessage(passes, fails));
+			ctx.addTo(header, result);
 			if (currentConfig.notifyOnFail && fails > 0) {
 				totalFails += fails;
 			}
@@ -194,19 +212,6 @@
 			}
 		}
 
-		function appendTestToHtml(testPassed, testName, msg) {
-			var className = getTestClassName(testPassed);
-			var test = html.makeDiv(className);
-			var name = html.makeDiv('name');
-			name.innerHTML = formatCodeParts(testName);
-			addTo(test, name);
-			if (typeof msg !== 'undefined') {
-				var info = html.makeDiv('info');
-				info.innerHTML = formatCodeParts(msg);
-				addTo(test, info);
-			}
-			addTo(testsContainer, test);
-		}
 	}
 
 	function getResultMessage(passes, fails) {
@@ -223,14 +228,6 @@
 		var resultClass = testPassed ? ' pass' : ' fail';
 		var className = 'test' + resultClass;
 		return className;
-	}
-
-	function addTo(parent, el) {
-		parent.appendChild(el);
-	}
-
-	function addText(element, text) {
-		element.appendChild(document.createTextNode(text));
 	}
 
 	function formatCodeParts(testName) {

@@ -1,4 +1,7 @@
-window.onerror = function (msg) { alert('Something went wrong' + (msg ? '\n\n' + msg : '')) }
+window.onerror = function (msg) {
+	if (confirm('Something went wrong' + (msg ? '\n\n' + msg : '') + '\n\nClick OK to reload'))
+		setTimeout(function () { window.location.reload() }, 0);
+}
 
 function resourceErrorFromEvent(event) {
 	var file = (typeof info === 'string') ? info : (event.srcElement.attributes.src || event.srcElement.attributes.href).value
@@ -6,11 +9,8 @@ function resourceErrorFromEvent(event) {
 }
 
 function resourceErrorMsg(info) {
-	alert('Resource didn\'t load properly:\n\n' + info);
-}
-
-function setErrorState() {
-
+	if (confirm('Resource didn\'t load properly:\n\n' + info + '\n\nClick OK to reload'))
+		setTimeout(function () { window.location.reload() }, 0);
 }
 
 (function (ctx) {

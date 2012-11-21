@@ -29,13 +29,21 @@
 	}
 
 	ctx.makeDiv = function (className) {
-		var d = ctx.makeEl('div');
-		if (className) d.className = className;
-		return d;
+		return ctx.makeEl('div', className);
 	}
 
-	ctx.makeEl = function (type) {
-		return document.createElement(type);
+	ctx.makeEl = function (type, className) {
+		var e = document.createElement(type);
+		e.className = className || '';
+		return e;
+	}
+
+	ctx.addTextTo = function (element, text) {
+		element.appendChild(document.createTextNode(text));
+	}
+
+	ctx.addTo = function (parent, el) {
+		parent.appendChild(el);
 	}
 
 })(window.JTF.html = window.JTF.html || {});
