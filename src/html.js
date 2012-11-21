@@ -15,14 +15,14 @@
 		notifyOnFail: false
 	}
 
-	function addMissingConfigurations(currentConfig) {
-		if (!currentConfig) return DefaultConfig;
+	function addMissingConfigurations(config) {
+		if (!config) return DefaultConfig;
 		else {
 			for (var option in DefaultConfig) {
-				currentConfig[option] = currentConfig[option] || DefaultConfig[option];
+				config[option] = config[option] || DefaultConfig[option];
 			}
 		}
-		return currentConfig;
+		return config;
 	}
 
 	html.TestHandler = function (configuration) {
@@ -34,8 +34,10 @@
 		this.handle = function (handleType) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TestRunner.EVENT.FIXTURE.START:
+				case TestRunner.EVENT.BATCH.START:
 					addControls();
+					break;
+				case TestRunner.EVENT.FIXTURE.START:
 					createFixture();
 					break;
 				case TestRunner.EVENT.FIXTURE.DESC:
@@ -112,9 +114,6 @@
 		}
 
 		function addControls() {
-			if (document.body.children.length > 0)
-				return;
-
 			var controls = html.makeDiv('controls');
 			var label = html.makeEl('span');
 			ctx.addTextTo(label, 'Expand:')
@@ -176,8 +175,6 @@
 
 			ctx.addTo(document.body, controls);
 		}
-
-
 
 		function statsOutputter(passes, fails) {
 			if (fixtureShouldBeCollapsed(fails > 0))

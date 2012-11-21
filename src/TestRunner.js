@@ -10,6 +10,7 @@
 			END: 5
 		},
 		BATCH: {
+			START: 7,
 			END: 6
 		}
 	}
@@ -72,6 +73,7 @@
 	ctx.Batch = function (testFixtures) {
 
 		this.run = function (testEventHandler) {
+			testEventHandler.handle(ctx.EVENT.BATCH.START);
 			for (var f in testFixtures)
 				new TestRunner(testFixtures[f]).run(testEventHandler);
 			testEventHandler.handle(ctx.EVENT.BATCH.END);
@@ -82,6 +84,7 @@
 	ctx.Single = function (testFixture) {
 
 		this.run = function (testEventHandler) {
+			testEventHandler.handle(ctx.EVENT.BATCH.START);
 			new TestRunner(testFixture).run(testEventHandler);
 			testEventHandler.handle(ctx.EVENT.BATCH.END);
 		}
