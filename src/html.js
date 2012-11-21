@@ -199,7 +199,10 @@
 		function headerOnclickClosure(fixture) {
 			return function () {
 				var cn = fixture.className;
-				fixture.className = 'testfixture' + status + collapsed + hidden;
+				if (cn.indexOf('collapsed') === -1)
+					ctx.addClassTo(fixture, 'collapsed');
+				else
+					ctx.removeClassFrom(fixture, 'collapsed');
 			}
 		}
 

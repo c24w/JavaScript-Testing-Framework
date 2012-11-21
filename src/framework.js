@@ -42,7 +42,7 @@ var suppressErrorAlerts = false;
 
 	function confirmReload(msg) {
 		if (!suppressErrorAlerts && confirm(msg + '\n\nClick OK to reload'))
-			window.location.reload();
+			window.location.reload(true);
 	}
 
 	/*
