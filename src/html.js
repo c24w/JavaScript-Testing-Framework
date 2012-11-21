@@ -1,33 +1,33 @@
 (function (ctx) {
 
-	var TestRunner = JTF.TestRunner;
-
 	var totalFails = 0;
 
-	var TestHandlerConfig = ctx.TestHandlerConfig = {
-		collapse: { none: 0, passes: 1, all: 2 },
+	var CONFIG = ctx.CONFIG = {
+		COLLAPSE: { NONE: 0, PASSES: 1, ALL: 2 },
 	}
 
 	var DefaultConfig = {
-		collapse: TestHandlerConfig.collapse.none,
+		collapse: CONFIG.COLLAPSE.PASSES,
 		showPasses: true,
 		runInterval: 0,
 		notifyOnFail: false
 	}
 
-	function addMissingConfigurations(config) {
-		if (!config) return DefaultConfig;
+	function addMissingConfigurations(currentConfig) {
+		if (!currentConfig) return DefaultConfig;
 		else {
 			for (var option in DefaultConfig) {
-				config[option] = config[option] || DefaultConfig[option];
+				currentConfig[option] = currentConfig[option] || DefaultConfig[option];
 			}
 		}
-		return config;
+		return currentConfig;
 	}
 
 	ctx.TestHandler = function (configuration) {
-		var config = addMissingConfigurations(configuration);
+		var TestRunner = JTF.TestRunner;
+		var currentConfig = addMissingConfigurations(configuration);
 		var fixture, header, testsContainer;
+		var reRunTimer;
 
 		this.handle = function (handleType) {
 			var args = Array.prototype.slice.call(arguments, 1);
@@ -59,12 +59,12 @@
 			if (totalFails > 0) {
 				if (isSetToReRun()) {
 					if (shouldCancelReRuns())
-						config.runInterval = 0;
+						currentConfig.runInterval = 0;
 				}
 				else showFailsAlert();
 			}
-			if (config.runInterval > 0)
-				setTimeout(function () { window.location.reload() }, config.runInterval);
+			if (currentConfig.runInterval > 0)
+				reRunTimer = setTimeout(function () { window.location.reload() }, currentConfig.runInterval);
 		}
 
 		function shouldCancelReRuns() {
@@ -76,7 +76,7 @@
 		}
 
 		function isSetToReRun() {
-			return config.runInterval > 0;
+			return currentConfig.runInterval > 0;
 		}
 
 		function startOutputter() {
@@ -126,9 +126,18 @@
 				setClass('.testfixture.failed .tests', 'tests collapsed');
 			}));
 
-			if (config.showPasses) {
+			if (currentConfig.showPasses) {
 				var btn = makeControlButton('Hide Passes', function () {
 					setClass('.testfixture.passed', 'testfixture passed hidden');
+					this.style.visibility = 'hidden';
+				});
+				btn.style.marginLeft = '2em';
+				addTo(controls, btn);
+			}
+
+			if (currentConfig.runInterval > 0) {
+				btn = makeControlButton('Stop re-runs', function () {
+					clearTimeout(reRunTimer);
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
@@ -167,23 +176,25 @@
 			if (shouldBeCollapsed(fails))
 				testsContainer.className += ' collapsed';
 			fixture.className += fails > 0 ? ' failed' : ' passed';
-			if (fails === 0 && !config.showPasses)
+			if (fails === 0 && !currentConfig.showPasses)
 				fixture.className += ' hidden';
 			var result = makeDiv('result');
 			addText(result, getResultMessage(passes, fails));
 			addTo(header, result);
-			if (config.notifyOnFail && fails > 0) {
+			if (currentConfig.notifyOnFail && fails > 0) {
 				totalFails += fails;
 			}
 		}
 
 		function shouldBeCollapsed(numFails) {
-			if (config.collapse === TestHandlerConfig.collapse.none)
-				return false;
-			if (config.collapse === TestHandlerConfig.collapse.all)
-				return true;
-			if (TestHandlerConfig.collapse.passes && numFails === 0)
-				return true;
+			switch (currentConfig.collapse) {
+				case CONFIG.COLLAPSE.NONE:
+					return false;
+				case CONFIG.COLLAPSE.ALL:
+					return true;
+				case CONFIG.COLLAPSE.PASSES:
+					return numFails === 0;
+			}
 		}
 
 		function appendTestToHtml(testPassed, testName, msg) {

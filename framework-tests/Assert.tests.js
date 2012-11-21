@@ -449,10 +449,10 @@ JTF.loadFramework(function () {
 		];
 
 		var handler = new JTF.html.TestHandler({
-			collapse: JTF.html.TestHandlerConfig.collapse.passes,
+			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
 			notifyOnFail: true,
-			runInterval: 5000
+			runInterval: 10000
 		})
 
 		new JTF.TestRunner.Batch(fixtures).run(handler);

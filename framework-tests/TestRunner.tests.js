@@ -111,7 +111,12 @@ JTF.loadFramework(function () {
 					Assert.equal(trace[i], 'TEST_SETUP');
 			}
 
-		})).run(new JTF.html.TestHandler({ showPasses: true, collapse: JTF.html.TestHandlerConfig.collapse.passes, notifyOnFail: true, runInterval: 5000 }));
+		})).run(new JTF.html.TestHandler({
+			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
+			showPasses: true,
+			notifyOnFail: true,
+			runInterval: 10000
+		}));
 
 	});
 });
