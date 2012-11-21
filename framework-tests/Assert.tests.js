@@ -451,7 +451,7 @@ JTF.loadFramework(function () {
 		var handler = new JTF.html.TestHandler({
 			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
-			notifyOnFail: true,
+			notifyOnFail: false,
 			runInterval: 10000
 		})
 

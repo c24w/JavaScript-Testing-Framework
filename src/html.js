@@ -26,6 +26,7 @@
 	}
 
 	html.TestHandler = function (configuration) {
+		JTF.setState('', JTF.resources.progressIcon);
 		var TestRunner = JTF.TestRunner;
 		var currentConfig = addMissingConfigurations(configuration);
 		var fixture, header, testsContainer;
@@ -91,12 +92,16 @@
 
 		function batchEnd() {
 			if (totalFails > 0) {
-				if (isSetToReRun()) {
-					if (shouldCancelReRuns())
-						currentConfig.runInterval = 0;
+				JTF.setState('', JTF.resources.failIcon);
+				if (currentConfig.notifyOnFail) {
+					if (isSetToReRun()) {
+						if (shouldCancelReRuns())
+							currentConfig.runInterval = 0;
+					}
+					else showFailsAlert();
 				}
-				else showFailsAlert();
 			}
+			else JTF.setState('', JTF.resources.passIcon);
 			if (currentConfig.runInterval > 0)
 				reRunTimer = setTimeout(function () { window.location.reload() }, currentConfig.runInterval);
 		}
@@ -185,7 +190,7 @@
 			var result = html.makeDiv('result');
 			ctx.addTextTo(result, getResultMessage(passes, fails));
 			ctx.addTo(header, result);
-			if (currentConfig.notifyOnFail && fails > 0) {
+			if (fails > 0) {
 				totalFails += fails;
 			}
 			header.onclick = headerOnclickClosure(fixture);

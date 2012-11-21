@@ -34,7 +34,7 @@
 
 	ctx.makeEl = function (type, className) {
 		var e = document.createElement(type);
-		e.className = className || '';
+		if (className) e.className = className;
 		return e;
 	}
 

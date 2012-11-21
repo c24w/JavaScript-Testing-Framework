@@ -1,19 +1,50 @@
-window.onerror = function (msg) {
-	if (confirm('Something went wrong' + (msg ? '\n\n' + msg : '') + '\n\nClick OK to reload'))
-		setTimeout(function () { window.location.reload() }, 0);
-}
-
-function resourceErrorFromEvent(event) {
-	var file = (typeof info === 'string') ? info : (event.srcElement.attributes.src || event.srcElement.attributes.href).value
-	resourceErrorMsg(file);
-}
-
-function resourceErrorMsg(info) {
-	if (confirm('Resource didn\'t load properly:\n\n' + info + '\n\nClick OK to reload'))
-		setTimeout(function () { window.location.reload() }, 0);
-}
+var suppressErrorAlerts = false;
 
 (function (ctx) {
+
+	ctx.setState = function (title, iconData) {
+		var favicon;
+		var linkEls = document.head.getElementsByTagName('link');
+		for (var i = 0; i < linkEls.length; i++) {
+			if (linkEls[i].rel === 'shortcut icon')
+				favicon = linkEls[i];
+		}
+		if (!favicon) {
+			favicon = document.createElement('link');
+			favicon.rel = 'shortcut icon';
+		}
+		favicon.type = iconData.substring(iconData.indexOf(':') + 1, iconData.indexOf(';'));
+		favicon.href = iconData;
+		document.head.appendChild(favicon);
+		document.title = title;
+	}
+
+	ctx.setState('', '');
+
+	function setErrorState() {
+		if (JTF.resources) ctx.setState('E R R O R', JTF.resources.errorIcon);
+	}
+
+	window.onerror = function (msg) {
+		setErrorState();
+		confirmReload(msg);
+	}
+
+	ctx.resourceErrorFromEvent = function (event) {
+		var file = (event.srcElement.attributes.src || event.srcElement.attributes.href).value
+		resourceErrorMsg(file);
+	}
+
+	function resourceErrorMsg(msg) {
+		setErrorState();
+		confirmReload('Something went wrong' + (msg ? '\n\n' + msg : ''));
+	}
+
+	function confirmReload(msg) {
+		if (!suppressErrorAlerts && confirm(msg + '\n\nClick OK to reload'))
+			window.location.reload();
+	}
+
 	/*
 	ctx.makeNamespace = function (hierarchyString) {
 		var parts = hierarchyString.split('.');
@@ -36,7 +67,9 @@ function resourceErrorMsg(info) {
 	}*/
 
 	ctx.loadFramework = function (loadCallback) {
-		ctx.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
+		ctx.loadResource('resources.js', function () {
+			ctx.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
+		});
 	}
 
 	ctx.loadHtmlResources = function (loadCallback) {
@@ -86,7 +119,7 @@ function resourceErrorMsg(info) {
 		var script = document.createElement('script');
 		script.src = frameworkBaseURL + file;
 		script.type = 'text/javascript';
-		script.onerror = resourceErrorFromEvent;
+		script.onerror = JTF.resourceErrorFromEvent;
 		document.head.appendChild(script);
 		script.onload = function () {
 			setLoaded(file);
@@ -99,7 +132,7 @@ function resourceErrorMsg(info) {
 		var stylesheet = document.createElement('link');
 		stylesheet.rel = 'stylesheet';
 		stylesheet.href = frameworkBaseURL + file;
-		stylesheet.onerror = resourceErrorFromEvent;
+		stylesheet.onerror = JTF.resourceErrorFromEvent;
 		document.head.appendChild(stylesheet);
 		stylesheet.onload = function () {
 			setLoaded(file);
