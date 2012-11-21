@@ -1,8 +1,10 @@
 (function (ctx) {
 
+	var html = ctx;
+
 	var totalFails = 0;
 
-	var CONFIG = ctx.CONFIG = {
+	var CONFIG = html.CONFIG = {
 		COLLAPSE: { NONE: 0, PASSES: 1, ALL: 2 },
 	}
 
@@ -23,7 +25,7 @@
 		return currentConfig;
 	}
 
-	ctx.TestHandler = function (configuration) {
+	html.TestHandler = function (configuration) {
 		var TestRunner = JTF.TestRunner;
 		var currentConfig = addMissingConfigurations(configuration);
 		var fixture, header, testsContainer;
@@ -82,53 +84,53 @@
 		function startOutputter() {
 			if (document.body.children.length === 0)
 				addControls();
-			fixture = makeDiv('testfixture');
-			header = makeDiv('header');
-			testsContainer = makeDiv('tests');
+			fixture = html.makeDiv('testfixture');
+			header = html.makeDiv('header');
+			testsContainer = html.makeDiv('tests');
 			addTo(fixture, header);
 			addTo(fixture, testsContainer);
 			addTo(document.body, fixture);
 		}
 
 		function addControls() {
-			var controls = makeDiv('controls');
-			var text = makeEl('span');
+			var controls = html.makeDiv('controls');
+			var text = html.makeEl('span');
 			addText(text, 'Expand:')
 
 			addTo(controls, text);
 
-			addTo(controls, makeControlButton('All', function () {
-				setClass('.testfixture .tests.collapsed', 'tests');
+			addTo(controls, html.makeOnClickButton('All', function () {
+				html.removeClassFromMany('.testfixture.collapsed', 'collapsed');
 			}));
 
-			addTo(controls, makeControlButton('Passes', function () {
-				setClass('.testfixture.passed .tests.collapsed', 'tests');
+			addTo(controls, html.makeOnClickButton('Passes', function () {
+				html.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
 			}));
 
-			addTo(controls, makeControlButton('Fails', function () {
-				setClass('.testfixture.failed .tests.collapsed', 'tests');
+			addTo(controls, html.makeOnClickButton('Fails', function () {
+				html.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
 			}));
 
-			text = makeEl('span');
+			text = html.makeEl('span');
 			text.style.marginLeft = '2em';
 			addText(text, 'Collapse:')
 			addTo(controls, text);
 
-			addTo(controls, makeControlButton('All', function () {
-				setClass('.testfixture .tests', 'tests collapsed');
+			addTo(controls, html.makeOnClickButton('All', function () {
+				html.addClassToMany('.testfixture', 'collapsed');
 			}));
 
-			addTo(controls, makeControlButton('Passes', function () {
-				setClass('.testfixture.passed .tests', 'tests collapsed');
+			addTo(controls, html.makeOnClickButton('Passes', function () {
+				html.addClassToMany('.testfixture.passed', 'collapsed');
 			}));
 
-			addTo(controls, makeControlButton('Fails', function () {
-				setClass('.testfixture.failed .tests', 'tests collapsed');
+			addTo(controls, html.makeOnClickButton('Fails', function () {
+				html.addClassToMany('.testfixture.failed', 'collapsed');
 			}));
 
 			if (currentConfig.showPasses) {
-				var btn = makeControlButton('Hide Passes', function () {
-					setClass('.testfixture.passed', 'testfixture passed hidden');
+				var btn = html.makeOnClickButton('Hide Passes', function () {
+					html.addClassToMany('.testfixture.passed', 'hidden');
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
@@ -136,7 +138,7 @@
 			}
 
 			if (currentConfig.runInterval > 0) {
-				btn = makeControlButton('Stop re-runs', function () {
+				btn = html.makeOnClickButton('Stop re-runs', function () {
 					clearTimeout(reRunTimer);
 					this.style.visibility = 'hidden';
 				});
@@ -144,7 +146,7 @@
 				addTo(controls, btn);
 			}
 
-			var btn = makeControlButton('Reload', function () {
+			var btn = html.makeOnClickButton('Reload', function () {
 				window.location.reload();
 			});
 			btn.style.marginLeft = '2em';
@@ -153,73 +155,57 @@
 			addTo(document.body, controls);
 		}
 
-		function makeControlButton(label, func) {
-			var button = makeEl('button');
-			button.innerHTML = label;
-			button.onclick = func;
-			return button;
-		}
-
-		function setClass(selector, newClass) {
-			var selection = document.querySelectorAll(selector);
-			for (var i = 0; i < selection.length; i++)
-				selection[i].className = newClass;
-		}
-
 		function createFixtureHeader(description) {
-			var desc = makeDiv('description');
+			var desc = html.makeDiv('description');
 			desc.innerHTML = formatCodeParts(description);
 			addTo(header, desc);
 		}
 
 		function statsOutputter(passes, fails) {
-			if (shouldBeCollapsed(fails))
-				testsContainer.className += ' collapsed';
+			if (fixtureShouldBeCollapsed(fails > 0))
+				fixture.className += ' collapsed';
 			fixture.className += fails > 0 ? ' failed' : ' passed';
 			if (fails === 0 && !currentConfig.showPasses)
 				fixture.className += ' hidden';
-			var result = makeDiv('result');
+			var result = html.makeDiv('result');
 			addText(result, getResultMessage(passes, fails));
 			addTo(header, result);
 			if (currentConfig.notifyOnFail && fails > 0) {
 				totalFails += fails;
 			}
+			header.onclick = headerOnclickClosure(fixture);
 		}
 
-		function shouldBeCollapsed(numFails) {
+		function headerOnclickClosure(fixture) {
+			return function () {
+				var cn = fixture.className;
+				fixture.className = 'testfixture' + status + collapsed + hidden;
+			}
+		}
+
+		function fixtureShouldBeCollapsed(hasFails) {
 			switch (currentConfig.collapse) {
 				case CONFIG.COLLAPSE.NONE:
 					return false;
 				case CONFIG.COLLAPSE.ALL:
 					return true;
 				case CONFIG.COLLAPSE.PASSES:
-					return numFails === 0;
+					return !hasFails;
 			}
 		}
 
 		function appendTestToHtml(testPassed, testName, msg) {
 			var className = getTestClassName(testPassed);
-			var test = makeDiv(className);
-			var name = makeDiv('name');
+			var test = html.makeDiv(className);
+			var name = html.makeDiv('name');
 			name.innerHTML = formatCodeParts(testName);
 			addTo(test, name);
-
 			if (typeof msg !== 'undefined') {
-				var info = makeDiv('info');
+				var info = html.makeDiv('info');
 				info.innerHTML = formatCodeParts(msg);
 				addTo(test, info);
 			}
-
-			header.onclick = headerOnclickClosure(testsContainer);
-
 			addTo(testsContainer, test);
-		}
-	}
-
-	function headerOnclickClosure(testsContainer) {
-		return function () {
-			var cn = testsContainer.className;
-			testsContainer.className = 'tests' + (cn === 'tests' ? ' collapsed' : '');
 		}
 	}
 
@@ -237,16 +223,6 @@
 		var resultClass = testPassed ? ' pass' : ' fail';
 		var className = 'test' + resultClass;
 		return className;
-	}
-
-	function makeDiv(className) {
-		var d = makeEl('div');
-		if (className) d.className = className;
-		return d;
-	}
-
-	function makeEl(type) {
-		return document.createElement(type);
 	}
 
 	function addTo(parent, el) {

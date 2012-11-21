@@ -232,9 +232,9 @@ JTF.loadFramework(function () {
 
 			];
 
-			var runner = new JTF.BatchTestRunner(fixtures);
+			var runner = new JTF.TestRunner.Batch(fixtures);
 			runner.run(new JTF.console.TestHandler());
-			runner.run(new JTF.html.TestHandler({ collapse: JTF.Html.TestHandlerConfig.collapse.none }));
+			runner.run(new JTF.html.TestHandler({ collapse: JTF.html.CONFIG.COLLAPSE.NONE}));
 
 		});
 	});

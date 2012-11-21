@@ -40,7 +40,7 @@ function setErrorState() {
 	}
 
 	ctx.loadHtmlResources = function (loadCallback) {
-		ctx.loadResources('html.js', 'style.css', loadCallback);
+		ctx.loadResources('html.js', 'html-tools.js', 'style.css', loadCallback);
 	}
 
 	ctx.loadConsoleResources = function (loadCallback) {
