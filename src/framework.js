@@ -1,9 +1,10 @@
-var suppressErrorAlerts = false;
+var suppressErrorAlerts = true;
 
 (function (ctx) {
 
 	ctx.setState = function (title, iconData) {
 		var favicon;
+		document.title = title;
 		var linkEls = document.head.getElementsByTagName('link');
 		for (var i = 0; i < linkEls.length; i++) {
 			if (linkEls[i].rel === 'shortcut icon')
@@ -16,13 +17,14 @@ var suppressErrorAlerts = false;
 		favicon.type = iconData.substring(iconData.indexOf(':') + 1, iconData.indexOf(';'));
 		favicon.href = iconData;
 		document.head.appendChild(favicon);
-		document.title = title;
 	}
 
 	ctx.setState('', '');
 
 	function setErrorState() {
-		if (JTF.resources) ctx.setState('E R R O R', JTF.resources.errorIcon);
+		ctx.loadResource('resources.js', function () {
+			ctx.setState('E R R O R', JTF.resources.errorIcon);
+		});
 	}
 
 	window.onerror = function (msg) {

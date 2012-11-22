@@ -33,29 +33,30 @@
 		var reRunTimer;
 
 		this.handle = function (handleType) {
+			var TREvent = JTF.TestRunner.EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TestRunner.EVENT.BATCH.START:
+				case TREvent.BATCH.START:
 					addControls();
 					break;
-				case TestRunner.EVENT.FIXTURE.START:
+				case TREvent.FIXTURE.START:
 					createFixture();
 					break;
-				case TestRunner.EVENT.FIXTURE.DESC:
+				case TREvent.FIXTURE.DESC:
 					setHeader(args[0]);
 					break;
-				case TestRunner.EVENT.FIXTURE.PASS:
-					appendTestToHtml(true, args[0], args[1]);
+				case TREvent.FIXTURE.PASS:
+					appendTestToHtml(true, args[0]);
 					break;
-				case TestRunner.EVENT.FIXTURE.FAIL:
+				case TREvent.FIXTURE.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
-				case TestRunner.EVENT.FIXTURE.STATS:
+				case TREvent.FIXTURE.STATS:
 					statsOutputter(args[0], args[1]);
 					break;
-				case TestRunner.EVENT.FIXTURE.END:
+				case TREvent.FIXTURE.END:
 					break;
-				case TestRunner.EVENT.BATCH.END:
+				case TREvent.BATCH.END:
 					batchEnd();
 					break;
 			}

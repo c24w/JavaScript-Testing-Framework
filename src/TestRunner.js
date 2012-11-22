@@ -39,23 +39,21 @@
 
 			var tests = testFixture.getTests();
 
-			var fixtureSetup = tests.FIXTURE_SETUP;
-			var testSetup = tests.TEST_SETUP;
-
-			if (fixtureSetup) {
-				fixtureSetup();
+			if (tests.FIXTURE_SETUP) {
+				tests.FIXTURE_SETUP();
 				delete tests.FIXTURE_SETUP;
 			}
 
+			var testSetup = tests.TEST_SETUP;
+			if (testSetup) delete tests.TEST_SETUP;
+
 			for (var testName in tests) {
+				if (testSetup) testSetup();
 				try {
-					if (testName !== 'TEST_SETUP') {
-						if (testSetup) testSetup();
-						var test = tests[testName];
-						test();
-						testEventHandler.handle(ctx.EVENT.FIXTURE.PASS, testName);
-						passes++;
-					}
+					var test = tests[testName];
+					test();
+					testEventHandler.handle(ctx.EVENT.FIXTURE.PASS, testName);
+					passes++;
 				}
 				catch (e) {
 					testEventHandler.handle(ctx.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));

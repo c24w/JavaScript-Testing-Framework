@@ -16,10 +16,9 @@ JTF.loadFramework(function () {
 
 			FIXTURE_SETUP: function () {
 				trace = [];
-
 				MockTestFixture = new TestFixture('Mock test fixture', {
 					FIXTURE_SETUP: function () { addTrace('FIXTURE_SETUP') },
-					TEST_SETUP: function () { addTrace('TEST_SETUP') },
+					TEST_SETUP: function () { addTrace('TEST_SETUP'); },
 					'Passing test 1': function () { addTrace('Test 1'); JTF.Assert.true(true) },
 					'Passing test 2': function () { addTrace('Test 2'); JTF.Assert.true(true) },
 					'Passing test 3': function () { addTrace('Test 3'); JTF.Assert.true(true) },
@@ -114,7 +113,7 @@ JTF.loadFramework(function () {
 		})).run(new JTF.html.TestHandler({
 			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
-			notifyOnFail: true,
+			notifyOnFail: false,
 			runInterval: 10000
 		}));
 
