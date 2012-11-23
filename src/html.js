@@ -10,7 +10,8 @@
 		collapse: CONFIG.COLLAPSE.PASSES,
 		showPasses: true,
 		runInterval: 0,
-		notifyOnFail: false
+		notifyOnFail: false,
+		rootElement: document.body
 	}
 
 	function addMissingConfigurations(config) {
@@ -66,7 +67,7 @@
 			testsContainer = ctx.makeDiv('tests');
 			ctx.addTo(fixture, header);
 			ctx.addTo(fixture, testsContainer);
-			ctx.addTo(document.body, fixture);
+			ctx.addTo(currentConfig.rootElement, fixture);
 		}
 
 		function setHeader(description) {
@@ -177,7 +178,7 @@
 			btn.style.marginLeft = '2em';
 			ctx.addTo(controls, btn);
 
-			ctx.addTo(document.body, controls);
+			ctx.addTo(currentConfig.rootElement, controls);
 		}
 
 		function statsOutputter(passes, fails) {
