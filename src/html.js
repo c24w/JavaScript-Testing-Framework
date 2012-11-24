@@ -1,7 +1,5 @@
 (function (ctx) {
 
-	var totalFails = 0;
-
 	var CONFIG = ctx.CONFIG = {
 		COLLAPSE: { NONE: 0, PASSES: 1, ALL: 2 },
 	}
@@ -25,6 +23,8 @@
 	}
 
 	ctx.TestHandler = function (configuration) {
+		var batchHasFails = false;
+
 		JTF.setState('', JTF.resources.progressIcon);
 		var TestRunner = JTF.TestRunner;
 		var currentConfig = addMissingConfigurations(configuration);
@@ -91,7 +91,7 @@
 		}
 
 		function batchEnd() {
-			if (totalFails > 0) {
+			if (batchHasFails) {
 				JTF.setState('', JTF.resources.failIcon);
 				if (currentConfig.notifyOnFail) {
 					if (isSetToReRun()) {
@@ -190,9 +190,7 @@
 			var result = ctx.makeDiv('result');
 			ctx.addTextTo(result, getResultMessage(passes, fails));
 			ctx.addTo(header, result);
-			if (fails > 0) {
-				totalFails += fails;
-			}
+			if (fails > 0) batchHasFails = true;
 			header.onclick = headerOnclickClosure(fixture);
 		}
 
