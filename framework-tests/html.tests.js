@@ -9,11 +9,12 @@ JTF.loadFramework(function () {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
+					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl });
 				},
 
 				'Controls contains \'Stop re-runs\' button when runInterval > 0': function () {
-					var handler = new JTF.html.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
-					new JTF.TestRunner.Batch().run(handler);
+					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
+					new JTF.TestRunner.Batch().run(htmlHandler);
 
 					var controlsRoot = dummyRootEl.firstChild;
 					Assert.that(getTagName(controlsRoot)).equals('div');
@@ -31,7 +32,7 @@ JTF.loadFramework(function () {
 				},
 
 				'Controls does not contains \'Stop re-runs\' button when runInterval is set to 0': function () {
-					new JTF.TestRunner.Batch().run(new JTF.html.TestHandler({ rootElement: dummyRootEl }));
+					new JTF.TestRunner.Batch().run(htmlHandler);
 
 					var controlsRoot = dummyRootEl.firstChild;
 					Assert.that(getTagName(controlsRoot)).equals('div');
@@ -49,39 +50,42 @@ JTF.loadFramework(function () {
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.ALL set have the expected class names': function () {
+					htmlHandler = new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.ALL
+					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
 						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
-					]).run(new JTF.html.TestHandler({
-						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.ALL
-					}));
+					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
 					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.PASSES set have the expected class names': function () {
+					htmlHandler = new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.PASSES
+					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
 						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
-					]).run(new JTF.html.TestHandler({
-						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.PASSES
-					}));
+					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
 					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture failed');
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.NONE set have the expected class names': function () {
+					htmlHandler = new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.NONE
+					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
 						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
-					]).run(new JTF.html.TestHandler({
-						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.NONE
-					}));
+					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture passed');
 					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture failed');
@@ -89,7 +93,7 @@ JTF.loadFramework(function () {
 
 				'Test fixtures element contains a header element which contains description and result elements': function () {
 					new JTF.TestRunner.Single(new JTF.TestFixture('Passed fixture'))
-						.run(new JTF.html.TestHandler({ rootElement: dummyRootEl }));
+						.run(htmlHandler);
 
 					var fixture = dummyRootEl.children[1], header = fixture.children[0];
 					assertTagAndClass(header, 'div', 'header');
