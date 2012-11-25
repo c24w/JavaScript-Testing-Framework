@@ -1,11 +1,11 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
-		var Assert = JTF.Assert, dummyRootEl;
+		var Assert = JTF.Assert, dummyRootEl, htmlHandler;
 
 		new JTF.TestRunner.Batch([
 
-			new JTF.TestFixture('HTML output tests', {
+			new JTF.TestFixture('HTML structure tests', {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
@@ -27,7 +27,7 @@ JTF.loadFramework(function () {
 					Assert.equal(actControlEls.length, expControlEls.length, 'Expected: {0} control elements, found: {1}'.format(expControlEls.length, actControlEls.length));
 
 					for (var i = 0; i < expControlEls.length; i++)
-						assertIsTagWithInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
+						assertTagAndInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
 				},
 
 				'Controls does not contains \'Stop re-runs\' button when runInterval is set to 0': function () {
@@ -45,7 +45,7 @@ JTF.loadFramework(function () {
 					Assert.equal(actControlEls.length, expControlEls.length, 'Expected: {0} control elements, found: {1}'.format(expControlEls.length, actControlEls.length));
 
 					for (var i = 0; i < expControlEls.length; i++)
-						assertIsTagWithInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
+						assertTagAndInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.ALL set have the expected class names': function () {
@@ -57,8 +57,8 @@ JTF.loadFramework(function () {
 						collapse: JTF.html.CONFIG.COLLAPSE.ALL
 					}));
 
-					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
-					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
+					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
+					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.PASSES set have the expected class names': function () {
@@ -70,8 +70,8 @@ JTF.loadFramework(function () {
 						collapse: JTF.html.CONFIG.COLLAPSE.PASSES
 					}));
 
-					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
-					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture failed');
+					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
+					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture failed');
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.NONE set have the expected class names': function () {
@@ -83,8 +83,73 @@ JTF.loadFramework(function () {
 						collapse: JTF.html.CONFIG.COLLAPSE.NONE
 					}));
 
-					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture passed');
-					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture failed');
+					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture passed');
+					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture failed');
+				},
+
+				'Test fixtures element contains a header element which contains description and result elements': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('Passed fixture'))
+						.run(new JTF.html.TestHandler({ rootElement: dummyRootEl }));
+
+					var fixture = dummyRootEl.children[1], header = fixture.children[0];
+					assertTagAndClass(header, 'div', 'header');
+
+					var desc = header.children[0], result = header.children[1];
+					assertTagAndClass(desc, 'div', 'description');
+					assertTagAndClass(result, 'div', 'result');
+				}
+
+			}),
+
+			new JTF.TestFixture('HTML value tests', {
+
+				TEST_SETUP: function () {
+					dummyRootEl = document.createElement('div');
+					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl });
+				},
+
+				'getStatsLine returns the expected value for no tests': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
+
+					var result = dummyRootEl.children[1].children[0].children[1];
+					Assert.equal(result.innerHTML, 'fixture contains no tests');
+				},
+
+				'getStatsLine returns the the expected value for all passed tests': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+						'Passing test': function () {
+							Assert.true(true)
+						}
+					})).run(htmlHandler);
+
+					var result = dummyRootEl.children[1].children[0].children[1];
+					Assert.equal(result.innerHTML, '1 passed');
+				},
+
+				'getStatsLine returns the the expected value for all failed tests': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+						'Failing test': function () { Assert.true(false) }
+					})).run(htmlHandler);
+
+					var result = dummyRootEl.children[1].children[0].children[1];
+					Assert.equal(result.innerHTML, '1 failed');
+				},
+
+				'getStatsLine returns the the expected value for mixed passed/failed tests': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+						'Passing test': function () { Assert.true(true) },
+						'Failing test': function () { Assert.true(false) }
+					})).run(htmlHandler);
+
+					var result = dummyRootEl.children[1].children[0].children[1];
+					Assert.equal(result.innerHTML, '1/2 failed');
+				},
+
+				'Test fixture > header > description contains the expected value': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('Empty fixture')).run(htmlHandler);
+
+					var desc = dummyRootEl.children[1].children[0].children[0];
+					Assert.equal(desc.innerHTML, 'Empty fixture');
 				}
 
 			})
@@ -100,12 +165,12 @@ JTF.loadFramework(function () {
 			return el.tagName.toLowerCase();
 		}
 
-		function assertIsTagWithClass(el, tag, className) {
+		function assertTagAndClass(el, tag, className) {
 			Assert.that(getTagName(el)).equals(tag);
 			Assert.that(el.className).equals(className);
 		}
 
-		function assertIsTagWithInnerHtml(el, tag, innerHtml) {
+		function assertTagAndInnerHtml(el, tag, innerHtml) {
 			Assert.equal(getTagName(el), tag);
 			Assert.equal(el.innerHTML, innerHtml);
 		}

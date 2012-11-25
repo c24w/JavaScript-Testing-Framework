@@ -185,7 +185,7 @@
 			if (fails === 0 && !currentConfig.showPasses)
 				fixture.className += ' hidden';
 			var result = ctx.makeDiv('result');
-			ctx.addTextTo(result, getResultMessage(passes, fails));
+			ctx.addTextTo(result, ctx.getStatsLine(passes, fails));
 			ctx.addTo(header, result);
 			if (fails > 0) batchHasFails = true;
 			header.onclick = headerOnclickClosure(fixture);
@@ -212,16 +212,15 @@
 			}
 		}
 
-	}
-
-	function getResultMessage(passes, fails) {
-		var total = passes + fails;
-		if (fails === 0)
-			return passes + ' passed';
-		else if (passes === 0)
-			return fails + ' failed';
-		else
-			return fails + '/' + total + ' failed';
+		ctx.getStatsLine = function (passes, fails) {
+			var total = passes + fails;
+			switch (total) {
+				case 0: return 'fixture contains no tests';
+				case passes: return passes + ' passed';
+				case fails: return fails + ' failed';
+				default: return fails + '/' + total + ' failed';
+			}
+		}
 	}
 
 	function getTestClassName(testPassed) {
