@@ -12,7 +12,8 @@ JTF.loadFramework(function () {
 				},
 
 				'Controls contains \'Stop re-runs\' button when runInterval > 0': function () {
-					new JTF.TestRunner.Batch().run(new JTF.html.TestHandler({ rootElement: dummyRootEl, runInterval: 60000 }));
+					var handler = new JTF.html.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
+					new JTF.TestRunner.Batch().run(handler);
 
 					var controlsRoot = dummyRootEl.firstChild;
 					Assert.that(getTagName(controlsRoot)).equals('div');
@@ -25,11 +26,8 @@ JTF.loadFramework(function () {
 
 					Assert.equal(actControlEls.length, expControlEls.length, 'Expected: {0} control elements, found: {1}'.format(expControlEls.length, actControlEls.length));
 
-					for (var i = 0; i < expControlEls.length; i++) {
-						Assert.equal(getTagName(actControlEls[i]), expControlEls[i][0]);
-						Assert.equal(actControlEls[i].innerHTML, expControlEls[i][1]);
-					}
-
+					for (var i = 0; i < expControlEls.length; i++)
+						assertIsTagWithInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
 				},
 
 				'Controls does not contains \'Stop re-runs\' button when runInterval is set to 0': function () {
@@ -46,11 +44,47 @@ JTF.loadFramework(function () {
 
 					Assert.equal(actControlEls.length, expControlEls.length, 'Expected: {0} control elements, found: {1}'.format(expControlEls.length, actControlEls.length));
 
-					for (var i = 0; i < expControlEls.length; i++) {
-						Assert.equal(getTagName(actControlEls[i]), expControlEls[i][0]);
-						Assert.equal(actControlEls[i].innerHTML, expControlEls[i][1]);
-					}
+					for (var i = 0; i < expControlEls.length; i++)
+						assertIsTagWithInnerHtml(actControlEls[i], expControlEls[i][0], expControlEls[i][1]);
+				},
 
+				'Passed/failed test fixtures with CONFIG.COLLAPSE.ALL set have the expected class names': function () {
+					new JTF.TestRunner.Batch([
+						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					]).run(new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.ALL
+					}));
+
+					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
+					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
+				},
+
+				'Passed/failed test fixtures with CONFIG.COLLAPSE.PASSES set have the expected class names': function () {
+					new JTF.TestRunner.Batch([
+						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					]).run(new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.PASSES
+					}));
+
+					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
+					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture failed');
+				},
+
+				'Passed/failed test fixtures with CONFIG.COLLAPSE.NONE set have the expected class names': function () {
+					new JTF.TestRunner.Batch([
+						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					]).run(new JTF.html.TestHandler({
+						rootElement: dummyRootEl,
+						collapse: JTF.html.CONFIG.COLLAPSE.NONE
+					}));
+
+					assertIsTagWithClass(dummyRootEl.children[1], 'div', 'testfixture passed');
+					assertIsTagWithClass(dummyRootEl.children[2], 'div', 'testfixture failed');
 				}
 
 			})
@@ -64,6 +98,16 @@ JTF.loadFramework(function () {
 
 		function getTagName(el) {
 			return el.tagName.toLowerCase();
+		}
+
+		function assertIsTagWithClass(el, tag, className) {
+			Assert.that(getTagName(el)).equals(tag);
+			Assert.that(el.className).equals(className);
+		}
+
+		function assertIsTagWithInnerHtml(el, tag, innerHtml) {
+			Assert.equal(getTagName(el), tag);
+			Assert.equal(el.innerHTML, innerHtml);
 		}
 
 	});

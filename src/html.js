@@ -15,11 +15,10 @@
 	function addMissingConfigurations(config) {
 		if (!config) return DefaultConfig;
 		else {
-			for (var option in DefaultConfig) {
-				config[option] = config[option] || DefaultConfig[option];
-			}
+			for (var option in DefaultConfig)
+				config[option] = (typeof config[option] !== 'undefined') ? config[option] : DefaultConfig[option];
+			return config;
 		}
-		return config;
 	}
 
 	ctx.TestHandler = function (configuration) {
@@ -103,7 +102,7 @@
 			}
 			else JTF.setState('', JTF.resources.passIcon);
 			if (currentConfig.runInterval > 0)
-				reRunTimer = setTimeout(function () { window.location.reload() }, currentConfig.runInterval);
+				reRunTimer = setTimeout(function () { JTF.reload(); }, currentConfig.runInterval);
 		}
 
 		function shouldCancelReRuns() {
@@ -111,7 +110,7 @@
 		}
 
 		function showFailsAlert() {
-			return !confirm('Tests failed\n\nOK = ignore & continue\n\nCancel = review tests')
+			alert('Tests failed')
 		}
 
 		function isSetToReRun() {
@@ -172,9 +171,7 @@
 				ctx.addTo(controls, btn);
 			}
 
-			var btn = ctx.makeOnClickButton('Reload', function () {
-				window.location.reload();
-			});
+			var btn = ctx.makeOnClickButton('Reload', JTF.reload);
 			btn.style.marginLeft = '2em';
 			ctx.addTo(controls, btn);
 
@@ -182,7 +179,7 @@
 		}
 
 		function statsOutputter(passes, fails) {
-			if (fixtureShouldBeCollapsed(fails > 0))
+			if (fixtureShouldBeCollapsed(fails === 0))
 				fixture.className += ' collapsed';
 			fixture.className += fails > 0 ? ' failed' : ' passed';
 			if (fails === 0 && !currentConfig.showPasses)
@@ -204,14 +201,14 @@
 			}
 		}
 
-		function fixtureShouldBeCollapsed(hasFails) {
+		function fixtureShouldBeCollapsed(fixturePassed) {
 			switch (currentConfig.collapse) {
 				case CONFIG.COLLAPSE.NONE:
 					return false;
 				case CONFIG.COLLAPSE.ALL:
 					return true;
 				case CONFIG.COLLAPSE.PASSES:
-					return !hasFails;
+					return fixturePassed;
 			}
 		}
 

@@ -68,6 +68,10 @@ var suppressErrorAlerts = true;
 		}
 	}*/
 
+	ctx.reload = function () {
+		window.location.reload();
+	}
+
 	ctx.loadFramework = function (loadCallback) {
 		ctx.loadResource('resources.js', function () {
 			ctx.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
