@@ -96,9 +96,9 @@ JTF.loadFramework(function () {
 						.run(htmlHandler);
 
 					var fixture = dummyRootEl.children[1], header = fixture.children[0];
-					assertTagAndClass(header, 'div', 'header');
-
 					var desc = header.children[0], result = header.children[1];
+
+					assertTagAndClass(header, 'div', 'header');
 					assertTagAndClass(desc, 'div', 'description');
 					assertTagAndClass(result, 'div', 'result');
 				}
@@ -112,11 +112,17 @@ JTF.loadFramework(function () {
 					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl });
 				},
 
+				'Test fixture > header > description contains the expected value': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture('Empty fixture')).run(htmlHandler);
+
+					var desc = dummyRootEl.children[1].children[0].children[0];
+					assertInnerHtml(desc, 'Empty fixture');
+				},
+
 				'getStatsLine returns the expected value for no tests': function () {
 					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
-
 					var result = dummyRootEl.children[1].children[0].children[1];
-					Assert.equal(result.innerHTML, 'fixture contains no tests');
+					assertInnerHtml(result, 'fixture contains no tests');
 				},
 
 				'getStatsLine returns the the expected value for all passed tests': function () {
@@ -127,7 +133,7 @@ JTF.loadFramework(function () {
 					})).run(htmlHandler);
 
 					var result = dummyRootEl.children[1].children[0].children[1];
-					Assert.equal(result.innerHTML, '1 passed');
+					assertInnerHtml(result, '1 passed');
 				},
 
 				'getStatsLine returns the the expected value for all failed tests': function () {
@@ -136,7 +142,7 @@ JTF.loadFramework(function () {
 					})).run(htmlHandler);
 
 					var result = dummyRootEl.children[1].children[0].children[1];
-					Assert.equal(result.innerHTML, '1 failed');
+					assertInnerHtml(result, '1 failed');
 				},
 
 				'getStatsLine returns the the expected value for mixed passed/failed tests': function () {
@@ -146,14 +152,14 @@ JTF.loadFramework(function () {
 					})).run(htmlHandler);
 
 					var result = dummyRootEl.children[1].children[0].children[1];
-					Assert.equal(result.innerHTML, '1/2 failed');
+					assertInnerHtml(result, '1/2 failed');
 				},
 
-				'Test fixture > header > description contains the expected value': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('Empty fixture')).run(htmlHandler);
+				'Test fixture > header > results contains the value of getStatsLine': function () {
+					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
 
-					var desc = dummyRootEl.children[1].children[0].children[0];
-					Assert.equal(desc.innerHTML, 'Empty fixture');
+					var result = dummyRootEl.children[1].children[0].children[1];
+					assertInnerHtml(result, JTF.html.getStatsLine(0, 0));
 				}
 
 			})
@@ -161,8 +167,7 @@ JTF.loadFramework(function () {
 		]).run(new JTF.html.TestHandler({
 			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
-			notifyOnFail: false,
-			runInterval: 10000
+			runInterval: 30000
 		}));
 
 		function getTagName(el) {
@@ -170,12 +175,24 @@ JTF.loadFramework(function () {
 		}
 
 		function assertTagAndClass(el, tag, className) {
-			Assert.that(getTagName(el)).equals(tag);
-			Assert.that(el.className).equals(className);
+			assertTag(el, tag);
+			assertClass(el, className);
 		}
 
 		function assertTagAndInnerHtml(el, tag, innerHtml) {
+			assertTag(el, tag);
+			assertInnerHtml(el, innerHtml);
+		}
+
+		function assertTag(el, tag) {
 			Assert.equal(getTagName(el), tag);
+		}
+
+		function assertClass(el, className) {
+			Assert.equal(el.className, className);
+		}
+
+		function assertInnerHtml(el, innerHtml) {
 			Assert.equal(el.innerHTML, innerHtml);
 		}
 
