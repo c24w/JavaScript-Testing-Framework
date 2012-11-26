@@ -448,8 +448,8 @@ JTF.loadFramework(function () {
 
 		];
 
-		var handler = new JTF.html.TestHandler({
-			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
+		var handler = new JTF.HTML.TestHandler({
+			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
 			notifyOnFail: false,
 			runInterval: 10000

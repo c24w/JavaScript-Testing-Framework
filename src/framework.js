@@ -1,8 +1,8 @@
-var suppressErrorAlerts = true;
+(function (JTF) {
 
-(function (ctx) {
+	var suppressErrorAlerts = true;
 
-	ctx.setState = function (title, iconData) {
+	JTF.setState = function (title, iconData) {
 		var favicon;
 		document.title = title;
 		var linkEls = document.head.getElementsByTagName('link');
@@ -19,11 +19,11 @@ var suppressErrorAlerts = true;
 		document.head.appendChild(favicon);
 	}
 
-	ctx.setState('', '');
+	JTF.setState('', '');
 
 	function setErrorState() {
-		ctx.loadResource('resources.js', function () {
-			ctx.setState('E R R O R', JTF.resources.errorIcon);
+		JTF.loadResource('resources.js', function () {
+			JTF.setState('E R R O R', JTF.resources.errorIcon);
 		});
 	}
 
@@ -32,7 +32,7 @@ var suppressErrorAlerts = true;
 		confirmReload(msg);
 	}
 
-	ctx.resourceErrorFromEvent = function (event) {
+	JTF.resourceErrorFromEvent = function (event) {
 		var file = (event.srcElement.attributes.src || event.srcElement.attributes.href).value
 		resourceErrorMsg(file);
 	}
@@ -47,52 +47,47 @@ var suppressErrorAlerts = true;
 			window.location.reload(true);
 	}
 
-	/*
-	ctx.makeNamespace = function (hierarchyString) {
-		var parts = hierarchyString.split('.');
-		var partsRootNode = window[parts[0]];
-		var currentNode = window;
+	JTF.namespace = function (namespaceString, callback) {
+		var namespaceNodes = namespaceString.split('.');
+		var currentNode = addNamespaceNode(window.JTF, namespaceNodes[0]);
+		for (var i = 1 ; i < namespaceNodes.length; i++)
+			currentNode = addNamespaceNode(currentNode, namespaceNodes[i]);
+		callback(currentNode);
+	}
 
-		if (partsRootNode) {
-			currentNode = partsRootNode;
-			parts = parts.slice(1);
-		}
+	JTF.namespaceAtRoot = function (callback) {
+		callback(window.JTF);
+	}
 
-		for (var i = 0; i < parts.length; i++) {
-			currentNode[parts[i]] = currentNode[parts[i]];
-			var nextNode = currentNode[parts[i]];
-			nextNode = nextNode || {};
-			currentNode = nextNode;
-			if (i === parts.length - 1)
-				return currentNode;
-		}
-	}*/
+	function addNamespaceNode(parent, child) {
+		return parent[child] = parent[child] || {};
+	}
 
-	ctx.reload = function () {
+	JTF.reload = function () {
 		window.location.reload();
 	}
 
-	ctx.loadFramework = function (loadCallback) {
-		ctx.loadResource('resources.js', function () {
-			ctx.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
+	JTF.loadFramework = function (loadCallback) {
+		JTF.loadResource('resources.js', function () {
+			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
 		});
 	}
 
-	ctx.loadHtmlResources = function (loadCallback) {
-		ctx.loadResources('html.js', 'html-tools.js', 'style.css', loadCallback);
+	JTF.loadHtmlResources = function (loadCallback) {
+		JTF.loadResources('HTML.js', 'HTML-tools.js', 'style.css', loadCallback);
 	}
 
-	ctx.loadConsoleResources = function (loadCallback) {
-		ctx.loadResources('console.js', loadCallback);
+	JTF.loadConsoleResources = function (loadCallback) {
+		JTF.loadResources('Console.js', loadCallback);
 	}
 
-	ctx.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
+	JTF.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
 		var loadCount = 0;
 		var resourceCount = arguments.length - 1;
 		var batchLoadCallback = arguments[arguments.length - 1];
 
 		for (var i = 0; i < resourceCount; i++) {
-			ctx.loadResource(arguments[i], function () {
+			JTF.loadResource(arguments[i], function () {
 				if (++loadCount === resourceCount && typeof batchLoadCallback !== 'undefined') {
 					batchLoadCallback();
 				}
@@ -100,7 +95,7 @@ var suppressErrorAlerts = true;
 		}
 	}
 
-	ctx.loadResource = function (file, loadCallback) {
+	JTF.loadResource = function (file, loadCallback) {
 		if (isLoaded(file)) {
 			if (typeof loadCallback !== 'undefined')
 				loadCallback();
@@ -123,7 +118,7 @@ var suppressErrorAlerts = true;
 
 	function loadScript(file, loadCallback) {
 		var script = document.createElement('script');
-		script.src = frameworkBaseURL + file;
+		script.src = addCacheBuster(frameworkBaseURL + file);
 		script.type = 'text/javascript';
 		script.onerror = JTF.resourceErrorFromEvent;
 		document.head.appendChild(script);
@@ -145,6 +140,10 @@ var suppressErrorAlerts = true;
 			if (typeof (loadCallback) !== 'undefined')
 				loadCallback();
 		};
+	}
+
+	function addCacheBuster(url) {
+		return url + '?cacheBuster=' + new Date().getTime();
 	}
 
 	var fileStatuses = {
