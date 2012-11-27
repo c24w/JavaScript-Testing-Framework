@@ -1,5 +1,7 @@
 (function (JTF) {
 
+	var frameworkBaseURL = document.documentElement.getAttribute('data-frameworkBaseURL');
+
 	var suppressErrorAlerts = true;
 
 	JTF.setState = function (title, iconData) {
