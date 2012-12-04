@@ -69,56 +69,56 @@
 		window.location.reload();
 	}
 
-	JTF.loadFramework = function (loadCallback) {
+	JTF.loadFramework = function (callback) {
 		JTF.loadResource('resources.js', function () {
-			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', loadCallback);
+			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', callback);
 		});
 	}
 
-	JTF.loadHtmlResources = function (loadCallback) {
-		JTF.loadResources('HTML.js', 'HTML-tools.js', 'style.css', loadCallback);
+	JTF.loadHtmlResources = function (callback) {
+		JTF.loadResources('HTML.js', 'HTML-tools.js', 'style.css', callback);
 	}
 
-	JTF.loadConsoleResources = function (loadCallback) {
-		JTF.loadResources('Console.js', loadCallback);
+	JTF.loadConsoleResources = function (callback) {
+		JTF.loadResources('Console.js', callback);
 	}
 
-	JTF.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., batchResourceLoadCallback) */) {
+	JTF.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., callback) */) {
 		var loadCount = 0;
 		var resourceCount = arguments.length - 1;
-		var batchLoadCallback = arguments[arguments.length - 1];
+		var callback = arguments[arguments.length - 1];
 
 		for (var i = 0; i < resourceCount; i++) {
 			JTF.loadResource(arguments[i], function () {
-				if (++loadCount === resourceCount && typeof batchLoadCallback !== 'undefined') {
-					batchLoadCallback();
+				if (++loadCount === resourceCount && typeof callback !== 'undefined') {
+					callback();
 				}
 			});
 		}
 	}
 
-	JTF.loadResource = function (file, loadCallback) {
+	JTF.loadResource = function (file, callback) {
 		if (isLoaded(file)) {
-			if (typeof loadCallback !== 'undefined')
-				loadCallback();
+			if (typeof callback !== 'undefined')
+				callback();
 			return;
 		}
 
 		if (isLoading(file)) {
-			setTimeout(function () { loadResource(file, loadCallback) }, 50);
+			setTimeout(function () { loadResource(file, callback) }, 50);
 			return;
 		}
 
 		setLoading(file);
 		if (isScript(file))
-			loadScript(file, loadCallback);
+			loadScript(file, callback);
 		else if (isStylesheet(file))
-			loadStylesheet(file, loadCallback);
+			loadStylesheet(file, callback);
 		else
 			resourceErrorMsg('Cannot handle resource type \'' + file.substring(file.lastIndexOf('.')) + '\' (' + file + ')');
 	}
 
-	function loadScript(file, loadCallback) {
+	function loadScript(file, callback) {
 		var script = document.createElement('script');
 		script.src = addCacheBuster(frameworkBaseURL + file);
 		script.type = 'text/javascript';
@@ -126,12 +126,12 @@
 		document.head.appendChild(script);
 		script.onload = function () {
 			setLoaded(file);
-			if (typeof loadCallback !== 'undefined')
-				loadCallback();
+			if (typeof callback !== 'undefined')
+				callback();
 		};
 	}
 
-	function loadStylesheet(file, loadCallback) {
+	function loadStylesheet(file, callback) {
 		var stylesheet = document.createElement('link');
 		stylesheet.rel = 'stylesheet';
 		stylesheet.href = frameworkBaseURL + file;
@@ -139,8 +139,8 @@
 		document.head.appendChild(stylesheet);
 		stylesheet.onload = function () {
 			setLoaded(file);
-			if (typeof (loadCallback) !== 'undefined')
-				loadCallback();
+			if (typeof (callback) !== 'undefined')
+				callback();
 		};
 	}
 
@@ -154,7 +154,7 @@
 	}
 
 	var fileStatus = {
-		'loader.js': fileStatuses.LOADED,
+		'framework.js': fileStatuses.LOADED,
 		'utils.js': fileStatuses.LOADED
 	}
 
