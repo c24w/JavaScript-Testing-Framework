@@ -31,7 +31,7 @@ Where ```data-frameworkBaseURL``` is the path to the framework src directory.
 * The TestRunner is run, which accepts a TestHandler
 * The TestHandler receives all events (and associated data) of the test run
 
-```TestRunner( TestFixture ).run( TestHandler( Config ) ) ```
+```TestRunner ( TestFixture ) .run ( TestHandler ( Config ) ) ```
 
 ### TestFixture
 
@@ -47,6 +47,7 @@ new JTF.TestFixture('Test fixture description goes here', {
 	}
 	
 }
+```
 
 Complete Examples
 -------------
