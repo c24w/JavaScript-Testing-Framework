@@ -1,6 +1,6 @@
-var StringProt = String.prototype;
+var string = String.prototype;
 
-StringProt.format = StringProt.format || function () {
+string.format = string.format || function () {
 	var s = this;
 	for (var i = 0; i < arguments.length; i++) {
 		var reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -9,10 +9,10 @@ StringProt.format = StringProt.format || function () {
 	return s;
 }
 
-StringProt.isWhitespace = StringProt.isWhitespace || function () {
+string.isWhitespace = string.isWhitespace || function () {
 	return /^\s*$/.test(this);
 }
 
-StringProt.endsWith = StringProt.endsWith || function (suffix) {
+string.endsWith = string.endsWith || function (suffix) {
 	return this.indexOf(suffix, this.length - suffix.length) !== -1;
 }

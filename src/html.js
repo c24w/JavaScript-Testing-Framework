@@ -1,6 +1,6 @@
-(function (ctx) {
+JTF.namespace('HTML', function (HTML) {
 
-	var CONFIG = ctx.CONFIG = {
+	var CONFIG = HTML.CONFIG = {
 		COLLAPSE: { NONE: 0, PASSES: 1, ALL: 2 },
 	}
 
@@ -21,7 +21,7 @@
 		}
 	}
 
-	ctx.TestHandler = function (configuration) {
+	HTML.TestHandler = function (configuration) {
 		var batchHasFails = false;
 
 		JTF.setState('', JTF.resources.progressIcon);
@@ -61,32 +61,32 @@
 		}
 
 		function createFixture() {
-			fixture = ctx.makeDiv('testfixture');
-			header = ctx.makeDiv('header');
-			testsContainer = ctx.makeDiv('tests');
-			ctx.addTo(fixture, header);
-			ctx.addTo(fixture, testsContainer);
-			ctx.addTo(currentConfig.rootElement, fixture);
+			fixture = HTML.makeDiv('testfixture');
+			header = HTML.makeDiv('header');
+			testsContainer = HTML.makeDiv('tests');
+			HTML.addTo(fixture, header);
+			HTML.addTo(fixture, testsContainer);
+			HTML.addTo(currentConfig.rootElement, fixture);
 		}
 
 		function setHeader(description) {
-			var desc = ctx.makeDiv('description');
+			var desc = HTML.makeDiv('description');
 			desc.innerHTML = formatCodeParts(description);
-			ctx.addTo(header, desc);
+			HTML.addTo(header, desc);
 		}
 
 		function appendTestToHtml(testPassed, testName, msg) {
 			var className = getTestClassName(testPassed);
-			var test = ctx.makeDiv(className);
-			var name = ctx.makeDiv('name');
+			var test = HTML.makeDiv(className);
+			var name = HTML.makeDiv('name');
 			name.innerHTML = formatCodeParts(testName);
-			ctx.addTo(test, name);
+			HTML.addTo(test, name);
 			if (typeof msg !== 'undefined') {
-				var info = ctx.makeDiv('info');
+				var info = HTML.makeDiv('info');
 				info.innerHTML = formatCodeParts(msg);
-				ctx.addTo(test, info);
+				HTML.addTo(test, info);
 			}
-			ctx.addTo(testsContainer, test);
+			HTML.addTo(testsContainer, test);
 		}
 
 		function batchEnd() {
@@ -118,64 +118,64 @@
 		}
 
 		function addControls() {
-			var controls = ctx.makeDiv('controls');
-			var label = ctx.makeEl('span');
-			ctx.addTextTo(label, 'Expand:')
+			var controls = HTML.makeDiv('controls');
+			var label = HTML.makeEl('span');
+			HTML.addTextTo(label, 'Expand:')
 
-			ctx.addTo(controls, label);
+			HTML.addTo(controls, label);
 
-			ctx.addTo(controls, ctx.makeOnClickButton('All', function () {
-				ctx.removeClassFromMany('.testfixture.collapsed', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('All', function () {
+				HTML.removeClassFromMany('.testfixture.collapsed', 'collapsed');
 			}));
 
-			ctx.addTo(controls, ctx.makeOnClickButton('Passes', function () {
-				ctx.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
+				HTML.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
 			}));
 
-			ctx.addTo(controls, ctx.makeOnClickButton('Fails', function () {
-				ctx.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
+				HTML.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
 			}));
 
-			label = ctx.makeEl('span');
+			label = HTML.makeEl('span');
 			label.style.marginLeft = '2em';
-			ctx.addTextTo(label, 'Collapse:')
-			ctx.addTo(controls, label);
+			HTML.addTextTo(label, 'Collapse:')
+			HTML.addTo(controls, label);
 
-			ctx.addTo(controls, ctx.makeOnClickButton('All', function () {
-				ctx.addClassToMany('.testfixture', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('All', function () {
+				HTML.addClassToMany('.testfixture', 'collapsed');
 			}));
 
-			ctx.addTo(controls, ctx.makeOnClickButton('Passes', function () {
-				ctx.addClassToMany('.testfixture.passed', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
+				HTML.addClassToMany('.testfixture.passed', 'collapsed');
 			}));
 
-			ctx.addTo(controls, ctx.makeOnClickButton('Fails', function () {
-				ctx.addClassToMany('.testfixture.failed', 'collapsed');
+			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
+				HTML.addClassToMany('.testfixture.failed', 'collapsed');
 			}));
 
 			if (currentConfig.showPasses) {
-				var btn = ctx.makeOnClickButton('Hide Passes', function () {
-					ctx.addClassToMany('.testfixture.passed', 'hidden');
+				var btn = HTML.makeOnClickButton('Hide Passes', function () {
+					HTML.addClassToMany('.testfixture.passed', 'hidden');
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
-				ctx.addTo(controls, btn);
+				HTML.addTo(controls, btn);
 			}
 
 			if (currentConfig.runInterval > 0) {
-				btn = ctx.makeOnClickButton('Stop re-runs', function () {
+				btn = HTML.makeOnClickButton('Stop re-runs', function () {
 					clearTimeout(reRunTimer);
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';
-				ctx.addTo(controls, btn);
+				HTML.addTo(controls, btn);
 			}
 
-			var btn = ctx.makeOnClickButton('Reload', JTF.reload);
+			var btn = HTML.makeOnClickButton('Reload', JTF.reload);
 			btn.style.marginLeft = '2em';
-			ctx.addTo(controls, btn);
+			HTML.addTo(controls, btn);
 
-			ctx.addTo(currentConfig.rootElement, controls);
+			HTML.addTo(currentConfig.rootElement, controls);
 		}
 
 		function statsOutputter(passes, fails) {
@@ -184,9 +184,9 @@
 			fixture.className += fails > 0 ? ' failed' : ' passed';
 			if (fails === 0 && !currentConfig.showPasses)
 				fixture.className += ' hidden';
-			var result = ctx.makeDiv('result');
-			ctx.addTextTo(result, ctx.getStatsLine(passes, fails));
-			ctx.addTo(header, result);
+			var result = HTML.makeDiv('result');
+			HTML.addTextTo(result, HTML.getStatsLine(passes, fails));
+			HTML.addTo(header, result);
 			if (fails > 0) batchHasFails = true;
 			header.onclick = headerOnclickClosure(fixture);
 		}
@@ -195,9 +195,9 @@
 			return function () {
 				var cn = fixture.className;
 				if (cn.indexOf('collapsed') === -1)
-					ctx.addClassTo(fixture, 'collapsed');
+					HTML.addClassTo(fixture, 'collapsed');
 				else
-					ctx.removeClassFrom(fixture, 'collapsed');
+					HTML.removeClassFrom(fixture, 'collapsed');
 			}
 		}
 
@@ -212,7 +212,7 @@
 			}
 		}
 
-		ctx.getStatsLine = function (passes, fails) {
+		HTML.getStatsLine = function (passes, fails) {
 			var total = passes + fails;
 			switch (total) {
 				case 0: return 'fixture contains no tests';
@@ -255,4 +255,4 @@
 		}
 	}
 
-})(window.JTF.html = window.JTF.html || {});
+});

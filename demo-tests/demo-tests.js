@@ -233,8 +233,8 @@ JTF.loadFramework(function () {
 			];
 
 			var runner = new JTF.TestRunner.Batch(fixtures);
-			runner.run(new JTF.console.TestHandler());
-			runner.run(new JTF.html.TestHandler({ collapse: JTF.html.CONFIG.COLLAPSE.NONE}));
+			runner.run(new JTF.Console.TestHandler());
+			runner.run(new JTF.HTML.TestHandler({ collapse: JTF.HTML.CONFIG.COLLAPSE.NONE}));
 
 		});
 	});

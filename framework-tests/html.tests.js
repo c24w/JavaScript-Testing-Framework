@@ -9,11 +9,11 @@ JTF.loadFramework(function () {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
-					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl });
+					htmlHandler = new JTF.HTML.TestHandler({ rootElement: dummyRootEl });
 				},
 
 				'Controls contains \'Stop re-runs\' button when runInterval > 0': function () {
-					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
+					htmlHandler = new JTF.HTML.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
 					new JTF.TestRunner.Batch().run(htmlHandler);
 
 					var controlsRoot = dummyRootEl.firstChild;
@@ -50,9 +50,9 @@ JTF.loadFramework(function () {
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.ALL set have the expected class names': function () {
-					htmlHandler = new JTF.html.TestHandler({
+					htmlHandler = new JTF.HTML.TestHandler({
 						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.ALL
+						collapse: JTF.HTML.CONFIG.COLLAPSE.ALL
 					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
@@ -64,9 +64,9 @@ JTF.loadFramework(function () {
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.PASSES set have the expected class names': function () {
-					htmlHandler = new JTF.html.TestHandler({
+					htmlHandler = new JTF.HTML.TestHandler({
 						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.PASSES
+						collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES
 					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
@@ -78,9 +78,9 @@ JTF.loadFramework(function () {
 				},
 
 				'Passed/failed test fixtures with CONFIG.COLLAPSE.NONE set have the expected class names': function () {
-					htmlHandler = new JTF.html.TestHandler({
+					htmlHandler = new JTF.HTML.TestHandler({
 						rootElement: dummyRootEl,
-						collapse: JTF.html.CONFIG.COLLAPSE.NONE
+						collapse: JTF.HTML.CONFIG.COLLAPSE.NONE
 					});
 					new JTF.TestRunner.Batch([
 						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
@@ -109,7 +109,7 @@ JTF.loadFramework(function () {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
-					htmlHandler = new JTF.html.TestHandler({ rootElement: dummyRootEl });
+					htmlHandler = new JTF.HTML.TestHandler({ rootElement: dummyRootEl });
 				},
 
 				'Test fixture > header > description contains the expected value': function () {
@@ -157,16 +157,14 @@ JTF.loadFramework(function () {
 
 				'Test fixture > header > results contains the value of getStatsLine': function () {
 					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
-
 					var result = dummyRootEl.children[1].children[0].children[1];
-					assertInnerHtml(result, JTF.html.getStatsLine(0, 0));
+					assertInnerHtml(result, JTF.HTML.getStatsLine(0, 0));
 				}
 
 			})
 
-		]).run(new JTF.html.TestHandler({
-			collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
-			showPasses: true,
+		]).run(new JTF.HTML.TestHandler({
+			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 			runInterval: 30000
 		}));
 

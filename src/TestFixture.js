@@ -1,10 +1,10 @@
-(function (ctx) {
+JTF.namespaceAtRoot(function (root) {
 
-	ctx.TestFixture = function (description, tests) {
-		this.getDescription = function () { return description || ctx.TestFixture.DefaultDescription }
+	root.TestFixture = function (description, tests) {
+		this.getDescription = function () { return description || root.TestFixture.DefaultDescription }
 		this.getTests = function () { return tests || {} }
 	}
 
-	ctx.TestFixture.DefaultDescription = 'Test Fixture';
+	root.TestFixture.DefaultDescription = 'Test Fixture';
 
-})(window.JTF = window.JTF || {});
+});

@@ -1,11 +1,11 @@
-(function (ctx) {
+JTF.namespace('Console', function (Console) {
 	var spacer = '\u0020';
 	var descPrefix = '\u250C' + spacer;
 	var testPrefix = '|' + spacer;
 	var nonFailPadding = spacer + spacer;
 	var bottomLine = '\u2514' + spacer;
 
-	ctx.TestHandler = function () {
+	Console.TestHandler = function () {
 
 		this.handle = function (handleType /*, args */) {
 			var TREvent = JTF.TestRunner.EVENT;
@@ -17,7 +17,7 @@
 					console.log('');
 					break;
 				case TREvent.FIXTURE.DESC:
-					console.log(ctx.getDescriptionLine(args[0]));
+					console.log(Console.getDescriptionLine(args[0]));
 					break;
 				case TREvent.FIXTURE.PASS:
 					testOutputter(true, args[0]);
@@ -36,30 +36,30 @@
 		}
 
 		function testOutputter(testPassed, testName, msg) {
-			if (testPassed) console.log(ctx.getPassedTestLine(testName))
-			else console.error(ctx.getFailedTestLine(testName, msg));
+			if (testPassed) console.log(Console.getPassedTestLine(testName))
+			else console.error(Console.getFailedTestLine(testName, msg));
 		}
 
 		function statsOutputter(passes, fails) {
-			var message = ctx.getStatsLine(passes, fails);
+			var message = Console.getStatsLine(passes, fails);
 			if (fails > 0) console.error(message);
 			else console.log(message);
 		}
 
-		ctx.getDescriptionLine = function (description) {
+		Console.getDescriptionLine = function (description) {
 			return nonFailPadding + descPrefix + description;
 		}
 
-		ctx.getPassedTestLine = function (testName) {
+		Console.getPassedTestLine = function (testName) {
 			return nonFailPadding + testPrefix + testName;
 		}
 
-		ctx.getFailedTestLine = function (testName, msg) {
+		Console.getFailedTestLine = function (testName, msg) {
 			var msg = !msg || msg.isWhitespace() ? '' : ' - ' + msg;
 			return testPrefix + testName + msg;
 		}
 
-		ctx.getStatsLine = function (passes, fails) {
+		Console.getStatsLine = function (passes, fails) {
 			var total = passes + fails;
 			switch (fails) {
 				case 0: return nonFailPadding + bottomLine + passes + ' passed';
@@ -70,4 +70,4 @@
 
 	}
 
-})(window.JTF.console = window.JTF.console || {});
+});

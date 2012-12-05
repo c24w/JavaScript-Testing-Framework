@@ -1,6 +1,6 @@
-(function (ctx) {
+JTF.namespace('TestRunner', function (TestRunner) {
 
-	ctx.EVENT = {
+	TestRunner.EVENT = {
 		FIXTURE: {
 			START: 0,
 			DESC: 1,
@@ -27,15 +27,15 @@
 		return !s || s.isWhitespace();
 	}
 
-	function TestRunner(testFixture) {
+	function TestFixtureRunner(testFixture) {
 
 		this.run = function (testEventHandler) {
 
-			testEventHandler.handle(ctx.EVENT.FIXTURE.START);
+			testEventHandler.handle(TestRunner.EVENT.FIXTURE.START);
 
 			var passes = 0, fails = 0;
 			var desc = formatDesc(testFixture.getDescription());
-			testEventHandler.handle(ctx.EVENT.FIXTURE.DESC, desc);
+			testEventHandler.handle(TestRunner.EVENT.FIXTURE.DESC, desc);
 
 			var tests = testFixture.getTests();
 
@@ -52,41 +52,41 @@
 				try {
 					var test = tests[testName];
 					test();
-					testEventHandler.handle(ctx.EVENT.FIXTURE.PASS, testName);
+					testEventHandler.handle(TestRunner.EVENT.FIXTURE.PASS, testName);
 					passes++;
 				}
 				catch (e) {
-					testEventHandler.handle(ctx.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
+					testEventHandler.handle(TestRunner.EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
 					fails++;
 				}
 			}
 
-			testEventHandler.handle(ctx.EVENT.FIXTURE.STATS, passes, fails);
-			testEventHandler.handle(ctx.EVENT.FIXTURE.FIXTURE_END);
+			testEventHandler.handle(TestRunner.EVENT.FIXTURE.STATS, passes, fails);
+			testEventHandler.handle(TestRunner.EVENT.FIXTURE.FIXTURE_END);
 
 		}
 
 	}
 
-	ctx.Batch = function (testFixtures) {
+	TestRunner.Batch = function (testFixtures) {
 
 		this.run = function (testEventHandler) {
-			testEventHandler.handle(ctx.EVENT.BATCH.START);
+			testEventHandler.handle(TestRunner.EVENT.BATCH.START);
 			for (var f in testFixtures)
-				new TestRunner(testFixtures[f]).run(testEventHandler);
-			testEventHandler.handle(ctx.EVENT.BATCH.END);
+				new TestFixtureRunner(testFixtures[f]).run(testEventHandler);
+			testEventHandler.handle(TestRunner.EVENT.BATCH.END);
 		}
 
 	}
 
-	ctx.Single = function (testFixture) {
+	TestRunner.Single = function (testFixture) {
 
 		this.run = function (testEventHandler) {
-			testEventHandler.handle(ctx.EVENT.BATCH.START);
-			new TestRunner(testFixture).run(testEventHandler);
-			testEventHandler.handle(ctx.EVENT.BATCH.END);
+			testEventHandler.handle(TestRunner.EVENT.BATCH.START);
+			new TestFixtureRunner(testFixture).run(testEventHandler);
+			testEventHandler.handle(TestRunner.EVENT.BATCH.END);
 		}
 
 	}
 
-})(window.JTF.TestRunner = window.JTF.TestRunner || {});
+});

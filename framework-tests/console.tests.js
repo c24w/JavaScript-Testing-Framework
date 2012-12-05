@@ -4,7 +4,7 @@ JTF.loadFramework(function () {
 
 			var logMsgs, errorMsgs;
 			var Assert = JTF.Assert;
-			var console = JTF.console;
+			var console = JTF.Console;
 
 			new JTF.TestRunner.Batch([
 
@@ -15,7 +15,7 @@ JTF.loadFramework(function () {
 						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
 						new JTF.TestRunner
 							.Single(new JTF.TestFixture('Demo test fixture', {}))
-							.run(new JTF.console.TestHandler());
+							.run(new JTF.Console.TestHandler());
 					},
 
 					'A new line should be outputted first, to console.log': function () {
@@ -41,7 +41,7 @@ JTF.loadFramework(function () {
 
 						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.console.TestHandler());
+						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Passing tests should be outputted, to console.log, in the expected format': function () {
@@ -53,7 +53,7 @@ JTF.loadFramework(function () {
 					},
 
 					'Statistics should be outputted to console.log, in the expected format': function () {
-						Assert.that(logMsgs[logMsgs.length - 1]).equals(JTF.console.getStatsLine(3, 0));
+						Assert.that(logMsgs[logMsgs.length - 1]).equals(JTF.Console.getStatsLine(3, 0));
 					}
 
 				}),
@@ -71,7 +71,7 @@ JTF.loadFramework(function () {
 
 						window.console = { log: function () { }, error: function (msg) { errorMsgs[errorMsgs.length] = msg } };
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.console.TestHandler());
+						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Failing tests should be outputted, to console.error, in the expected format': function () {
@@ -83,7 +83,7 @@ JTF.loadFramework(function () {
 					},
 
 					'Statistics should be outputted to console.error, in the expected format': function () {
-						Assert.that(errorMsgs[errorMsgs.length - 1]).equals(JTF.console.getStatsLine(0, 3));
+						Assert.that(errorMsgs[errorMsgs.length - 1]).equals(JTF.Console.getStatsLine(0, 3));
 					}
 
 				}),
@@ -108,7 +108,7 @@ JTF.loadFramework(function () {
 							error: function (msg) { errorMsgs[errorMsgs.length] = msg },
 						};
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.console.TestHandler());
+						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Passing tests should be outputted, to console.log, in the expected format': function () {
@@ -128,13 +128,13 @@ JTF.loadFramework(function () {
 					},
 
 					'Statistics should be outputted, to console.error, in the expected format': function () {
-						Assert.that(errorMsgs[errorMsgs.length - 1]).equals(JTF.console.getStatsLine(3, 3));
+						Assert.that(errorMsgs[errorMsgs.length - 1]).equals(JTF.Console.getStatsLine(3, 3));
 					}
 
 				})
 
-			]).run(new JTF.html.TestHandler({
-				collapse: JTF.html.CONFIG.COLLAPSE.PASSES,
+			]).run(new JTF.HTML.TestHandler({
+				collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 				showPasses: true,
 				notifyOnFail: false,
 				runInterval: 10000
