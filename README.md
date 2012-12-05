@@ -10,6 +10,7 @@ Basic Components
 
 HTML file:
 
+```
 <html data-frameworkBaseURL="../src/">
 <head>
     <title>JavaScript Testing Framework Tests</title>
@@ -20,6 +21,7 @@ HTML file:
 <body>
 </body>
 </html>
+```
 
 Where ```data-frameworkBaseURL``` is the path to the framework src directory.
 
