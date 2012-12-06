@@ -51,10 +51,16 @@
 
 	JTF.namespace = function (namespaceString, callback) {
 		var namespaceNodes = namespaceString.split('.');
-		var currentNode = addNamespaceNode(window.JTF, namespaceNodes[0]);
-		for (var i = 1 ; i < namespaceNodes.length; i++)
+		if (namespaceNodes[0] !== 'JTF')
+			addNamespaceNode(window, 'JTF');
+		var currentNode = namespaceNodes[0] === 'JTF' ? window : window.JTF;
+		for (var i = 0 ; i < namespaceNodes.length; i++)
 			currentNode = addNamespaceNode(currentNode, namespaceNodes[i]);
 		callback(currentNode);
+	}
+
+	JTF.addNamespace = function (parent, child) {
+		return parent[child] = parent[child] || {};
 	}
 
 	JTF.namespaceAtRoot = function (callback) {
@@ -105,7 +111,7 @@
 		}
 
 		if (isLoading(file)) {
-			setTimeout(function () { loadResource(file, callback) }, 50);
+			setTimeout(function () { JTF.loadResource(file, callback) }, 50);
 			return;
 		}
 
