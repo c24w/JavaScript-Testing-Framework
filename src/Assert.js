@@ -101,13 +101,13 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.instance = function (obj, objClass, optionalInfo) {
 		try {
-			Assert.true(obj instanceof objClass, info);
+			Assert.true(obj instanceof objClass);
 		}
 		catch (e) {
 			var actualClass = obj.constructor.name;
-			var expectedType = objClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, expectedType);
-			Assert.equal(actualClass, expectedType, info);
+			var shouldBeThisClass = objClass.name;
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, shouldBeThisClass);
+			Assert.equal(actualClass, shouldBeThisClass, info);
 		}
 	}
 
@@ -152,9 +152,9 @@ JTF.namespace('Assert', function (Assert) {
 
 		AssertNot.instance = function (obj, objClass, optionalInfo) {
 			var actualClass = obj.constructor.name;
-			var expectedNotType = objClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualClass, 'not ' + expectedNotType);
-			Assert.not.equal(actualClass, expectedNotType, info);
+			var shouldNotBeThisClass = objClass.name;
+			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualClass, 'not ' + shouldNotBeThisClass);
+			Assert.not.equal(actualClass, shouldNotBeThisClass, info);
 		}
 
 		AssertNot.type = function (obj, type, optionalInfo) {
