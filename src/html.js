@@ -12,11 +12,13 @@ JTF.namespace('HTML', function (HTML) {
 		rootElement: document.body
 	}
 
-	function addMissingConfigurations(config) {
-		if (!config) return DefaultConfig;
+	function updatePartialConfig(partialConfig) {
+		if (!partialConfig || !(partialConfig instanceof Object))
+			return DefaultConfig;
 		else {
-			for (var option in DefaultConfig)
-				config[option] = (typeof config[option] !== 'undefined') ? config[option] : DefaultConfig[option];
+			var config = {};
+			for (var key in DefaultConfig)
+				config[key] = partialConfig.hasOwnProperty(key) ? partialConfig[key] : DefaultConfig[key];
 			return config;
 		}
 	}
@@ -26,7 +28,7 @@ JTF.namespace('HTML', function (HTML) {
 
 		JTF.setState('', JTF.resources.progressIcon);
 		var TestRunner = JTF.TestRunner;
-		var currentConfig = addMissingConfigurations(configuration);
+		var currentConfig = updatePartialConfig(configuration);
 		var fixture, header, testsContainer;
 		var reRunTimer;
 
