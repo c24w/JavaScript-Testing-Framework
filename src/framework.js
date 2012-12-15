@@ -89,14 +89,14 @@
 		JTF.loadResources('Console.js', callback);
 	}
 
-	JTF.loadResources = function (/* args usage: (resource.css, resource.js, ..., ..., callback) */) {
+	JTF.loadResources = function (/* resource.css, resource.js, ..., ..., callback */) {
 		var loadCount = 0;
-		var resourceCount = arguments.length - 1;
-		var callback = arguments[arguments.length - 1];
-
+		var lastArg = arguments[arguments.length - 1];
+		var callback = lastArg instanceof Function ? lastArg : null;
+		var resourceCount = arguments.length - (callback !== null ? 1 : 0);
 		for (var i = 0; i < resourceCount; i++) {
 			JTF.loadResource(arguments[i], function () {
-				if (++loadCount === resourceCount && typeof callback !== 'undefined') {
+				if (++loadCount === resourceCount && callback !== null) {
 					callback();
 				}
 			});
