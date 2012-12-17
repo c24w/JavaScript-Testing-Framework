@@ -380,7 +380,12 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new JTF.TestFixture('Exception handling', {
+			new JTF.TestFixture('Specific exception thrown', {
+				'Assert.throws should pass if the defined exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.throws(function () { throw new TestException() }, TestException);
+					});
+				},
 				'Assert.throws should fail if the defined exception is not thrown': function () {
 					assertFails(function () {
 						Assert.throws(function () { }, TestException, genericFailMsg);
@@ -396,22 +401,11 @@ JTF.loadFramework(function () {
 					Assert.equal(exception.message, genericFailMsg);
 				},
 
-				'Assert.not.throws should pass if the defined exception is not thrown': function () {
+				'Assert.that(*).throws(*) should pass if the defined exception is thrown': function () {
 					assertAllPass(function () {
-						Assert.not.throws(function () { }, Error)
+						Assert.that(function () { throw new TestException() }).throws(TestException);
 					});
 				},
-				'Assert.not.throws should pass if a different type of exception is thrown': function () {
-					assertAllPass(function () {
-						Assert.not.throws(function () { throw new TestException() }, Error)
-					});
-				},
-				'Assert.not.throws should fail if the defined exception is thrown': function () {
-					assertFails(function () {
-						Assert.not.throws(function () { throw new Error() }, Error, genericFailMsg);
-					});
-				},
-
 				'Assert.that(*).throws(*) should fail if the defined exception is not thrown': function () {
 					assertFails(function () {
 						Assert.that(function () { }).throws(TestException);
@@ -426,6 +420,58 @@ JTF.loadFramework(function () {
 					assertAllPass(function () {
 						var exception = Assert.that(function () { throw new TestException(genericFailMsg) }).throws(TestException);
 						Assert.that(exception.message).equals(genericFailMsg);
+					});
+				},
+			}),
+
+			new JTF.TestFixture('Any exception thrown', {
+				'Assert.throws should pass if any exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.throws(function () { throw new TestException() });
+					});
+				},
+				'Assert.throws should fail if no exception is thrown': function () {
+					assertFails(function () {
+						Assert.throws(function () { }, genericFailMsg);
+					});
+				},
+				'Assert.throws should return any thrown exception': function () {
+					var exception = Assert.throws(function () { throw new TestException(genericFailMsg) });
+					Assert.instance(exception, TestException);
+					Assert.equal(exception.message, genericFailMsg);
+				},
+
+				'Assert.that(*).throws(*) should pass if any exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.that(function () { throw new TestException() }).throws();
+					});
+				},
+				'Assert.that(*).throws(*) should fail if no exception is thrown': function () {
+					assertFails(function () {
+						Assert.that(function () { }).throws();
+					}, "no exceptions were thrown");
+				},
+				'Assert.that(*).throws(*) should return any thrown exception': function () {
+					var exception = Assert.that(function () { throw new TestException(genericFailMsg) }).throws();
+					Assert.instance(exception, TestException);
+					Assert.equal(exception.message, genericFailMsg);
+				},
+			}),
+
+			new JTF.TestFixture('Specific exception not thrown', {
+				'Assert.not.throws should pass if the defined exception is not thrown': function () {
+					assertAllPass(function () {
+						Assert.not.throws(function () { }, Error)
+					});
+				},
+				'Assert.not.throws should pass if a different type of exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.not.throws(function () { throw new TestException() }, Error)
+					});
+				},
+				'Assert.not.throws should fail if the defined exception is thrown': function () {
+					assertFails(function () {
+						Assert.not.throws(function () { throw new Error() }, Error, genericFailMsg);
 					});
 				},
 

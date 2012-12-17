@@ -16,7 +16,9 @@ JTF.namespace('Assert', function (Assert) {
 	function AssertThat(subject) {
 		var A = Assert;
 		var AN = A.not;
-		this.throws = function (exception) { return A.throws(subject, exception) },
+		this.throws = function (exception) {
+			return A.throws(subject, exception)
+		},
 		this.does = { not: { 'throw': function (exception) { Assert.not.throws(subject, exception) } } },
 		this.equals = function (expected) { A.equal(subject, expected) },
 		this.is = {
@@ -99,13 +101,13 @@ JTF.namespace('Assert', function (Assert) {
 		Assert.true(number1 < number2, info);
 	}
 
-	Assert.instance = function (obj, objClass, optionalInfo) {
+	Assert.instance = function (obj, expectedClass, optionalInfo) {
 		try {
-			Assert.true(obj instanceof objClass);
+			Assert.true(obj instanceof expectedClass);
 		}
 		catch (e) {
 			var actualClass = obj.constructor.name;
-			var shouldBeThisClass = objClass.name;
+			var shouldBeThisClass = expectedClass.name;
 			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, shouldBeThisClass);
 			Assert.equal(actualClass, shouldBeThisClass, info);
 		}
@@ -117,17 +119,29 @@ JTF.namespace('Assert', function (Assert) {
 		Assert.equal(actualType, type, info);
 	}
 
-	Assert.throws = function (func, exception, optionalInfo) {
+	Assert.throws = function (func, expectedException, optionalInfo) {
+		if (typeof expectedException === 'string' && typeof optionalInfo === 'undefined') {
+			optionalInfo = expectedException;
+			expectedException = undefined;
+		}
 		try {
 			func();
 		}
 		catch (e) {
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', e.name, exception.name);
-			Assert.instance(e, exception, info);
+			if (typeof expectedException !== 'undefined') {
+				var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', e.name, expectedException.name);
+				Assert.instance(e, expectedException, info);
+			}
 			return e;
 		}
-		var info = optionalInfo ? optionalInfo : exception.name + ' was never thrown';
+		var info = optionalInfo ? optionalInfo : notThrownError(expectedException);
 		throw new AssertException(info);
+	}
+
+	function notThrownError(exception) {
+		return (typeof exception === 'undefined')
+			? 'no exceptions were thrown'
+			: exception.name + ' was never thrown'
 	}
 
 	JTF.namespace('Assert.not', function (AssertNot) {

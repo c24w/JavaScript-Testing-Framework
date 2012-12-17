@@ -12,7 +12,7 @@ JTF.loadFramework(function () {
 			return 'wrong amount of {0} data received'.format(type);
 		}
 
-		new TestRunner.Single(new TestFixture('TestRunner tests', {
+		var fixture = new TestFixture('TestRunner tests', {
 
 			FIXTURE_SETUP: function () {
 				trace = [];
@@ -29,7 +29,7 @@ JTF.loadFramework(function () {
 
 				MockTestHandler = {
 					receivedEvents: { start: false, end: false },
-					receivedData: { desc: [], passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], noPasses: [], noFails: [] },
+					receivedData: { desc: [], passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], noPasses: null, noFails: null },
 					handle: function (handleType) {
 						var args = Array.prototype.slice.call(arguments, 1);
 						switch (handleType) {
@@ -62,60 +62,67 @@ JTF.loadFramework(function () {
 				new TestRunner.Single(MockTestFixture).run(MockTestHandler);
 			},
 
-			'TestRunner should send test start event to the TestHandler': function () {
+			'TestRunner should send start event to the TestHandler': function () {
 				JTF.Assert.true(MockTestHandler.receivedEvents.start, 'start event was not received/processed in TestHandler');
 			},
 
-			'TestRunner should send test description event and data to the TestHandler': function () {
+			'TestRunner should send description event and data to the TestHandler': function () {
 				var fixtureName = 'Mock test fixture';
 				var data = MockTestHandler.receivedData.desc;
 				Assert.equal(data.length, 1, dataLengthError('description'));
 				Assert.equal(data[0], fixtureName);
 			},
 
-			'TestRunner should send test pass event and data to the TestHandler': function () {
+			'TestRunner should send pass events and data to the TestHandler': function () {
 				var data = MockTestHandler.receivedData.passedTestNames;
 				Assert.equal(data.length, 3, dataLengthError('passed test'));
 				for (var i = 0; i < data.length;)
 					Assert.equal(data[i], 'Passing test ' + (++i));
 			},
 
-			'TestRunner should send test fail event and data to the TestHandler': function () {
+			'TestRunner should send test fail events and data to the TestHandler': function () {
 				var testNames = MockTestHandler.receivedData.failedTestsNames;
 				var testMsgs = MockTestHandler.receivedData.failedTestsMsgs;
 				Assert.equal(testNames.length, 3, dataLengthError('failed test names'));
 				Assert.equal(testMsgs.length, 3, dataLengthError('failed test messages'));
 				for (var i = 0; i < 3; i++) {
-					var testNo = i + 1;
-					Assert.equal(testNames[i], 'Failing test ' + testNo);
+					Assert.equal(testNames[i], 'Failing test ' + (i + 1));
 					Assert.equal(testMsgs[i], Assert.DEFAULT_FAIL_MESSAGE);
 				}
 			},
 
-			'TestRunner should send test stats event and data to the TestHandler': function () {
+			'TestRunner should send stats event and data to the TestHandler': function () {
 				Assert.equal(MockTestHandler.receivedData.noPasses, 3, dataLengthError('number of passes'));
 				Assert.equal(MockTestHandler.receivedData.noFails, 3, dataLengthError('number of fails'));
 			},
 
-			'TestRunner should send end stats event and data to the TestHandler': function () {
+			'TestRunner should send end event and data to the TestHandler': function () {
 				Assert.true(MockTestHandler.receivedEvents.end, 'end event was not received/processed in TestHandler');
 			},
 
 			'TestRunner should call FIXTURE_SETUP once before any tests are run': function () {
 				Assert.equal(trace[0], 'FIXTURE_SETUP');
+				for (var i = 1; i < trace.length; i++)
+					Assert.not.equal(trace[i], 'FIXTURE_SETUP');
 			},
 
 			'TestRunner should call TEST_SETUP once before each test is run': function () {
-				for (var i = 1; i < trace.length; i += 2)
-					Assert.equal(trace[i], 'TEST_SETUP');
+				for (var i = 0; i < trace.length; i++) {
+					if (i % 2 !== 0) Assert.equal(trace[i], 'TEST_SETUP');
+					else Assert.not.equal(trace[i], 'TEST_SETUP');
+				}
 			}
 
-		})).run(new JTF.HTML.TestHandler({
+		});
+
+		var handler = new JTF.HTML.TestHandler({
 			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 			showPasses: true,
 			notifyOnFail: false,
 			runInterval: 10000
-		}));
+		});
+
+		new TestRunner.Single(fixture).run(handler);
 
 	});
 });
