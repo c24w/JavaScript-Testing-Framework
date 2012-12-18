@@ -380,7 +380,7 @@ JTF.loadFramework(function () {
 				}
 			}),
 
-			new JTF.TestFixture('Specific exception thrown', {
+			new JTF.TestFixture('Assert.throws specific exception', {
 				'Assert.throws should pass if the defined exception is thrown': function () {
 					assertAllPass(function () {
 						Assert.throws(function () { throw new TestException() }, TestException);
@@ -424,7 +424,7 @@ JTF.loadFramework(function () {
 				},
 			}),
 
-			new JTF.TestFixture('Any exception thrown', {
+			new JTF.TestFixture('Assert.throws any exception', {
 				'Assert.throws should pass if any exception is thrown': function () {
 					assertAllPass(function () {
 						Assert.throws(function () { throw new TestException() });
@@ -441,24 +441,24 @@ JTF.loadFramework(function () {
 					Assert.equal(exception.message, genericFailMsg);
 				},
 
-				'Assert.that(*).throws(*) should pass if any exception is thrown': function () {
+				'Assert.that(*).throws() should pass if any exception is thrown': function () {
 					assertAllPass(function () {
 						Assert.that(function () { throw new TestException() }).throws();
 					});
 				},
-				'Assert.that(*).throws(*) should fail if no exception is thrown': function () {
+				'Assert.that(*).throws() should fail if no exception is thrown': function () {
 					assertFails(function () {
 						Assert.that(function () { }).throws();
 					}, "no exceptions were thrown");
 				},
-				'Assert.that(*).throws(*) should return any thrown exception': function () {
+				'Assert.that(*).throws() should return any thrown exception': function () {
 					var exception = Assert.that(function () { throw new TestException(genericFailMsg) }).throws();
 					Assert.instance(exception, TestException);
 					Assert.equal(exception.message, genericFailMsg);
 				},
 			}),
 
-			new JTF.TestFixture('Specific exception not thrown', {
+			new JTF.TestFixture('Assert.not.throws specific exception', {
 				'Assert.not.throws should pass if the defined exception is not thrown': function () {
 					assertAllPass(function () {
 						Assert.not.throws(function () { }, Error)
@@ -489,6 +489,30 @@ JTF.loadFramework(function () {
 					assertFails(function () {
 						Assert.that(function () { throw new Error() }).does.not.throw(Error);
 					}, 'Assert.not.throws - expected: Error not thrown found: Error was thrown');
+				}
+			}),
+
+			new JTF.TestFixture('Assert.not.throws any exception', {
+				'Assert.not.throws should pass if no exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.not.throws(function () { })
+					});
+				},
+				'Assert.not.throws should fail if any exception is thrown': function () {
+					assertFails(function () {
+						Assert.not.throws(function () { throw new Error() }, genericFailMsg);
+					});
+				},
+
+				'Assert.that(*).does.not.throw() should pass if no exception is thrown': function () {
+					assertAllPass(function () {
+						Assert.that(function () { }).does.not.throw();
+					});
+				},
+				'Assert.that(*).does.not.throw() should fail if any exception is thrown ': function () {
+					assertFails(function () {
+						Assert.that(function () { throw new Error() }).does.not.throw();
+					}, 'Assert.not.throws - expected: exceptions were thrown found: Error was thrown');
 				}
 			})
 

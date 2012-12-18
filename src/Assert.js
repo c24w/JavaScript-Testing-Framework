@@ -16,9 +16,7 @@ JTF.namespace('Assert', function (Assert) {
 	function AssertThat(subject) {
 		var A = Assert;
 		var AN = A.not;
-		this.throws = function (exception) {
-			return A.throws(subject, exception)
-		},
+		this.throws = function (exception) { return A.throws(subject, exception) },
 		this.does = { not: { 'throw': function (exception) { Assert.not.throws(subject, exception) } } },
 		this.equals = function (expected) { A.equal(subject, expected) },
 		this.is = {
@@ -177,13 +175,23 @@ JTF.namespace('Assert', function (Assert) {
 			Assert.not.equal(actualType, type, info);
 		}
 
-		AssertNot.throws = function (func, exception, optionalInfo) {
+		AssertNot.throws = function (func, unthrownException, optionalInfo) {
+			if (typeof unthrownException === 'string' && typeof optionalInfo === 'undefined') {
+				optionalInfo = unthrownException;
+				unthrownException = undefined;
+			}
 			try {
 				func();
 			}
 			catch (e) {
-				var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.throws', e.constructor.name + ' was thrown', exception.name + ' not thrown');
-				Assert.not.instance(e, exception, info);
+				var expectedMsg = (typeof unthrownException !== 'undefined') ? (unthrownException.name + ' not thrown') : ('exceptions were thrown');
+				var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.throws', e.constructor.name + ' was thrown', expectedMsg);
+				if (typeof unthrownException !== 'undefined') {
+					Assert.not.instance(e, unthrownException, info);
+				}
+				else {
+					throw new AssertException(info);
+				}
 			}
 		}
 
