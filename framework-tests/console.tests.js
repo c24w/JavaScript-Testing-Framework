@@ -28,7 +28,7 @@ JTF.loadFramework(function () {
 
 				}),
 
-				new JTF.TestFixture('Console output tests (passing tests))', {
+				new JTF.TestFixture('Console output tests (passing tests)', {
 
 					FIXTURE_SETUP: function () {
 						logMsgs = [];
@@ -58,7 +58,7 @@ JTF.loadFramework(function () {
 
 				}),
 
-				new JTF.TestFixture('Console output tests (failing tests))', {
+				new JTF.TestFixture('Console output tests (failing tests)', {
 
 					FIXTURE_SETUP: function () {
 						errorMsgs = [];

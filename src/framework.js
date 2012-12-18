@@ -77,7 +77,7 @@
 
 	JTF.loadFramework = function (callback) {
 		JTF.loadResource('resources.js', function () {
-			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', callback);
+			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', 'TestCase.js', callback);
 		});
 	}
 

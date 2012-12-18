@@ -27,6 +27,13 @@ JTF.namespace('TestRunner', function (TestRunner) {
 		return !s || s.isWhitespace();
 	}
 
+	function TestCase() {
+		var cases = [];
+		this.add = function () { cases[cases.length] = arguments };
+		this.hasCases = function () { return cases.length > 0 };
+		this.getCases = function () { return cases };
+	}
+
 	function TestFixtureRunner(testFixture) {
 
 		this.run = function (testEventHandler) {
@@ -50,8 +57,7 @@ JTF.namespace('TestRunner', function (TestRunner) {
 			for (var testName in tests) {
 				if (testSetup) testSetup();
 				try {
-					var test = tests[testName];
-					test();
+					tests[testName]();
 					testEventHandler.handle(TestRunner.EVENT.FIXTURE.PASS, testName);
 					passes++;
 				}
