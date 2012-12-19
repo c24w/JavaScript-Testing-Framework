@@ -85,7 +85,8 @@ JTF.namespace('Assert', function (Assert) {
 	}
 
 	function assertIsNumber(object, prefix) {
-		JTF.Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), typeof object));
+		var actualType = object === null ? 'null' : typeof object;
+		Assert.instance(object, Number, '{0}: expected: {1} found: {2}'.format(prefix, typeof Number(), actualType));
 	}
 
 	Assert.greater = function (number1, number2, optionalInfo) {
@@ -103,6 +104,8 @@ JTF.namespace('Assert', function (Assert) {
 	}
 
 	Assert.instance = function (obj, expectedClass, optionalInfo) {
+		var info = optionalInfo ? optionalInfo : 'Assert.instance - first argument was null';
+		Assert.not.null(obj, optionalInfo);
 		try {
 			Assert.true(obj instanceof expectedClass);
 		}
