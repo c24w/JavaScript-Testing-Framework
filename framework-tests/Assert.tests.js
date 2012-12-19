@@ -434,28 +434,48 @@ JTF.loadFramework(function () {
 
 				'Assert.that(*).is.instance.of(*) should pass for true conditions': function () {
 					assertPass(function () {
-						Assert.that(new TestException()).is.instance.of(TestException);
-						Assert.that(new Object()).is.instance.of(Object);
-						Assert.that('hello').is.instance.of(String);
-						Assert.that(1).is.instance.of(Number);
-						Assert.that(true).is.instance.of(Boolean);
+						new TestCase(function (data1, data2) {
+							Assert.that(data1).is.instance.of(data2);
+						})
+						.addCase(new TestException(), TestException)
+						.addCase(new Object(), Object)
+						.addCase('hello', String)
+						.addCase(1, Number)
+						.addCase(true, Boolean);
 					});
 				},
 				'Assert.that(*).is.instance.of(*) should fail for false conditions': function () {
-					assertFail(function () {
-						Assert.that(1).is.instance.of(String);
-					}, 'Assert.instance - expected: String found: Number');
+					new TestCase(function (data1, data2, type1, type2) {
+						assertFail(function () {
+							Assert.that(data1).is.instance.of(data2);
+						}, 'Assert.instance - expected: {0} found: {1}'.format(type2, type1));
+					})
+					.addCase(1, String, 'Number', 'String')
+					.addCase('hi', Number, 'String', 'Number')
+					.addCase(true, Object, 'Boolean', 'Object');
 				},
 				'Assert.that(*).is.not.instance.of(*) should pass for true conditions': function () {
 					assertPass(function () {
-						Assert.that(new Error()).is.not.instance.of(TestException);
-						Assert.that(new Object()).is.not.instance.of(Number);
+						new TestCase(function (data1, data2) {
+							Assert.that(data1).is.not.instance.of(data2);
+						})
+						.addCase(new Error(), TestException)
+						.addCase(new Object(), Number)
+						.addCase(1, String)
+						.addCase('', Boolean)
+						.addCase(true, Number)
 					});
 				},
 				'Assert.that(*).is.not.instance.of(*) should fail for false conditions': function () {
-					assertFail(function () {
-						Assert.that('hello').is.not.instance.of(String);
-					}, 'Assert.not.instance - expected: not String found: String');
+					new TestCase(function (data1, data2, type) {
+						assertFail(function () {
+							Assert.that(data1).is.not.instance.of(data2);
+						}, 'Assert.not.instance - expected: not {0} found: {0}'.format(type));
+					})
+					.addCase(new TestException(), TestException, 'TestException')
+					.addCase(new Object(), Object, 'Object')
+					.addCase('hello', String, 'String')
+					.addCase(1, Number, 'Number');
 				}
 
 			}),
