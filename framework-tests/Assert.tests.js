@@ -389,34 +389,47 @@ JTF.loadFramework(function () {
 				},
 			}),
 
-			new JTF.TestFixture('Object types / instances', {
+			new JTF.TestFixture('Assert.instance', {
 				'Assert.instance should pass for true conditions': function () {
 					assertPass(function () {
-						Assert.instance(new TestException(), TestException);
-						Assert.instance(new Object(), Object);
-						Assert.instance('hello', String);
-						Assert.instance(1, Number);
+						new TestCase(Assert.instance)
+							.addCase(new TestException(), TestException)
+							.addCase(new Object(), Object)
+							.addCase('hello', String)
+							.addCase(1, Number);
 					});
 
 				},
 				'Assert.instance should fail for false conditions': function () {
-					assertFail(function () {
-						Assert.instance(1, String, genericFailMsg);
-					});
+					new TestCase(function (data1, data2) {
+						assertFail(function () {
+							Assert.instance(data1, data2, genericFailMsg);
+						});
+					})
+					.addCase(1, String)
+					.addCase('hello', Number)
+					.addCase(new Object(), TestException);
 				},
 				'Assert.not.instance should pass for true conditions': function () {
 					assertPass(function () {
-						Assert.not.instance(new Error(), TestException);
-						Assert.not.instance(new Object(), Number);
-						Assert.not.instance(1, String);
-						Assert.not.instance('', Boolean);
-						Assert.not.instance(true, Number);
+						new TestCase(Assert.not.instance)
+							.addCase(new Error(), TestException)
+							.addCase(new Object(), Number)
+							.addCase(1, String)
+							.addCase('', Boolean)
+							.addCase(true, Number);
 					});
 				},
 				'Assert.not.instance should fail for false conditions': function () {
-					assertFail(function () {
-						Assert.not.instance('hello', String, genericFailMsg);
-					});
+					new TestCase(function (data1, data2) {
+						assertFail(function () {
+							Assert.not.instance(data1, data2, genericFailMsg);
+						});
+					})
+					.addCase(new TestException(), TestException)
+					.addCase(new Object(), Object)
+					.addCase('hello', String)
+					.addCase(1, Number);
 				},
 
 				'Assert.that(*).is.instance.of(*) should pass for true conditions': function () {
@@ -443,8 +456,11 @@ JTF.loadFramework(function () {
 					assertFail(function () {
 						Assert.that('hello').is.not.instance.of(String);
 					}, 'Assert.not.instance - expected: not String found: String');
-				},
+				}
 
+			}),
+
+			new JTF.TestFixture('Assert.type', {
 				'Assert.type should pass for true conditions': function () {
 					assertPass(function () {
 						Assert.type(TestException, 'function');
