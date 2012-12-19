@@ -77,7 +77,10 @@ JTF.namespace('Assert', function (Assert) {
 	}
 
 	Assert.equiv = function (actual, expected, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equiv', encloseInType(actual), encloseInType(expected));
+		var sameType = areTheSameType(actual, expected);
+		var act = sameType ? actual : encloseInType(actual);
+		var exp = sameType ? expected : encloseInType(expected);
+		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equiv', act, exp);
 		Assert.true(actual == expected, info);
 	}
 

@@ -2,6 +2,7 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
 		var Assert = JTF.Assert;
+		var TestCase = JTF.TestCase;
 		var genericFailMsg = 'Should fail';
 		function TestException(message) { this.message = message }
 
@@ -27,7 +28,7 @@ JTF.loadFramework(function () {
 				'Assert.true should fail for false conditions': function () {
 					assertFails(function () {
 						Assert.true(false, genericFailMsg)
-					});
+					})
 				},
 				'Assert.false should pass for false conditions': function () {
 					assertAllPass(function () {
@@ -119,7 +120,16 @@ JTF.loadFramework(function () {
 					});
 				},
 				'Assert.equal should fail for false conditions': function () {
-					assertFails(function () { Assert.equal(true, false, genericFailMsg) });
+					new TestCase(
+						function (data1, data2) {
+							assertFails(function () {
+								Assert.equal(data1, data2, genericFailMsg);
+							});
+						}
+					)
+					.addCase(true, false)
+					.addCase(1, 2)
+					.addCase('hi', 'bye');
 				},
 				'Assert.equiv should pass for true conditions': function () {
 					assertAllPass(function () {
@@ -129,9 +139,16 @@ JTF.loadFramework(function () {
 					});
 				},
 				'Assert.equiv should fail for false conditions': function () {
-					assertFails(function () {
-						Assert.equiv(true, false, genericFailMsg);
-					});
+					new TestCase(
+						function (data1, data2) {
+							assertFails(function () {
+								Assert.equiv(data1, data2, genericFailMsg);
+							});
+						}
+					)
+					.addCase(true, false)
+					.addCase(1, 2)
+					.addCase('hi', 'bye');
 				},
 
 				'Assert.that(*).equals(*) should pass for true conditions': function () {
@@ -143,7 +160,16 @@ JTF.loadFramework(function () {
 					});
 				},
 				'Assert.that(*).equals(*) should fail for false conditions': function () {
-					assertFails(function () { Assert.equal(true, false, genericFailMsg) });
+					new TestCase(
+						function (data1, data2) {
+							assertFails(function () {
+								Assert.that(data1).equals(data2);
+							}, 'Assert.equal - expected: {0} found: {1}'.format(data2, data1));
+						}
+					)
+					.addCase(true, false)
+					.addCase(1, 2)
+					.addCase('hi', 'bye');
 				},
 				'Assert.that(*).is.equiv.to(*) should pass for true conditions': function () {
 					assertAllPass(function () {
@@ -153,9 +179,16 @@ JTF.loadFramework(function () {
 					});
 				},
 				'Assert.that(*).is.equiv.to(*) should fail for false conditions': function () {
-					assertFails(function () {
-						Assert.that(true).is.equiv.to(false);
-					}, 'Assert.equiv - expected: Boolean(false) found: Boolean(true)');
+					new TestCase(
+						function (data1, data2) {
+							assertFails(function () {
+								Assert.that(data1).is.equiv.to(data2);
+							}, 'Assert.equiv - expected: {0} found: {1}'.format(data2, data1));
+						}
+					)
+					.addCase(true, false)
+					.addCase(1, 2)
+					.addCase('hi', 'bye');
 				}
 			}),
 

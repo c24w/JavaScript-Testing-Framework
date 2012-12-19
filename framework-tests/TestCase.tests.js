@@ -22,14 +22,14 @@ JTF.loadFramework(function () {
 				MockTestFixture = new TestFixture('Mock test fixture', {
 					'Test': function () {
 
-						TestCase(
-							[1, 2],
-							['one', 'two'],
-							[true, false],
+						new TestCase(
 							function (arg1, arg2) {
 								addTrace(getTraceMsg(arg1, arg2));
 							}
-						);
+						)
+						.addCase(1, 2)
+						.addCase('one', 'two')
+						.addCase(true, false);
 
 					}
 				});
