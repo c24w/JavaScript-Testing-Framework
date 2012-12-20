@@ -13,7 +13,7 @@ JTF.namespace('TestRunner', function (TestRunner) {
 			START: 7,
 			END: 6
 		}
-	}
+	};
 
 	function formatMsg(msg) {
 		return isUselessString(msg) ? 'no additional information' : msg;
@@ -57,7 +57,7 @@ JTF.namespace('TestRunner', function (TestRunner) {
 			for (var testName in tests) {
 				if (testSetup) testSetup();
 				try {
-					tests[testName]();
+					tests[testName](JTF.TestCase);
 					testEventHandler.handle(TestRunner.EVENT.FIXTURE.PASS, testName);
 					passes++;
 				}

@@ -7,7 +7,6 @@ JTF.loadFramework(function () {
 
 		var TestRunner = JTF.TestRunner;
 		var TestFixture = JTF.TestFixture;
-		var TestCase = JTF.TestCase;
 		var Case = JTF.TestCase;
 		var Assert = JTF.Assert;
 
@@ -20,16 +19,15 @@ JTF.loadFramework(function () {
 				trace = [];
 
 				MockTestFixture = new TestFixture('Mock test fixture', {
-					'Test': function () {
+					'Test': function (TestCase) {
 
-						new TestCase(
-							function (arg1, arg2) {
-								addTrace(getTraceMsg(arg1, arg2));
-							}
-						)
+						TestCase(function (arg1, arg2) {
+							addTrace(getTraceMsg(arg1, arg2));
+						})
 						.addCase(1, 2)
 						.addCase('one', 'two')
-						.addCase(true, false);
+						.addCase(true, false)
+						.addCase(new Object(), new Object());
 
 					}
 				});
@@ -38,14 +36,15 @@ JTF.loadFramework(function () {
 			},
 
 			'TestCase should be called once for each case, with the correct arguments': function () {
-				Assert.equal(trace.length, 3);
 				var cases = [
 					[1, 2],
 					['one', 'two'],
-					[true, false]
+					[true, false],
+					[new Object(), new Object()]
 				];
+				Assert.equal(trace.length, cases.length);
 				for (var i = 0; i < trace.length; i++)
-					Assert.equal(trace[i], getTraceMsg.apply(this, cases[i]));
+					Assert.equal(trace[i], getTraceMsg.apply(null, cases[i]));
 			}
 
 		});

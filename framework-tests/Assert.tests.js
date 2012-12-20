@@ -2,7 +2,6 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
 		var Assert = JTF.Assert;
-		var TestCase = JTF.TestCase;
 		var genericFailMsg = 'Should fail';
 		function TestException(message) { this.message = message }
 
@@ -19,65 +18,65 @@ JTF.loadFramework(function () {
 		var fixtures = [
 
 			new JTF.TestFixture('Conditions', {
-				'Assert.true should pass for true conditions': function () {
+				'Assert.true should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.true)
+						TestCase(Assert.true)
 							.addCase(true)
-							.addCase(1 === 1)
+							.addCase(1 === 1);
 					});
 				},
-				'Assert.true should fail for false conditions': function () {
+				'Assert.true should fail for false conditions': function (TestCase) {
 					assertFail(function () {
-						new TestCase(Assert.true)
+						TestCase(Assert.true)
 							.addCase(false, genericFailMsg)
 							.addCase(1 === 2, genericFailMsg);
 					});
 				},
-				'Assert.false should pass for false conditions': function () {
+				'Assert.false should pass for false conditions': function (TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.false)
+						TestCase(Assert.false)
 							.addCase(false)
 							.addCase(1 === 0);
 					});
 				},
-				'Assert.false should fail for false conditions': function () {
+				'Assert.false should fail for false conditions': function (TestCase) {
 					assertFail(function () {
-						new TestCase(Assert.false)
+						TestCase(Assert.false)
 							.addCase(true, genericFailMsg)
 							.addCase(1 === 1, genericFailMsg);
 					});
 				},
 
-				'Assert.that(*).is.true() should pass for true conditions': function () {
+				'Assert.that(*).is.true() should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						new TestCase(function (subject) {
+						TestCase(function (subject) {
 							Assert.that(subject).is.true();
 						})
 						.addCase(true)
 						.addCase(1 === 1);
 					});
 				},
-				'Assert.that(*).is.true() should fail for false conditions': function () {
+				'Assert.that(*).is.true() should fail for false conditions':function(TestCase) {
 					assertFail(function () {
-						new TestCase(function (subject) {
+						TestCase(function (subject) {
 							Assert.that(subject).is.true();
 						})
 						.addCase(false)
 						.addCase(1 === 2);
 					}, 'no additional information');
 				},
-				'Assert.that(*).is.false() should pass for false conditions': function () {
+				'Assert.that(*).is.false() should pass for false conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (subject) {
+						TestCase(function (subject) {
 							Assert.that(subject).is.false();
 						})
 						.addCase(false)
 						.addCase(1 === 2);
 					});
 				},
-				'Assert.that(*).is.false() should fail for false conditions': function () {
+				'Assert.that(*).is.false() should fail for false conditions':function(TestCase) {
 					assertFail(function () {
-						new TestCase(function (subject) {
+						TestCase(function (subject) {
 							Assert.that(subject).is.false();
 						})
 						.addCase(true)
@@ -92,8 +91,8 @@ JTF.loadFramework(function () {
 						Assert.null(null);
 					});
 				},
-				'Assert.null should fail for false conditions': function () {
-					new TestCase(function (subject, msg) {
+				'Assert.null should fail for false conditions':function(TestCase) {
+					TestCase(function (subject, msg) {
 						assertFail(function () {
 							Assert.null(subject, msg);
 						})
@@ -102,15 +101,15 @@ JTF.loadFramework(function () {
 					.addCase(true, genericFailMsg)
 					.addCase('not null', genericFailMsg);
 				},
-				'Assert.not.null should pass for true conditions': function () {
+				'Assert.not.null should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.not.null)
+						TestCase(Assert.not.null)
 							.addCase(1)
 							.addCase(true)
 							.addCase('not null');
 					});
 				},
-				'Assert.not.null should fail for false conditions': function () {
+				'Assert.not.null should fail for false conditions':function(TestCase) {
 					assertFail(function () {
 						Assert.not.null(null, genericFailMsg)
 					});
@@ -121,8 +120,8 @@ JTF.loadFramework(function () {
 						Assert.that(null).is.null()
 					});
 				},
-				'Assert.that(*).is.null() should fail for false conditions': function () {
-					new TestCase(function (subject) {
+				'Assert.that(*).is.null() should fail for false conditions':function(TestCase) {
+					TestCase(function (subject) {
 						assertFail(function () {
 							Assert.that(subject).is.null();
 						}, 'Assert.null - argument was not null')
@@ -131,8 +130,8 @@ JTF.loadFramework(function () {
 					.addCase(true)
 					.addCase('not null');
 				},
-				'Assert.that(*).is.not.null() should pass for true conditions': function () {
-					new TestCase(function (subject) {
+				'Assert.that(*).is.not.null() should pass for true conditions':function(TestCase) {
+					TestCase(function (subject) {
 						assertPass(function () {
 							Assert.that(subject).is.not.null();
 						}, 'Assert.not.null - argument was null')
@@ -141,8 +140,8 @@ JTF.loadFramework(function () {
 					.addCase(true)
 					.addCase('not null');
 				},
-				'Assert.that(*).is.not.null() should fail for false conditions': function () {
-					new TestCase(function (subject) {
+				'Assert.that(*).is.not.null() should fail for false conditions': function (TestCase) {
+					TestCase(function (subject) {
 						assertFail(function () {
 							Assert.that(subject).is.not.null();
 						})
@@ -152,16 +151,16 @@ JTF.loadFramework(function () {
 			}),
 
 			new JTF.TestFixture('Equality', {
-				'Assert.equal should pass for true conditions': function () {
+				'Assert.equal should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.equal)
+						TestCase(Assert.equal)
 						addCase(1, 1)
 						addCase('abc', 'abc')
 						addCase(true, true);
 					});
 				},
-				'Assert.equal should fail for false conditions': function () {
-					new TestCase(
+				'Assert.equal should fail for false conditions':function(TestCase) {
+					TestCase(
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.equal(data1, data2, genericFailMsg);
@@ -172,16 +171,16 @@ JTF.loadFramework(function () {
 					.addCase(1, 2)
 					.addCase('hi', 'bye');
 				},
-				'Assert.equiv should pass for true conditions': function () {
+				'Assert.equiv should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.equiv)
+						TestCase(Assert.equiv)
 							.addCase(true, 1)
 							.addCase(false, "0")
 							.addCase('1', 1);
 					});
 				},
-				'Assert.equiv should fail for false conditions': function () {
-					new TestCase(
+				'Assert.equiv should fail for false conditions':function(TestCase) {
+					TestCase(
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.equiv(data1, data2, genericFailMsg);
@@ -193,9 +192,9 @@ JTF.loadFramework(function () {
 					.addCase('hi', 'bye');
 				},
 
-				'Assert.that(*).equals(*) should pass for true conditions': function () {
+				'Assert.that(*).equals(*) should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (data1, data2) {
+						TestCase(function (data1, data2) {
 							Assert.that(data1).equals(data2)
 						})
 						.addCase(1, 1)
@@ -203,8 +202,8 @@ JTF.loadFramework(function () {
 						.addCase(true, true);
 					});
 				},
-				'Assert.that(*).equals(*) should fail for false conditions': function () {
-					new TestCase(
+				'Assert.that(*).equals(*) should fail for false conditions':function(TestCase) {
+					TestCase(
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.that(data1).equals(data2);
@@ -215,9 +214,9 @@ JTF.loadFramework(function () {
 					.addCase(1, 2)
 					.addCase('hi', 'bye');
 				},
-				'Assert.that(*).is.equiv.to(*) should pass for true conditions': function () {
+				'Assert.that(*).is.equiv.to(*) should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (data1, data2) {
+						TestCase(function (data1, data2) {
 							Assert.that(data1).is.equiv.to(data2);
 						})
 						.addCase(true, 1)
@@ -225,8 +224,8 @@ JTF.loadFramework(function () {
 						.addCase('1', 1);
 					});
 				},
-				'Assert.that(*).is.equiv.to(*) should fail for false conditions': function () {
-					new TestCase(
+				'Assert.that(*).is.equiv.to(*) should fail for false conditions':function(TestCase) {
+					TestCase(
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.that(data1).is.equiv.to(data2);
@@ -240,16 +239,16 @@ JTF.loadFramework(function () {
 			}),
 
 			new JTF.TestFixture('Assert.greater', {
-				'Assert.greater should pass for true conditions': function () {
+				'Assert.greater should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.greater)
+						TestCase(Assert.greater)
 							.addCase(1, 0)
 							.addCase(1, 0.5)
 							.addCase(1, -1);
 					});
 				},
-				'Assert.greater should fail for false conditions': function () {
-					new TestCase(function (data1, data2) {
+				'Assert.greater should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.greater(data1, data2, genericFailMsg);
 						});
@@ -258,8 +257,8 @@ JTF.loadFramework(function () {
 					.addCase(0.5, 1)
 					.addCase(-1, 1);
 				},
-				'Assert.greater should fail for non-numeric first value': function () {
-					new TestCase(function (data, type) {
+				'Assert.greater should fail for non-numeric first value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.greater(data, 1, genericFailMsg);
 						}, 'Assert.greater - first argument: expected: number found: ' + type);
@@ -268,8 +267,8 @@ JTF.loadFramework(function () {
 					.addCase('hi', 'string')
 					.addCase(null, 'null');
 				},
-				'Assert.greater should fail for non-numeric second value': function () {
-					new TestCase(function (data, type) {
+				'Assert.greater should fail for non-numeric second value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.greater(1, data, genericFailMsg);
 						}, 'Assert.greater - second argument: expected: number found: ' + type);
@@ -306,16 +305,16 @@ JTF.loadFramework(function () {
 
 			new JTF.TestFixture('Assert.less', {
 
-				'Assert.less should pass for true conditions': function () {
+				'Assert.less should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.less)
+						TestCase(Assert.less)
 							.addCase(0, 1)
 							.addCase(0.5, 1)
 							.addCase(-1, 1);
 					});
 				},
-				'Assert.less should fail for false conditions': function () {
-					new TestCase(function (data1, data2) {
+				'Assert.less should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.less(data1, data2, genericFailMsg);
 						})
@@ -324,8 +323,8 @@ JTF.loadFramework(function () {
 					.addCase(1, 0.5)
 					.addCase(1, -1);
 				},
-				'Assert.less should fail for non-numeric first value': function () {
-					new TestCase(function (data, type) {
+				'Assert.less should fail for non-numeric first value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.less(data, 1, genericFailMsg);
 						}, 'Assert.less - first argument: expected: number found: ' + type);
@@ -334,8 +333,8 @@ JTF.loadFramework(function () {
 					.addCase('hi', 'string')
 					.addCase(null, 'null');
 				},
-				'Assert.less should fail for non-numeric second value': function () {
-					new TestCase(function (data, type) {
+				'Assert.less should fail for non-numeric second value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.less(1, data, genericFailMsg);
 						}, 'Assert.less - second argument: expected: number found: ' + type);
@@ -345,9 +344,9 @@ JTF.loadFramework(function () {
 					.addCase(null, 'null');
 				},
 
-				'Assert.that(*).is.less.than(*) should pass for true conditions': function () {
+				'Assert.that(*).is.less.than(*) should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (data1, data2) {
+						TestCase(function (data1, data2) {
 							Assert.that(data1).is.less.than(data2);
 							Assert.that(data1).is.less.than(data2);
 							Assert.that(data1).is.less.than(data2);
@@ -357,8 +356,8 @@ JTF.loadFramework(function () {
 						.addCase(-1, 1);
 					});
 				},
-				'Assert.that(*).is.less.than(*) should fail for false conditions': function () {
-					new TestCase(function (data1, data2) {
+				'Assert.that(*).is.less.than(*) should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.that(data1).is.less.than(data2);
 						}, 'Assert.less - {0} is not less than {1}'.format(data1, data2));
@@ -367,8 +366,8 @@ JTF.loadFramework(function () {
 					.addCase(1, 0.5)
 					.addCase(1, -1);
 				},
-				'Assert.that(*).is.less.than(*) should fail for non-numeric first value': function () {
-					new TestCase(function (data, type) {
+				'Assert.that(*).is.less.than(*) should fail for non-numeric first value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.that(data).is.less.than(1);
 						}, 'Assert.less - first argument: expected: number found: ' + type);
@@ -377,8 +376,8 @@ JTF.loadFramework(function () {
 					.addCase('hi', 'string')
 					.addCase(null, 'null');
 				},
-				'Assert.that(*).is.less.than(*) should fail for non-numeric second value': function () {
-					new TestCase(function (data, type) {
+				'Assert.that(*).is.less.than(*) should fail for non-numeric second value':function(TestCase) {
+					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.that(1).is.less.than(data);
 						}, 'Assert.less - second argument: expected: number found: ' + type);
@@ -390,9 +389,9 @@ JTF.loadFramework(function () {
 			}),
 
 			new JTF.TestFixture('Assert.instance', {
-				'Assert.instance should pass for true conditions': function () {
+				'Assert.instance should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.instance)
+						TestCase(Assert.instance)
 							.addCase(new TestException(), TestException)
 							.addCase(new Object(), Object)
 							.addCase('hello', String)
@@ -400,8 +399,8 @@ JTF.loadFramework(function () {
 					});
 
 				},
-				'Assert.instance should fail for false conditions': function () {
-					new TestCase(function (data1, data2) {
+				'Assert.instance should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.instance(data1, data2, genericFailMsg);
 						});
@@ -410,9 +409,9 @@ JTF.loadFramework(function () {
 					.addCase('hello', Number)
 					.addCase(new Object(), TestException);
 				},
-				'Assert.not.instance should pass for true conditions': function () {
+				'Assert.not.instance should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.not.instance)
+						TestCase(Assert.not.instance)
 							.addCase(new Error(), TestException)
 							.addCase(new Object(), Number)
 							.addCase(1, String)
@@ -420,8 +419,8 @@ JTF.loadFramework(function () {
 							.addCase(true, Number);
 					});
 				},
-				'Assert.not.instance should fail for false conditions': function () {
-					new TestCase(function (data1, data2) {
+				'Assert.not.instance should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.not.instance(data1, data2, genericFailMsg);
 						});
@@ -432,9 +431,9 @@ JTF.loadFramework(function () {
 					.addCase(1, Number);
 				},
 
-				'Assert.that(*).is.instance.of(*) should pass for true conditions': function () {
+				'Assert.that(*).is.instance.of(*) should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (data1, data2) {
+						TestCase(function (data1, data2) {
 							Assert.that(data1).is.instance.of(data2);
 						})
 						.addCase(new TestException(), TestException)
@@ -444,8 +443,8 @@ JTF.loadFramework(function () {
 						.addCase(true, Boolean);
 					});
 				},
-				'Assert.that(*).is.instance.of(*) should fail for false conditions': function () {
-					new TestCase(function (data1, data2, type1, type2) {
+				'Assert.that(*).is.instance.of(*) should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2, type1, type2) {
 						assertFail(function () {
 							Assert.that(data1).is.instance.of(data2);
 						}, 'Assert.instance - expected: {0} found: {1}'.format(type2, type1));
@@ -454,9 +453,9 @@ JTF.loadFramework(function () {
 					.addCase('hi', Number, 'String', 'Number')
 					.addCase(true, Object, 'Boolean', 'Object');
 				},
-				'Assert.that(*).is.not.instance.of(*) should pass for true conditions': function () {
+				'Assert.that(*).is.not.instance.of(*) should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(function (data1, data2) {
+						TestCase(function (data1, data2) {
 							Assert.that(data1).is.not.instance.of(data2);
 						})
 						.addCase(new Error(), TestException)
@@ -466,8 +465,8 @@ JTF.loadFramework(function () {
 						.addCase(true, Number)
 					});
 				},
-				'Assert.that(*).is.not.instance.of(*) should fail for false conditions': function () {
-					new TestCase(function (data1, data2, type) {
+				'Assert.that(*).is.not.instance.of(*) should fail for false conditions':function(TestCase) {
+					TestCase(function (data1, data2, type) {
 						assertFail(function () {
 							Assert.that(data1).is.not.instance.of(data2);
 						}, 'Assert.not.instance - expected: not {0} found: {0}'.format(type));
@@ -481,9 +480,9 @@ JTF.loadFramework(function () {
 			}),
 
 			new JTF.TestFixture('Assert.type', {
-				'Assert.type should pass for true conditions': function () {
+				'Assert.type should pass for true conditions':function(TestCase) {
 					assertPass(function () {
-						new TestCase(Assert.type)
+						TestCase(Assert.type)
 							.addCase(TestException, 'function')
 							.addCase(new TestException(), 'object')
 							.addCase(null, 'object')

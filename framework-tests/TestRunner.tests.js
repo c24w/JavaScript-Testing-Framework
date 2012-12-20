@@ -111,6 +111,10 @@ JTF.loadFramework(function () {
 					if (i % 2 !== 0) Assert.equal(trace[i], 'TEST_SETUP');
 					else Assert.not.equal(trace[i], 'TEST_SETUP');
 				}
+			},
+
+			'TestRunner should add case:n to failing test messages': function (testCase) {
+
 			}
 
 		});
