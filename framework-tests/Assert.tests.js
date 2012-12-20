@@ -483,14 +483,14 @@ JTF.loadFramework(function () {
 			new JTF.TestFixture('Assert.type', {
 				'Assert.type should pass for true conditions': function () {
 					assertPass(function () {
-						Assert.type(TestException, 'function');
-						Assert.type(new TestException(), 'object');
-						Assert.type(null, 'object');
-						Assert.type('hello', 'string');
-						Assert.type(1, 'number');
-						Assert.type(true, 'boolean');
-						var undefinedVariable;
-						Assert.type(undefinedVariable, 'undefined');
+						new TestCase(Assert.type)
+							.addCase(TestException, 'function')
+							.addCase(new TestException(), 'object')
+							.addCase(null, 'object')
+							.addCase('hello', 'string')
+							.addCase(1, 'number')
+							.addCase(true, 'boolean')
+							.addCase(undefined, 'undefined');
 					});
 				},
 				'Assert.type should fail for false conditions': function () {
