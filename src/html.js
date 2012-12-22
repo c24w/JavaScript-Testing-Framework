@@ -33,7 +33,7 @@ JTF.namespace('HTML', function (HTML) {
 		var reRunTimer;
 
 		this.handle = function (handleType) {
-			var TREvent = JTF.TestRunner.EVENT;
+			var TREvent = JTF.TEST_EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
 				case TREvent.BATCH.START:

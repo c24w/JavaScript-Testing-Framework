@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 		var Assert = JTF.Assert;
 		var expectedDesc, testFixture;
 
-		new TestRunner.Single(new TestFixture('TestFixture tests', {
+		new TestRunner(new TestFixture('TestFixture tests', {
 
 			FIXTURE_SETUP: function () {
 				expectedDesc = 'test fixture description';

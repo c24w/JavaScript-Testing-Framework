@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 			var Assert = JTF.Assert;
 			var console = JTF.Console;
 
-			new JTF.TestRunner.Batch([
+			new JTF.TestRunner([
 
 				new JTF.TestFixture('Console output tests (constant outputs)', {
 
@@ -14,7 +14,7 @@ JTF.loadFramework(function () {
 						logMsgs = [];
 						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
 						new JTF.TestRunner
-							.Single(new JTF.TestFixture('Demo test fixture', {}))
+							(new JTF.TestFixture('Demo test fixture', {}))
 							.run(new JTF.Console.TestHandler());
 					},
 
@@ -41,7 +41,7 @@ JTF.loadFramework(function () {
 
 						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
+						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Passing tests should be outputted, to console.log, in the expected format': function () {
@@ -71,7 +71,7 @@ JTF.loadFramework(function () {
 
 						window.console = { log: function () { }, error: function (msg) { errorMsgs[errorMsgs.length] = msg } };
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
+						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Failing tests should be outputted, to console.error, in the expected format': function () {
@@ -108,7 +108,7 @@ JTF.loadFramework(function () {
 							error: function (msg) { errorMsgs[errorMsgs.length] = msg },
 						};
 
-						new JTF.TestRunner.Single(demoFixture).run(new JTF.Console.TestHandler());
+						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
 
 					'Passing tests should be outputted, to console.log, in the expected format': function () {

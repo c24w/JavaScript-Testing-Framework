@@ -1,10 +1,10 @@
-JTF.namespaceAtRoot(function (root) {
+JTF.namespaceAtRoot(function (JTF) {
 
-	root.TestFixture = function (description, tests) {
-		this.getDescription = function () { return description || root.TestFixture.DefaultDescription }
+	JTF.TestFixture = function (description, tests) {
+		this.getDescription = function () { return description || JTF.TestFixture.DefaultDescription }
 		this.getTests = function () { return tests || {} }
 	}
 
-	root.TestFixture.DefaultDescription = 'Test Fixture';
+	JTF.TestFixture.DefaultDescription = 'Test Fixture';
 
 });

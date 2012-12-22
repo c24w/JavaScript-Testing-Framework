@@ -696,7 +696,7 @@ JTF.loadFramework(function () {
 			runInterval: 10000
 		})
 
-		new JTF.TestRunner.Batch(fixtures).run(handler);
+		new JTF.TestRunner(fixtures).run(handler);
 
 	});
 });

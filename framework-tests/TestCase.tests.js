@@ -32,7 +32,7 @@ JTF.loadFramework(function () {
 					}
 				});
 
-				new TestRunner.Single(MockTestFixture).run({ handle: function () { } });
+				new TestRunner(MockTestFixture).run({ handle: function () { } });
 			},
 
 			'TestCase should be called once for each case, with the correct arguments': function () {
@@ -56,7 +56,7 @@ JTF.loadFramework(function () {
 			runInterval: 10000
 		});
 
-		new TestRunner.Single(fixture).run(handler);
+		new TestRunner(fixture).run(handler);
 
 	});
 });

@@ -59,9 +59,9 @@
 		callback(currentNode);
 	}
 
-	JTF.addNamespace = function (parent, child) {
-		return parent[child] = parent[child] || {};
-	}
+	//JTF.addNamespace = function (parent, child) {
+	//	return parent[child] = parent[child] || {};
+	//}
 
 	JTF.namespaceAtRoot = function (callback) {
 		callback(window.JTF);

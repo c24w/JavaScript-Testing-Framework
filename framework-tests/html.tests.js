@@ -1,11 +1,14 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
-		var Assert = JTF.Assert, dummyRootEl, htmlHandler;
+		var Assert = JTF.Assert;
+		var TestFixture = JTF.TestFixture;
+		var TestRunner = JTF.TestRunner;
+		var dummyRootEl, htmlHandler;
 
-		new JTF.TestRunner.Batch([
+		new TestRunner([
 
-			new JTF.TestFixture('HTML structure tests', {
+			new TestFixture('HTML structure tests', {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
@@ -14,7 +17,7 @@ JTF.loadFramework(function () {
 
 				'Controls contains \'Stop re-runs\' button when runInterval > 0': function () {
 					htmlHandler = new JTF.HTML.TestHandler({ rootElement: dummyRootEl, runInterval: 9999999 });
-					new JTF.TestRunner.Batch().run(htmlHandler);
+					new TestRunner().run(htmlHandler);
 
 					var controlsRoot = dummyRootEl.firstChild;
 					Assert.that(getTagName(controlsRoot)).equals('div');
@@ -32,7 +35,7 @@ JTF.loadFramework(function () {
 				},
 
 				'Controls does not contains \'Stop re-runs\' button when runInterval is set to 0': function () {
-					new JTF.TestRunner.Batch().run(htmlHandler);
+					new TestRunner().run(htmlHandler);
 
 					var controlsRoot = dummyRootEl.firstChild;
 					Assert.that(getTagName(controlsRoot)).equals('div');
@@ -54,9 +57,9 @@ JTF.loadFramework(function () {
 						rootElement: dummyRootEl,
 						collapse: JTF.HTML.CONFIG.COLLAPSE.ALL
 					});
-					new JTF.TestRunner.Batch([
-						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					new TestRunner([
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
@@ -68,9 +71,9 @@ JTF.loadFramework(function () {
 						rootElement: dummyRootEl,
 						collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES
 					});
-					new JTF.TestRunner.Batch([
-						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					new TestRunner([
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
@@ -82,9 +85,9 @@ JTF.loadFramework(function () {
 						rootElement: dummyRootEl,
 						collapse: JTF.HTML.CONFIG.COLLAPSE.NONE
 					});
-					new JTF.TestRunner.Batch([
-						new JTF.TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new JTF.TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+					new TestRunner([
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture passed');
@@ -92,7 +95,7 @@ JTF.loadFramework(function () {
 				},
 
 				'Test fixtures element contains a header element which contains description and result elements': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('Passed fixture'))
+					new TestRunner(new TestFixture('Passed fixture'))
 						.run(htmlHandler);
 
 					var fixture = dummyRootEl.children[1], header = fixture.children[0];
@@ -105,7 +108,7 @@ JTF.loadFramework(function () {
 
 			}),
 
-			new JTF.TestFixture('HTML value tests', {
+			new TestFixture('HTML value tests', {
 
 				TEST_SETUP: function () {
 					dummyRootEl = document.createElement('div');
@@ -113,20 +116,20 @@ JTF.loadFramework(function () {
 				},
 
 				'Test fixture > header > description contains the expected value': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('Empty fixture')).run(htmlHandler);
+					new TestRunner(new TestFixture('Empty fixture')).run(htmlHandler);
 
 					var desc = dummyRootEl.children[1].children[0].children[0];
 					assertInnerHtml(desc, 'Empty fixture');
 				},
 
 				'getStatsLine returns the expected value for no tests': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
+					new TestRunner(new TestFixture()).run(htmlHandler);
 					var result = dummyRootEl.children[1].children[0].children[1];
 					assertInnerHtml(result, 'fixture contains no tests');
 				},
 
 				'getStatsLine returns the the expected value for all passed tests': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+					new TestRunner(new TestFixture('', {
 						'Passing test': function () {
 							Assert.true(true)
 						}
@@ -137,7 +140,7 @@ JTF.loadFramework(function () {
 				},
 
 				'getStatsLine returns the the expected value for all failed tests': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+					new TestRunner(new TestFixture('', {
 						'Failing test': function () { Assert.true(false) }
 					})).run(htmlHandler);
 
@@ -146,7 +149,7 @@ JTF.loadFramework(function () {
 				},
 
 				'getStatsLine returns the the expected value for mixed passed/failed tests': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture('', {
+					new TestRunner(new TestFixture('', {
 						'Passing test': function () { Assert.true(true) },
 						'Failing test': function () { Assert.true(false) }
 					})).run(htmlHandler);
@@ -156,7 +159,7 @@ JTF.loadFramework(function () {
 				},
 
 				'Test fixture > header > results contains the value of getStatsLine': function () {
-					new JTF.TestRunner.Single(new JTF.TestFixture()).run(htmlHandler);
+					new TestRunner(new TestFixture()).run(htmlHandler);
 					var result = dummyRootEl.children[1].children[0].children[1];
 					assertInnerHtml(result, JTF.HTML.getStatsLine(0, 0));
 				}
