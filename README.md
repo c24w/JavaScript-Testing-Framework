@@ -71,10 +71,10 @@ Components
 
 __Terminology__
 
-* TestFixture - a collection of tests
-* TestCase - varying scenarios for an individual test
-* TestHandler - receives test events/data from a TestRunner
-* TestRunner - runs TestFixtures, passing events/data to a TestHandler
+* [TestFixture](#testfixture) - a collection of tests
+* [TestCase](#testcase) - varying scenarios for an individual test
+* [TestHandler](#testhandler) - receives test events/data from a TestRunner
+* [TestRunner](#testrunner) - runs TestFixtures, passing events/data to a TestHandler
 
 ### `TestFixture`
 
