@@ -33,7 +33,7 @@ JTF.namespace('Console', function (Console) {
 				case TREvent.BATCH.END:
 					break;
 			}
-		}
+		};
 
 		function testOutputter(testPassed, testName, msg) {
 			if (testPassed) console.log(Console.getPassedTestLine(testName))
@@ -48,16 +48,16 @@ JTF.namespace('Console', function (Console) {
 
 		Console.getDescriptionLine = function (description) {
 			return nonFailPadding + descPrefix + description;
-		}
+		};
 
 		Console.getPassedTestLine = function (testName) {
 			return nonFailPadding + testPrefix + testName;
-		}
+		};
 
 		Console.getFailedTestLine = function (testName, msg) {
 			var msg = !msg || msg.isWhitespace() ? '' : ' - ' + msg;
 			return testPrefix + testName + msg;
-		}
+		};
 
 		Console.getStatsLine = function (passes, fails) {
 			var total = passes + fails;
@@ -66,7 +66,7 @@ JTF.namespace('Console', function (Console) {
 				case total: return bottomLine + fails + ' failed';
 				default: return bottomLine + fails + '/' + total + ' failed';
 			}
-		}
+		};
 
 	}
 

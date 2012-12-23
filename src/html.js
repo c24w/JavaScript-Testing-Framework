@@ -6,7 +6,7 @@ JTF.namespace('HTML', function (HTML) {
 
 	var DefaultConfig = {
 		collapse: CONFIG.COLLAPSE.PASSES,
-		showPasses: true,
+		showPassedFixtures: true,
 		runInterval: 0,
 		notifyOnFail: false,
 		rootElement: document.body
@@ -33,34 +33,34 @@ JTF.namespace('HTML', function (HTML) {
 		var reRunTimer;
 
 		this.handle = function (handleType) {
-			var TREvent = JTF.TEST_EVENT;
+			var EVT = JTF.TEST_EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TREvent.BATCH.START:
+				case EVT.BATCH.START:
 					addControls();
 					break;
-				case TREvent.FIXTURE.START:
+				case EVT.FIXTURE.START:
 					createFixture();
 					break;
-				case TREvent.FIXTURE.DESC:
+				case EVT.FIXTURE.DESC:
 					setHeader(args[0]);
 					break;
-				case TREvent.FIXTURE.PASS:
+				case EVT.FIXTURE.PASS:
 					appendTestToHtml(true, args[0]);
 					break;
-				case TREvent.FIXTURE.FAIL:
+				case EVT.FIXTURE.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
-				case TREvent.FIXTURE.STATS:
+				case EVT.FIXTURE.STATS:
 					statsOutputter(args[0], args[1]);
 					break;
-				case TREvent.FIXTURE.END:
+				case EVT.FIXTURE.END:
 					break;
-				case TREvent.BATCH.END:
+				case EVT.BATCH.END:
 					batchEnd();
 					break;
 			}
-		}
+		};
 
 		function createFixture() {
 			fixture = HTML.makeDiv('testfixture');
@@ -155,7 +155,7 @@ JTF.namespace('HTML', function (HTML) {
 				HTML.addClassToMany('.testfixture.failed', 'collapsed');
 			}));
 
-			if (currentConfig.showPasses) {
+			if (currentConfig.showPassedFixtures) {
 				var btn = HTML.makeOnClickButton('Hide Passes', function () {
 					HTML.addClassToMany('.testfixture.passed', 'hidden');
 					this.style.visibility = 'hidden';
@@ -184,7 +184,7 @@ JTF.namespace('HTML', function (HTML) {
 			if (fixtureShouldBeCollapsed(fails === 0))
 				fixture.className += ' collapsed';
 			fixture.className += fails > 0 ? ' failed' : ' passed';
-			if (fails === 0 && !currentConfig.showPasses)
+			if (fails === 0 && !currentConfig.showPassedFixtures)
 				fixture.className += ' hidden';
 			var result = HTML.makeDiv('result');
 			HTML.addTextTo(result, HTML.getStatsLine(passes, fails));

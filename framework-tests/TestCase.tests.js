@@ -51,7 +51,7 @@ JTF.loadFramework(function () {
 
 		var handler = new JTF.HTML.TestHandler({
 			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-			showPasses: true,
+			showPassedFixtures: true,
 			notifyOnFail: false,
 			runInterval: 10000
 		});

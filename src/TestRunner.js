@@ -27,6 +27,10 @@ JTF.namespaceAtRoot(function (JTF) {
 		return !s || s.isWhitespace();
 	}
 
+	JTF.runToHtml = function (testFixtures, config) {
+		new JTF.TestRunner(testFixtures).run(new JTF.HTML.TestHandler(config));
+	};
+
 	JTF.TestRunner = function (testFixtures) {
 		this.run = function (testEventHandler) {
 
@@ -52,14 +56,16 @@ JTF.namespaceAtRoot(function (JTF) {
 				}
 
 				var testSetup = tests.TEST_SETUP;
-				if (testSetup) delete tests.TEST_SETUP;
+				//if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
 					if (testSetup) testSetup();
 					try {
-						tests[testName](JTF.TestCase);
-						testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.PASS, testName);
-						passes++;
+						if (testName != 'TEST_SETUP') { // added due to comment above
+							tests[testName](JTF.TestCase);
+							testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.PASS, testName);
+							passes++;
+						}
 					}
 					catch (e) {
 						testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
@@ -73,7 +79,7 @@ JTF.namespaceAtRoot(function (JTF) {
 
 			testEventHandler.handle(JTF.TEST_EVENT.BATCH.END);
 
-		}
-	}
+		};
+	};
 
 });

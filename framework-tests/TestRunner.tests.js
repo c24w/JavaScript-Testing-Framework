@@ -109,19 +109,15 @@ JTF.loadFramework(function () {
 			'TestRunner should call TEST_SETUP once before each test is run': function () {
 				for (var i = 0; i < trace.length; i++) {
 					if (i % 2 !== 0) Assert.equal(trace[i], 'TEST_SETUP');
-					else Assert.not.equal(trace[i], 'TEST_SETUP');
+					else Assert.not.equal(trace[i], 'TEST_SETUP'); // breaking because .addSetup break sequence?
 				}
-			},
-
-			'TestRunner should add case:n to failing test messages': function (testCase) {
-
 			}
 
 		});
 
 		var handler = new JTF.HTML.TestHandler({
 			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-			showPasses: true,
+			showPassedFixtures: true,
 			notifyOnFail: false,
 			runInterval: 10000
 		});
