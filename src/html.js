@@ -45,10 +45,10 @@ JTF.namespace('HTML', function (HTML) {
 				case EVT.FIXTURE.DESC:
 					setHeader(args[0]);
 					break;
-				case EVT.FIXTURE.PASS:
+				case EVT.TEST.PASS:
 					appendTestToHtml(true, args[0]);
 					break;
-				case EVT.FIXTURE.FAIL:
+				case EVT.TEST.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
 				case EVT.FIXTURE.STATS:
@@ -131,11 +131,11 @@ JTF.namespace('HTML', function (HTML) {
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
-				HTML.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
+				HTML.removeClassFromMany('.testTEST.PASSed.collapsed', 'collapsed');
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
-				HTML.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
+				HTML.removeClassFromMany('.testTEST.FAILed.collapsed', 'collapsed');
 			}));
 
 			label = HTML.makeEl('span');
@@ -148,16 +148,16 @@ JTF.namespace('HTML', function (HTML) {
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
-				HTML.addClassToMany('.testfixture.passed', 'collapsed');
+				HTML.addClassToMany('.testTEST.PASSed', 'collapsed');
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
-				HTML.addClassToMany('.testfixture.failed', 'collapsed');
+				HTML.addClassToMany('.testTEST.FAILed', 'collapsed');
 			}));
 
 			if (currentConfig.showPassedFixtures) {
 				var btn = HTML.makeOnClickButton('Hide Passes', function () {
-					HTML.addClassToMany('.testfixture.passed', 'hidden');
+					HTML.addClassToMany('.testTEST.PASSed', 'hidden');
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';

@@ -19,10 +19,10 @@ JTF.namespace('Console', function (Console) {
 				case TREvent.FIXTURE.DESC:
 					console.log(Console.getDescriptionLine(args[0]));
 					break;
-				case TREvent.FIXTURE.PASS:
+				case TREvent.TEST.PASS:
 					testOutputter(true, args[0]);
 					break;
-				case TREvent.FIXTURE.FAIL:
+				case TREvent.TEST.FAIL:
 					testOutputter(false, args[0], args[1]);
 					break;
 				case TREvent.FIXTURE.STATS:

@@ -47,15 +47,11 @@ JTF.loadFramework(function () {
 					});
 				},
 
-				TEST_SETUP1: function () { console.log('setup') },
-
 				'Assert.that(*).is.true() should pass for true conditions': function (TestCase) {
-					var setup = this.TEST_SETUP1;
 					assertPass(function () {
 						TestCase(function (subject) {
 							Assert.that(subject).is.true();
 						})
-						.addSetup(setup)
 						.addCase(true)
 						.addCase(1 === 1);
 					});

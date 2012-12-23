@@ -4,14 +4,16 @@ JTF.namespaceAtRoot(function (JTF) {
 		FIXTURE: {
 			START: 0,
 			DESC: 1,
-			PASS: 2,
-			FAIL: 3,
-			STATS: 4,
-			END: 5
+			STATS: 2,
+			END: 3
+		},
+		TEST: {
+			PASS: 4,
+			FAIL: 5
 		},
 		BATCH: {
-			START: 7,
-			END: 6
+			START: 6,
+			END: 7
 		}
 	};
 
@@ -56,19 +58,19 @@ JTF.namespaceAtRoot(function (JTF) {
 				}
 
 				var testSetup = tests.TEST_SETUP;
-				//if (testSetup) delete tests.TEST_SETUP;
+				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
 					if (testSetup) testSetup();
 					try {
-						if (testName != 'TEST_SETUP') { // added due to comment above
+						//if (testName != 'TEST_SETUP') { // comment line 61 (delete TEST_SETUP) if uncomment this
 							tests[testName](JTF.TestCase);
-							testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.PASS, testName);
+							testEventHandler.handle(JTF.TEST_EVENT.TEST.PASS, testName);
 							passes++;
-						}
+						//}
 					}
 					catch (e) {
-						testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.FAIL, testName, formatMsg(e.message));
+						testEventHandler.handle(JTF.TEST_EVENT.TEST.FAIL, testName, formatMsg(e.message));
 						fails++;
 					}
 				}

@@ -39,11 +39,11 @@ JTF.loadFramework(function () {
 							case JTF.TEST_EVENT.FIXTURE.DESC:
 								this.receivedData.desc = args;
 								break;
-							case JTF.TEST_EVENT.FIXTURE.PASS:
+							case JTF.TEST_EVENT.TEST.PASS:
 								var index = this.receivedData.passedTestNames.length;
 								this.receivedData.passedTestNames[index] = args[0];
 								break;
-							case JTF.TEST_EVENT.FIXTURE.FAIL:
+							case JTF.TEST_EVENT.TEST.FAIL:
 								var index = this.receivedData.failedTestsNames.length;
 								this.receivedData.failedTestsNames[index] = args[0];
 								this.receivedData.failedTestsMsgs[index] = args[1];
