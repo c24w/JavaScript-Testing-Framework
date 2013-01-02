@@ -1,189 +1,25 @@
-Test-driving chrome extension seems impossible with unit-type tests.  A test framework uses browsers as slaves, which cannot interpret the chrome_extension library, hence it cannot test chrome_extension methods, etc.
-
-Seemlingly impossible to tie together a JS testing framework with actual implementation of JS files interacting with HTML, THEN all inside a chrome extension with the developer SDK!
-
-Cannot test the holistically outside of actual usage environment, i.e. when the extension is installed and interacting with the browser.
-
-Added ballache of not being able to easily grab the contents of an HTML file from inside the test case, to check it's state.
-
-Hours of failure trying to scrape popup html from an iframe or popup, etc.  Eventually managed to get AsyncTestCase example working with XMLHttpRequest to the popup file via chrome-extension://xxx/popup.html, rather than as a local file directly.  Oh, and it required adding "web_accessible_resources": [ "popup.html" ], to manifest file.
-
-Now that I can grab data directly from the extension exactly as it will appear in use and fully interacting with the browser, I create a test js file and test html file.  Test js file has functions wrapping production js file, and writing results to the test html file, to be retrieved by the XMLHttprequest for testing.  Summary: real js methods get tested and their real usage results are logged in a test html file.  The data is retrieved and compare to expected results, as per normal unit tests.
-
-E.g. I can only call chrome.storage.sync.set(x,y,z) while actually executing as the extension, so cannot during a typical, browser-slave test run.  Because popup tests js and popup test html are integrated into the extension, they can interact with it as such and I can pull the data from them.
-
-*** Reverted to window.open(...).document.body access to popup test html page, not XMLHttprequest ***
-
-JS test driver frameworks seem (naturally) geared at cross-browser testing, by automating and capturing browsers as slaves - perhaps not the right approach for this.
-
-Only good thought so far: great not having to care about cross-browser compatibility with JavaScript :D can build for webkit to satisfy chrome
-
-May be able to implement simpler testing with my own simplistic framework or by using a plain assertion library.  The test html page can now contain expected as well as actual results - pulling from here to complex test runner seems overkill. Summary: fuck this, I'm going to make my own JS testing framework which runs within the scope of the extension, rather than scraping data into an external framework.
-
-
-* * *
-
-
-building it
-
-testCase vs autoRunTestCase - why should the test automatically run?  testCase holds the data/tests, which can then be run using testCase.runTests(outputter) or runTests(testCase, outputter)
-
-Raname test case to test set or something
-Case implies same test with different inputs/scenarios; set is more a collection of related tests, e.g. test which would be kept in the same test fixture class
-Test case within test set/collection/fixture...?
-
-dfferent approach - test drive the test framework?!  Paradox?
-
-
-e.g:
-
-test
-	assert throws if condition is false
-		expected e
-		try assert(false)
-		catch e
-			assert(e == expected e)
-			
-impl
-	assert(cond)
-		if !cond throw e
-		
-test
-	assert passes if condition is true
-		assert(assert(true) == true))
-		
-impl
-	assert(cond)
-		if !cond throw e
-		return true
-		
-test
-case 1 === 1
-case (10 * 5 === 25 * 2)
-case true != false
-case 'hello' != 'world'
-	assert evaluates true conditions and returns the correct result
-		assert(assert(case) == true)
-
-
-* * *
-
-
-Hoping I can run pure JS / dumb unit tests which assure basic functionality.
-
-Can't think of a way to run whitebox tests :/ could easily use screenshot-matching tests, but that's flaky and not unit - consider this later.
-
-
-* * *
-
-
 Only TDD chrome extension I could find: https://github.com/testdouble/in-my-words
-
 
 Loading js files asynchronously:
 if loaded, execute callback
 else if loading, retry in timeout
 else append to head
 
-issues: tests running in a random order, due to varying load/callback speeds
+issues: tests running in a random order when multiple test files referenced, due to varying load/callback speeds
 
-
-options re loading external resources:
- - dozens of <script> tags - hard txcodeep track and clumsy
- - fewer files with a few <script> tags - bad practice and hard to manage code
- - AJAX requests - ideal solution, although requires a server; I'm testing locally, with static files, no desire for server
- - dynamically insert <script> tags as/when required, with callback for load event - emulates AJAX behaviour in a slightly hacky way, but works perfectly
-
-load resources (I think only the plural function) has a bug which causes the same fiels to be loaded more than once
-
-Real focus on providing meaningful errors, hence various assertion types and generated of custom info messages
-
-
-
-
-outputFixture -> testRunner(testEventHandler)?
-
-output passes -> handler not arg
-
-handler contains testFailed(test), testPassed(test)
-
-write test for testRunner with mock handler, e.g. test should fail, logs it
-
-HTML code marking can use `word` to monospace the word (like markdown) - not bulletproof, e.g. `code`notcode`code` will highlight all as code
-
-thoughts:
-
-have to be at the top of the fixture, if need them:
-FIXTURE_SETUP = function(){}
-SETUP = function(){}
-then:
-var setup;
-if test === SETUP
-   setup = tests[test];
-if(setup)
-   setup()
-   
-
-assertGreater
-re-run single test or fixture
-
-added type comparison to assert.equal to only output types when they are different
-
-add new assert.types to demo tests
+HTML code marking can use `word` to monospace the word - not bulletproof, e.g. `code`notcode`code` will highlight all as code
 
 add test body to tooltip or something
 
-renamed assert.that to assert.true and add assert.false
-
-add control to top, e.g. collapse all, re-run all, index/contents?
-
-tested and demoed assert.not.*
-add tests for them
-then implement in assertions.tests to tidy existing code
-
-add TestException throughout to tests - using AssertException in tests is confusing (make sure don't remove AssertException where required though)
-
-add assert.throwsAny? - any exception
-
-TEST CASES!?
-
-add assert.less tests
-
-add DemoException to demo tests
-
-title/description on demo page - 'look at console window'
-
-organise assertion demo/framework tests group framework assertion tests into categories?
-
-careful between assert.instance and assert.type - primitives don't work with instance, e.g. 1 instanceof Number is false, unless using the constructor, i.e. new Number(1) instance of Number, although 				assert.not.instance(new String(), String); seems to work in demo test
+careful between assert.instance and assert.type - primitives don't work with instance, e.g. 1 instanceof Number is false, unless using the constructor, i.e. new Number(1) instance of Number, although assert.not.instance(new String(), String); seems to work in demo test
 "If you're dealing with literal notation, and not constructors, you can use typeof:."
 improved assert.instance to accomodate for primitives
 
-for inverted assert conditions, would this be better:
-assert.not.instance(...){
-	try{
-		assert.instance(..)
-		throw new AE(...)
-	}
-	catch(e){/*good*/}
-}
+fix code marking / formatting with ``
 
-add complements for all asserts
-
-fix code marking
-
-added config option for HtmlTestHandler, implementing autocollapse option
-
-HTML controls
-collapse all
-expand all
 invert expanded
 
-timed refresh on page? fixture?  needs to be tied to test runner, because requires reiterating over tests? but can't referesh for console, etc - needs to be in html handler really
-
 crank load retry interval to 0ms and the fixtures load in random orders and sometimes bug!
-
-many files all outputted to one page - tries to load the resources for each file - pull the loading into one initialiser and run tests in callback?
 
 load in a particular order:
 
@@ -196,7 +32,7 @@ loadResource(a, function(){
 or:
 
 loadSpecificResource(function(){
-	loadSomeResource(function(){
+	loadOtherSpecificResource(function(){
 		loadOtherResource(finishedCallback);
 	});
 });
@@ -205,22 +41,16 @@ Assert.type case-sensitive, e.g. Assert.type(1, 'Number') fails; Assert.type(1, 
 
 if test name is whitespace, doesn't display in html properly
 
+Assert.that... no custom message option
+
 Stuff I added
 -------------
-add option to 'collapse' in console output
-added Assert.that(subject).is.verb(expected), etc (cannot yet add custom message to these if they fail)
+add option to 'collapse' in console output - did I?
 
-
-
-Things I learneded
-------------------
 cannot rely on !(A instanceof B) for primitives because !('hello' instanceof String) returns false!
-
-
 
 Known issues
 ------------
-when Assert.that(subject).is.verb(expected), etc fails, message still relates to Asser.verb(subject, expected) equivalent
-
+when Assert.that(subject).is.true() fails, message refers to Assert.true(subject) (etc)
 
 Assert instance checks no longer using toString.call() with regex to extract type and still works for primitives.

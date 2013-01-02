@@ -232,7 +232,7 @@ JTF.loadFramework(function () {
 
 			];
 
-			var runner = new JTF.TestRunner.Batch(fixtures);
+			var runner = new JTF.TestRunner(fixtures);
 			runner.run(new JTF.Console.TestHandler());
 			runner.run(new JTF.HTML.TestHandler({ collapse: JTF.HTML.CONFIG.COLLAPSE.NONE}));
 

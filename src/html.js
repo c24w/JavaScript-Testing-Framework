@@ -16,10 +16,11 @@ JTF.namespace('HTML', function (HTML) {
 		if (!partialConfig || !(partialConfig instanceof Object))
 			return DefaultConfig;
 		else {
-			var config = {};
-			for (var key in DefaultConfig)
-				config[key] = partialConfig.hasOwnProperty(key) ? partialConfig[key] : DefaultConfig[key];
-			return config;
+			for (var key in DefaultConfig) {
+				if (!partialConfig.hasOwnProperty(key))
+					partialConfig[key] = DefaultConfig[key];
+			}
+			return partialConfig;
 		}
 	}
 
@@ -131,11 +132,11 @@ JTF.namespace('HTML', function (HTML) {
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
-				HTML.removeClassFromMany('.testTEST.PASSed.collapsed', 'collapsed');
+				HTML.removeClassFromMany('.testfixture.passed.collapsed', 'collapsed');
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
-				HTML.removeClassFromMany('.testTEST.FAILed.collapsed', 'collapsed');
+				HTML.removeClassFromMany('.testfixture.failed.collapsed', 'collapsed');
 			}));
 
 			label = HTML.makeEl('span');
@@ -148,16 +149,16 @@ JTF.namespace('HTML', function (HTML) {
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Passes', function () {
-				HTML.addClassToMany('.testTEST.PASSed', 'collapsed');
+				HTML.addClassToMany('.testfixture.passed', 'collapsed');
 			}));
 
 			HTML.addTo(controls, HTML.makeOnClickButton('Fails', function () {
-				HTML.addClassToMany('.testTEST.FAILed', 'collapsed');
+				HTML.addClassToMany('.testfixture.failed', 'collapsed');
 			}));
 
 			if (currentConfig.showPassedFixtures) {
 				var btn = HTML.makeOnClickButton('Hide Passes', function () {
-					HTML.addClassToMany('.testTEST.PASSed', 'hidden');
+					HTML.addClassToMany('.testfixture.passed', 'hidden');
 					this.style.visibility = 'hidden';
 				});
 				btn.style.marginLeft = '2em';

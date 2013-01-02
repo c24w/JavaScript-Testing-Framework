@@ -547,7 +547,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).is.not.type(*) should fail for false conditions': function () {
 					assertFail(function () {
 						Assert.that(1).is.not.type('number');
-					}, 'Assert.type - expected: not number found: number');
+					}, 'Assert.not.type - expected: not number found: number');
 				}
 			}),
 
