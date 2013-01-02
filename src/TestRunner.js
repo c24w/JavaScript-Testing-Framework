@@ -76,7 +76,7 @@ JTF.namespaceAtRoot(function (JTF) {
 				}
 
 				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.STATS, passes, fails);
-				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.FIXTURE_END);
+				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.END);
 			}
 
 			testEventHandler.handle(JTF.TEST_EVENT.BATCH.END);

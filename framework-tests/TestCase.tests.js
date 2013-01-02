@@ -1,62 +1,50 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
-		function getTraceMsg(arg1, arg2) {
-			return 'TestCase({0}, {1})'.format(arg1, arg2)
-		}
+		var TestRunner = JTF.TestRunner, TestFixture = JTF.TestFixture, Case = JTF.TestCase, Assert = JTF.Assert;
 
-		var TestRunner = JTF.TestRunner;
-		var TestFixture = JTF.TestFixture;
-		var Case = JTF.TestCase;
-		var Assert = JTF.Assert;
-
-		var MockTestFixture, MockTestHandler, trace;
-		function addTrace(t) { trace[trace.length] = t }
+		var MockTestFixture, MockTestHandler, trace, cases;
+		function addTrace(t) { trace[trace.length] = t; }
+		function logCase() { addTrace(Array.prototype.join.call(arguments, ',')); }
 
 		var fixture = new TestFixture('TestCase tests', {
 
 			FIXTURE_SETUP: function () {
 				trace = [];
+				cases = [
+					[1, 2, 3],
+					['a', 'b'],
+					[true, false],
+					[new Object(), new Object()]
+				];
 
 				MockTestFixture = new TestFixture('Mock test fixture', {
 					'Test': function (TestCase) {
-
-						TestCase(function (arg1, arg2) {
-							addTrace(getTraceMsg(arg1, arg2));
-						})
-						.addCase(1, 2)
-						.addCase('one', 'two')
-						.addCase(true, false)
-						.addCase(new Object(), new Object());
-
+						var tc = TestCase(logCase);
+						for (var i = 0; i < cases.length; i++)
+							tc.addCase(cases[i]);
 					}
 				});
 
 				new TestRunner(MockTestFixture).run({ handle: function () { } });
 			},
 
-			'TestCase should be called once for each case, with the correct arguments': function () {
-				var cases = [
-					[1, 2],
-					['one', 'two'],
-					[true, false],
-					[new Object(), new Object()]
-				];
+			'Test function should be called once for each case with the correct arguments': function () {
 				Assert.equal(trace.length, cases.length);
 				for (var i = 0; i < trace.length; i++)
-					Assert.equal(trace[i], getTraceMsg.apply(null, cases[i]));
+					Assert.equal(trace[i], cases[i].join(','));
 			}
 
-		});
-
-		var handler = new JTF.HTML.TestHandler({
-			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-			showPassedFixtures: true,
-			notifyOnFail: false,
-			runInterval: 10000
-		});
-
-		new TestRunner(fixture).run(handler);
-
 	});
+
+	var config = {
+		collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
+		showPassedFixtures: true,
+		notifyOnFail: false,
+		runInterval: 10000
+	};
+
+	JTF.runToHtml(fixture, config);
+
+});
 });

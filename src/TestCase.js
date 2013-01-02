@@ -11,10 +11,10 @@ JTF.namespaceAtRoot(function (JTF) {
 		//	setup = func;
 		//	return this;
 		//};
-	}
+	};
 
 	JTF.TestCase = function (test) {
 		return new JTF.TestCaseFixture(test);
-	}
+	};
 
 });
