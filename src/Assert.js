@@ -54,7 +54,7 @@ JTF.namespace('Assert', function (Assert) {
 		if (condition === null)
 			throw new AssertException('assert condition was null');
 		if (!condition) {
-			var info = optionalInfo ? optionalInfo : Assert.DEFAULT_FAIL_MESSAGE;
+			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
 		}
 	};
@@ -64,7 +64,7 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert['null'] = function (subject, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : 'Assert.null - argument was not null';
+		var info = optionalInfo || 'Assert.null - argument was not null';
 		Assert.equal(subject, null, info);
 	};
 
@@ -72,7 +72,7 @@ JTF.namespace('Assert', function (Assert) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
-		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equal', act, exp);
+		var info = optionalInfo || buildMessage('Assert.equal', act, exp);
 		Assert.true(actual === expected, info);
 	};
 
@@ -80,7 +80,7 @@ JTF.namespace('Assert', function (Assert) {
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
-		var info = optionalInfo ? optionalInfo : buildMessage('Assert.equiv', act, exp);
+		var info = optionalInfo || buildMessage('Assert.equiv', act, exp);
 		Assert.true(actual == expected, info);
 	};
 
@@ -92,19 +92,19 @@ JTF.namespace('Assert', function (Assert) {
 	Assert.greater = function (number1, number2, optionalInfo) {
 		assertIsNumber(number1, 'Assert.greater - first argument');
 		assertIsNumber(number2, 'Assert.greater - second argument');
-		var info = optionalInfo ? optionalInfo : 'Assert.greater - {0} is not greater than {1}'.format(number1, number2);
+		var info = optionalInfo || 'Assert.greater - {0} is not greater than {1}'.format(number1, number2);
 		Assert.true(number1 > number2, info);
 	};
 
 	Assert.less = function (number1, number2, optionalInfo) {
 		assertIsNumber(number1, 'Assert.less - first argument');
 		assertIsNumber(number2, 'Assert.less - second argument');
-		var info = optionalInfo ? optionalInfo : 'Assert.less - {0} is not less than {1}'.format(number1, number2);
+		var info = optionalInfo || 'Assert.less - {0} is not less than {1}'.format(number1, number2);
 		Assert.true(number1 < number2, info);
 	};
 
 	Assert.instance = function (obj, expectedClass, optionalInfo) {
-		var info = optionalInfo ? optionalInfo : 'Assert.instance - first argument was null';
+		var info = optionalInfo || 'Assert.instance - first argument was null';
 		Assert.not.null(obj, optionalInfo);
 		try {
 			Assert.true(obj instanceof expectedClass);
@@ -112,14 +112,14 @@ JTF.namespace('Assert', function (Assert) {
 		catch (e) {
 			var actualClass = obj.constructor.name;
 			var shouldBeThisClass = expectedClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.instance', actualClass, shouldBeThisClass);
+			var info = optionalInfo || buildMessage('Assert.instance', actualClass, shouldBeThisClass);
 			Assert.equal(actualClass, shouldBeThisClass, info);
 		}
 	};
 
 	Assert.type = function (obj, type, optionalInfo) {
 		var actualType = typeof obj;
-		var info = optionalInfo ? optionalInfo : buildMessage('Assert.type', actualType, type);
+		var info = optionalInfo || buildMessage('Assert.type', actualType, type);
 		Assert.equal(actualType, type, info);
 	};
 
@@ -133,12 +133,12 @@ JTF.namespace('Assert', function (Assert) {
 		}
 		catch (e) {
 			if (typeof expectedException !== 'undefined') {
-				var info = optionalInfo ? optionalInfo : buildMessage('Assert.throws', e.name, expectedException.name);
+				var info = optionalInfo || buildMessage('Assert.throws', e.name, expectedException.name);
 				Assert.instance(e, expectedException, info);
 			}
 			return e;
 		}
-		var info = optionalInfo ? optionalInfo : notThrownError(expectedException);
+		var info = optionalInfo || notThrownError(expectedException);
 		throw new AssertException(info);
 	};
 
@@ -151,7 +151,7 @@ JTF.namespace('Assert', function (Assert) {
 	JTF.namespace('Assert.not', function (AssertNot) {
 
 		AssertNot['null'] = function (subject, optionalInfo) {
-			var info = optionalInfo ? optionalInfo : 'Assert.not.null - argument was null';
+			var info = optionalInfo || 'Assert.not.null - argument was null';
 			Assert.not.equal(subject, null, info);
 		};
 
@@ -159,25 +159,25 @@ JTF.namespace('Assert', function (Assert) {
 			var sameType = areTheSameType(actual, expected);
 			var act = sameType ? actual : encloseInType(actual);
 			var exp = sameType ? expected : encloseInType(expected);
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.equal', act, 'not ' + exp);
+			var info = optionalInfo || buildMessage('Assert.not.equal', act, 'not ' + exp);
 			Assert.false(actual === expected, info);
 		};
 
 		AssertNot.equiv = function (actual, expected, optionalInfo) {
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.equiv', encloseInType(actual), encloseInType(expected));
+			var info = optionalInfo || buildMessage('Assert.not.equiv', encloseInType(actual), encloseInType(expected));
 			Assert.false(actual == expected, info);
 		};
 
 		AssertNot.instance = function (obj, objClass, optionalInfo) {
 			var actualClass = obj.constructor.name;
 			var shouldNotBeThisClass = objClass.name;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.instance', actualClass, 'not ' + shouldNotBeThisClass);
+			var info = optionalInfo || buildMessage('Assert.not.instance', actualClass, 'not ' + shouldNotBeThisClass);
 			Assert.not.equal(actualClass, shouldNotBeThisClass, info);
 		};
 
 		AssertNot.type = function (obj, type, optionalInfo) {
 			var actualType = typeof obj;
-			var info = optionalInfo ? optionalInfo : buildMessage('Assert.not.type', actualType, 'not ' + type);
+			var info = optionalInfo || buildMessage('Assert.not.type', actualType, 'not ' + type);
 			Assert.not.equal(actualType, type, info);
 		};
 
