@@ -1,21 +1,23 @@
 JTF.namespaceAtRoot(function (JTF) {
 
-	JTF.TEST_EVENT = {
+	var evt = JTF.EVENT = Object.freeze({
 		FIXTURE: {
 			START: 0,
 			DESC: 1,
 			STATS: 2,
-			END: 3
+			END: 3,
+			ERROR: 4
 		},
 		TEST: {
-			PASS: 4,
-			FAIL: 5
+			PASS: 5,
+			FAIL: 6,
+			ERROR: 7
 		},
 		BATCH: {
-			START: 6,
-			END: 7
+			START: 8,
+			END: 9
 		}
-	};
+	});
 
 	function formatMsg(msg) {
 		return isUselessString(msg) ? 'no additional information' : msg;
@@ -39,21 +41,26 @@ JTF.namespaceAtRoot(function (JTF) {
 			if (!testFixtures) testFixtures = [];
 			else if (!(testFixtures instanceof Array)) testFixtures = [testFixtures];
 
-			testEventHandler.handle(JTF.TEST_EVENT.BATCH.START);
+			testEventHandler.handle(evt.BATCH.START);
 
 			for (var i = 0; i < testFixtures.length; i++) {
 				var testFixture = testFixtures[i];
 
-				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.START);
+				testEventHandler.handle(evt.FIXTURE.START);
 
 				var passes = 0, fails = 0;
 				var desc = formatDesc(testFixture.getDescription());
-				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.DESC, desc);
+				testEventHandler.handle(evt.FIXTURE.DESC, desc);
 
 				var tests = testFixture.getTests();
 
 				if (tests.FIXTURE_SETUP) {
-					tests.FIXTURE_SETUP();
+					try {
+						tests.FIXTURE_SETUP();
+					}
+					catch (e) {
+						testEventHandler.handle(evt.FIXTURE.FAIL, e);
+					}
 					delete tests.FIXTURE_SETUP;
 				}
 
@@ -63,23 +70,24 @@ JTF.namespaceAtRoot(function (JTF) {
 				for (var testName in tests) {
 					if (testSetup) testSetup();
 					try {
-						//if (testName != 'TEST_SETUP') { // comment line 61 (delete TEST_SETUP) if uncomment this
-							tests[testName](JTF.TestCase);
-							testEventHandler.handle(JTF.TEST_EVENT.TEST.PASS, testName);
-							passes++;
-						//}
+						tests[testName](JTF.TestCase);
+						testEventHandler.handle(evt.TEST.PASS, testName);
+						passes++;
 					}
 					catch (e) {
-						testEventHandler.handle(JTF.TEST_EVENT.TEST.FAIL, testName, formatMsg(e.message));
-						fails++;
+						if (e instanceof JTF.Assert.AssertException) {
+							testEventHandler.handle(evt.TEST.FAIL, testName, formatMsg(e.message));
+							fails++;
+						}
+						else testEventHandler.handle(evt.TEST.ERROR, e);
 					}
 				}
 
-				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.STATS, passes, fails);
-				testEventHandler.handle(JTF.TEST_EVENT.FIXTURE.END);
+				testEventHandler.handle(evt.FIXTURE.STATS, passes, fails);
+				testEventHandler.handle(evt.FIXTURE.END);
 			}
 
-			testEventHandler.handle(JTF.TEST_EVENT.BATCH.END);
+			testEventHandler.handle(evt.BATCH.END);
 
 		};
 	};

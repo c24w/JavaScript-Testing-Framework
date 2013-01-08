@@ -54,3 +54,6 @@ Known issues
 when Assert.that(subject).is.true() fails, message refers to Assert.true(subject) (etc)
 
 Assert instance checks no longer using toString.call() with regex to extract type and still works for primitives.
+
+if setup fails, test should fail
+admin page? launch all tests; stop all tests

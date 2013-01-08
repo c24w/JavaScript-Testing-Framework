@@ -1,7 +1,7 @@
 JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
-		var TestRunner = JTF.TestRunner, TestFixture = JTF.TestFixture, Assert = JTF.Assert;
+		var TestRunner = JTF.TestRunner, TestFixture = JTF.TestFixture, Assert = JTF.Assert, evt = JTF.EVENT;
 
 		var MockTestFixture, MockTestHandler, trace;
 
@@ -13,7 +13,7 @@ JTF.loadFramework(function () {
 
 		var fixtures = [
 
-			new TestFixture('Events tests', {
+			new TestFixture('Happy path events tests', {
 
 				FIXTURE_SETUP: function () {
 					MockTestFixture = new TestFixture('Mock test fixture', {
@@ -28,10 +28,9 @@ JTF.loadFramework(function () {
 					MockTestHandler = {
 						fixtureEvents: { start: false, end: false },
 						receivedData: { desc: [], passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], noPasses: null, noFails: null },
-						handle: function (handleType) {
+						handle: function (event) {
 							var args = Array.prototype.slice.call(arguments, 1);
-							var evt = JTF.TEST_EVENT;
-							switch (handleType) {
+							switch (event) {
 								case evt.FIXTURE.START:
 									this.fixtureEvents.start = true;
 									break;
@@ -101,6 +100,54 @@ JTF.loadFramework(function () {
 
 			}),
 
+			new TestFixture('Error events tests', {
+
+				'Should send test error event and data to the TestHandler': function () {
+					var testErrorHandled = false, expectedError = new Error('Test fail error message'), actualError;
+
+					MockTestFixture = new TestFixture('', {
+						'Erroneous test': function () { throw expectedError; },
+					});
+					var handler = {
+						handle: function (event) {
+							var args = Array.prototype.slice.call(arguments, 1);
+							switch (event) {
+								case evt.TEST.ERROR:
+									testErrorHandled = true;
+									actualError = args[0];
+							}
+						}
+					};
+					new TestRunner(MockTestFixture).run(handler);
+
+					Assert.true(testErrorHandled);
+					Assert.equal(actualError, expectedError);
+				},
+
+				'Should send fixture error event and data to the TestHandler': function () {
+					var testErrorHandled = false, expectedError = new Error('Fixture fail error message'), actualError;
+
+					MockTestFixture = new TestFixture('', {
+						FXITURE_SETUP: function () { throw expectedError; },
+					});
+					var handler = {
+						handle: function (event) {
+							var args = Array.prototype.slice.call(arguments, 1);
+							switch (event) {
+								case evt.TEST.ERROR:
+									testErrorHandled = true;
+									actualError = args[0];
+							}
+						}
+					};
+					new TestRunner(MockTestFixture).run(handler);
+
+					Assert.true(testErrorHandled);
+					Assert.equal(actualError, expectedError);
+				}
+
+			}),
+
 			new TestFixture('Sequence tests', {
 
 				FIXTURE_SETUP: function () {
@@ -110,7 +157,12 @@ JTF.loadFramework(function () {
 						TEST_SETUP: function () { addTrace('TEST_SETUP'); },
 						'Test 1': function () { addTrace('Test 1'); },
 						'Test 2': function () { addTrace('Test 2'); },
-						'Test 3': function () { addTrace('Test 3'); }
+						'Test 3': function () { addTrace('Test 3'); },
+						/*	'Test case': function (TestCase) {
+								TestCase(addTrace)
+								.addCase('Test case 1')
+								.addCase('Test case 2');
+							}*/
 					});
 
 					new TestRunner(MockTestFixture).run({ handle: function () { } });
@@ -129,9 +181,10 @@ JTF.loadFramework(function () {
 					}
 				},
 
-				'Should execute test setup once before each case in a test case': function () {
-
-				}
+				/*	'Should execute test setup once before each case in a test case': function () {console.log(trace)
+						//for (var i = trace.length - ; i < trace.length; i++) {
+							Assert.equal(trace[trace.length - 1], 'Test case');
+					}*/
 
 			})
 
