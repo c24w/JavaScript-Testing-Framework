@@ -11,11 +11,14 @@ JTF.namespaceAtRoot(function (JTF) {
 		TEST: {
 			PASS: 5,
 			FAIL: 6,
-			ERROR: 7
+			ERROR: 7,
+			SETUP: {
+				ERROR: 8
+			}
 		},
 		BATCH: {
-			START: 8,
-			END: 9
+			START: 9,
+			END: 10
 		}
 	});
 
@@ -59,7 +62,7 @@ JTF.namespaceAtRoot(function (JTF) {
 						tests.FIXTURE_SETUP();
 					}
 					catch (e) {
-						testEventHandler.handle(evt.FIXTURE.FAIL, e);
+						testEventHandler.handle(evt.FIXTURE.ERROR, e);
 					}
 					delete tests.FIXTURE_SETUP;
 				}
@@ -68,7 +71,14 @@ JTF.namespaceAtRoot(function (JTF) {
 				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
-					if (testSetup) testSetup();
+					if (testSetup) {
+						try {
+							testSetup();
+						}
+						catch (e) {
+							testEventHandler.handle(evt.TEST.SETUP.ERROR, testName, e);
+						}
+					}
 					try {
 						tests[testName](JTF.TestCase);
 						testEventHandler.handle(evt.TEST.PASS, testName);
@@ -79,7 +89,7 @@ JTF.namespaceAtRoot(function (JTF) {
 							testEventHandler.handle(evt.TEST.FAIL, testName, formatMsg(e.message));
 							fails++;
 						}
-						else testEventHandler.handle(evt.TEST.ERROR, e);
+						else testEventHandler.handle(evt.TEST.ERROR, testName, e);
 					}
 				}
 
