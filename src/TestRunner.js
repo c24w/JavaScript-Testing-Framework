@@ -44,7 +44,9 @@ JTF.namespaceAtRoot(function (JTF) {
 			if (!testFixtures) testFixtures = [];
 			else if (!(testFixtures instanceof Array)) testFixtures = [testFixtures];
 
-			testEventHandler.handle(evt.BATCH.START);
+			var sendEvent = testEventHandler.handle;
+
+			sendEvent(evt.BATCH.START);
 
 			for (var i = 0; i < testFixtures.length; i++) {
 				var testFixture = testFixtures[i];
@@ -71,14 +73,7 @@ JTF.namespaceAtRoot(function (JTF) {
 				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
-					if (testSetup) {
-						try {
-							testSetup();
-						}
-						catch (e) {
-							testEventHandler.handle(evt.TEST.SETUP.ERROR, testName, e);
-						}
-					}
+					if (testSetup) runSetup(testSetup, testName);
 					try {
 						tests[testName](JTF.TestCase);
 						testEventHandler.handle(evt.TEST.PASS, testName);
@@ -101,5 +96,14 @@ JTF.namespaceAtRoot(function (JTF) {
 
 		};
 	};
+
+	function runSetup(setup, testName) {
+		try {
+			setup();
+		}
+		catch (e) {
+			testEventHandler.handle(evt.TEST.SETUP.ERROR, testName, e);
+		}
+	}
 
 });

@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 		var Assert = JTF.Assert;
 		var expectedDesc, testFixture;
 
-		new TestRunner(new TestFixture('TestFixture tests', {
+		JTF.runToHtml(new TestFixture('TestFixture tests', {
 
 			FIXTURE_SETUP: function () {
 				expectedDesc = 'test fixture description';
@@ -17,8 +17,12 @@ JTF.loadFramework(function () {
 				});
 			},
 
-			'getDescription should return a default value, if undefined': function () {
-				Assert.equal(new TestFixture().getDescription(), TestFixture.DefaultDescription);
+			'getDescription should return the default value, if undefined': function (TestCase) {
+				TestCase(function (tf) {
+					Assert.equal(tf.getDescription(), TestFixture.DefaultDescription);
+				})
+				.addCase(new TestFixture())
+				.addCase(new TestFixture({}));
 			},
 
 			'getDescription should return the expected string, if defined': function () {
@@ -34,16 +38,25 @@ JTF.loadFramework(function () {
 			'getTests should return the expected object, if defined': function () {
 				var tests = testFixture.getTests();
 				var testNo = 1;
-				for (var t in tests)
-					Assert.equal(t, 'expected test ' + testNo++);
+				for (var t in tests) Assert.equal(t, 'expected test ' + testNo++);
 			},
 
-		})).run(new JTF.HTML.TestHandler({
+			'implicit fixture is converted to test fixture': function () {
+				var implicitFixture = {
+					'fixture description': {
+						'test name': function () { }
+					}
+				};
+				Assert.equal();
+			}
+
+		}),
+		{
 			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 			showPassedFixtures: true,
 			notifyOnFail: false,
 			runInterval: 10000
-		}));
+		});
 
 	});
 });

@@ -1,10 +1,14 @@
 JTF.namespaceAtRoot(function (JTF) {
 
 	JTF.TestFixture = function (description, tests) {
-		this.getDescription = function () { return description || JTF.TestFixture.DefaultDescription }
-		this.getTests = function () { return tests || {} }
-	}
+		if (typeof description === 'object') {
+			tests = description;
+			description = defaultDesc;
+		}
+		this.getDescription = function () { return description || defaultDesc };
+		this.getTests = function () { return tests || {} };
+	};
 
-	JTF.TestFixture.DefaultDescription = 'Test Fixture';
+	var defaultDesc = JTF.TestFixture.DefaultDescription = 'Test Fixture';
 
 });

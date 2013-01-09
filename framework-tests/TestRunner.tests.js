@@ -130,9 +130,7 @@ JTF.loadFramework(function () {
 						expectedTestName = 'Failing test name',
 						actualTestName, actualError;
 
-					var tests = {
-						TEST_SETUP: function () { throw expectedError; }
-					};
+					var tests = { TEST_SETUP: function () { throw expectedError; } };
 					tests[expectedTestName] = function () { };
 
 					MockTestFixture = new TestFixture('', tests);
