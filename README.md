@@ -187,7 +187,7 @@ __Terminology__
 	CustomTestHandler = function (optionalConfig) {
 
 		this.handle = function (event) {
-			var EVT = JTF.TEST_EVENT;
+			var EVT = JTF.EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (event) {
 				case EVT.BATCH.START:
@@ -205,6 +205,12 @@ __Terminology__
 					break;
 				case EVT.TEST.FAIL:
 					addFailedTest(args[0], args[1]);
+					break;
+				case EVT.TEST.ERROR:
+					handleTestError(args[0]);
+					break;
+				case EVT.FIXTURE.ERROR:
+					handleFixtureError(args[0]);
 					break;
 				case EVT.FIXTURE.STATS:
 					addStats(args[0], args[1]);
@@ -226,13 +232,15 @@ The `TestRunner` will call `TestHandler.handle`, where the first argument passed
 <table>
 <tr><th>Event</th><th>Additional argument(s)</th></tr>
 <tr><td>BATCH.START</td><td>-</td></tr>
+<tr><td>BATCH.END</td><td>-</td></tr>
 <tr><td>FIXTURE.START</td><td>-</td></tr>
 <tr><td>FIXTURE.DESC</td><td><em>string</em> description</td></tr>
+<tr><td>FIXTURE.STATS</td><td><em>integer</em> passes, <em>integer</em> fails</td></tr>
+<tr><td>FIXTURE.ERROR</td><td><em>object</em> error/exception</tr>
+<tr><td>FIXTURE.END</td><td>-</td></tr>
 <tr><td>TEST.PASS</td><td><em>string</em> test name</td></tr>
 <tr><td>TEST.FAIL</td><td><em>string</em> test name, <em>string</em> error message</td></tr>
-<tr><td>FIXTURE.STATS</td><td><em>integer</em> passes, <em>integer</em> fails</td></tr>
-<tr><td>FIXTURE.END</td><td>-</td></tr>
-<tr><td>BATCH.END</td><td>-</td></tr>
+<tr><td>TEST.ERROR</td><td><em>object</em> error/exception</tr>
 </table>
 
 ### `TestRunner`
