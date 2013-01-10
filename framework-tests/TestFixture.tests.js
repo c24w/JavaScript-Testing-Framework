@@ -19,7 +19,7 @@ JTF.loadFramework(function () {
 
 			'getDescription should return the default value, if undefined': function (TestCase) {
 				TestCase(function (tf) {
-					Assert.equal(tf.getDescription(), TestFixture.DefaultDescription);
+					Assert.equal(tf.getDescription(), TestFixture.DEFAULT_DESCRIPTION);
 				})
 				.addCase(new TestFixture())
 				.addCase(new TestFixture({}));

@@ -9,6 +9,6 @@ JTF.namespaceAtRoot(function (JTF) {
 		this.getTests = function () { return tests || {} };
 	};
 
-	var defaultDesc = JTF.TestFixture.DefaultDescription = 'Test Fixture';
+	var defaultDesc = JTF.TestFixture.DEFAULT_DESCRIPTION = 'Test Fixture';
 
 });

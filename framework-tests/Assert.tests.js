@@ -2,7 +2,7 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 
 		var Assert = JTF.Assert;
-		var genericFailMsg = 'Should fail';
+		var genericFailMsg = 'should fail';
 		function TestException(message) { this.message = message }
 
 		function assertPass(assertCollection) {
@@ -16,6 +16,27 @@ JTF.loadFramework(function () {
 		}
 
 		var fixtures = [
+
+			new JTF.TestFixture('Invalid method calls', {
+				'Assert.true should fail with the expected message when invalid arguments are supplied': function (TestCase) {
+					assertFail(function () {
+						TestCase(Assert.true)
+							.addCase()
+							.addCase('optional message but no condition');
+					}, 'no assert condition found');
+					assertFail(function () {
+						Assert.true(null);
+					}, 'assert condition was null');
+				},
+
+				//'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
+				//	assertFail(function () {
+				//		TestCase(Assert.equal)
+				//			.addCase()
+				//			.addCase(1);
+				//	}, 'no assert condition found');
+				//}
+			}),
 
 			new JTF.TestFixture('Conditions', {
 				'Assert.true should pass for true conditions': function (TestCase) {

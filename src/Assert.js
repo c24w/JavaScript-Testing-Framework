@@ -46,6 +46,10 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.DEFAULT_FAIL_MESSAGE = 'no additional information';
 
+	function isUndefined(v){
+		return typeof v === 'undefined';
+	}
+
 	Assert.that = function (subject) {
 		return new AssertThat(subject);
 	};
@@ -53,6 +57,8 @@ JTF.namespace('Assert', function (Assert) {
 	Assert['true'] = function (condition, optionalInfo) {
 		if (condition === null)
 			throw new AssertException('assert condition was null');
+		if(isUndefined(condition) || (typeof condition === 'string' && !optionalInfo))
+			throw new AssertException('no assert condition found');
 		if (!condition) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
@@ -69,6 +75,7 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.equal = function (actual, expected, optionalInfo) {
+		//if(expected ==
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
