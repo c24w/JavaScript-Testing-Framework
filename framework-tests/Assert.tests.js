@@ -23,10 +23,10 @@ JTF.loadFramework(function () {
 						TestCase(Assert.true)
 							.addCase()
 							.addCase('optional message but no condition');
-					}, 'Assert.true - no assert condition found');
+					}, 'no assert condition found');
 					assertFail(function () {
 						Assert.true(null);
-					}, 'Assert.true - assert condition was null');
+					}, 'assert condition was null');
 				},
 
 				'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
@@ -34,7 +34,7 @@ JTF.loadFramework(function () {
 						TestCase(Assert.equal)
 							.addCase()
 							.addCase(1);
-					}, 'Assert.equal - expected at least 2 arguments');
+					}, 'expected at least 2 arguments');
 				},
 
 				'Assert.equiv should fail with the expected message when invalid arguments are supplied': function (TestCase) {
@@ -42,7 +42,7 @@ JTF.loadFramework(function () {
 						TestCase(Assert.equiv)
 							.addCase()
 							.addCase(1);
-					}, 'Assert.equiv - expected at least 2 arguments');
+					}, 'expected at least 2 arguments');
 				}
 			}),
 
@@ -150,20 +150,20 @@ JTF.loadFramework(function () {
 					});
 				},
 				'Assert.that(*).is.null() should fail for false conditions': function (TestCase) {
-					TestCase(function (subject) {
+					TestCase(function (subject, type) {
 						assertFail(function () {
 							Assert.that(subject).is.null();
-						}, 'Assert.null - argument was not null')
+						}, 'expected: null found: {0}({1})'.format(type, subject))
 					})
-					.addCase(1)
-					.addCase(true)
-					.addCase('not null');
+					.addCase(1, 'Number')
+					.addCase(true, 'Boolean')
+					.addCase('not null', 'String');
 				},
 				'Assert.that(*).is.not.null() should pass for true conditions': function (TestCase) {
 					TestCase(function (subject) {
 						assertPass(function () {
 							Assert.that(subject).is.not.null();
-						}, 'Assert.not.null - argument was null')
+						}, 'argument was null')
 					})
 					.addCase(1)
 					.addCase(true)
@@ -236,7 +236,7 @@ JTF.loadFramework(function () {
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.that(data1).equals(data2);
-							}, 'Assert.equal - expected: {0} found: {1}'.format(data2, data1));
+							}, 'expected: {0} found: {1}'.format(data2, data1));
 						}
 					)
 					.addCase(true, false)
@@ -258,7 +258,7 @@ JTF.loadFramework(function () {
 						function (data1, data2) {
 							assertFail(function () {
 								Assert.that(data1).is.equiv.to(data2);
-							}, 'Assert.equiv - expected: {0} found: {1}'.format(data2, data1));
+							}, 'expected: {0} found: {1}'.format(data2, data1));
 						}
 					)
 					.addCase(true, false)
@@ -290,7 +290,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.greater(data, 1, genericFailMsg);
-						}, 'Assert.greater - first argument: expected: number found: ' + type);
+						}, 'first argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -300,7 +300,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.greater(1, data, genericFailMsg);
-						}, 'Assert.greater - second argument: expected: number found: ' + type);
+						}, 'second argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -317,17 +317,17 @@ JTF.loadFramework(function () {
 				'Assert.that(*).is.greater.than(*) should fail for false conditions': function () {
 					assertFail(function () {
 						Assert.that(0).is.greater.than(1);
-					}, 'Assert.greater - 0 is not greater than 1');
+					}, '0 is not greater than 1');
 				},
 				'Assert.that(*).is.greater.than(*) should fail for non-numeric first value': function () {
 					assertFail(function () {
 						Assert.that(false).is.greater.than(1);
-					}, 'Assert.greater - first argument: expected: number found: boolean');
+					}, 'first argument: expected: number found: boolean');
 				},
 				'Assert.that(*).is.greater.than(*) should fail for non-numeric second value': function () {
 					assertFail(function () {
 						Assert.that(2).is.greater.than('one');
-					}, 'Assert.greater - second argument: expected: number found: string');
+					}, 'second argument: expected: number found: string');
 				}
 
 			}),
@@ -356,7 +356,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.less(data, 1, genericFailMsg);
-						}, 'Assert.less - first argument: expected: number found: ' + type);
+						}, 'first argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -366,7 +366,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.less(1, data, genericFailMsg);
-						}, 'Assert.less - second argument: expected: number found: ' + type);
+						}, 'second argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -389,7 +389,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data1, data2) {
 						assertFail(function () {
 							Assert.that(data1).is.less.than(data2);
-						}, 'Assert.less - {0} is not less than {1}'.format(data1, data2));
+						}, '{0} is not less than {1}'.format(data1, data2));
 					})
 					.addCase(1, 0)
 					.addCase(1, 0.5)
@@ -399,7 +399,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.that(data).is.less.than(1);
-						}, 'Assert.less - first argument: expected: number found: ' + type);
+						}, 'first argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -409,7 +409,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data, type) {
 						assertFail(function () {
 							Assert.that(1).is.less.than(data);
-						}, 'Assert.less - second argument: expected: number found: ' + type);
+						}, 'second argument: expected: number found: ' + type);
 					})
 					.addCase(false, 'boolean')
 					.addCase('hi', 'string')
@@ -476,7 +476,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data1, data2, type1, type2) {
 						assertFail(function () {
 							Assert.that(data1).is.instance.of(data2);
-						}, 'Assert.instance - expected: {0} found: {1}'.format(type2, type1));
+						}, 'expected: {0} found: {1}'.format(type2, type1));
 					})
 					.addCase(1, String, 'Number', 'String')
 					.addCase('hi', Number, 'String', 'Number')
@@ -498,7 +498,7 @@ JTF.loadFramework(function () {
 					TestCase(function (data1, data2, type) {
 						assertFail(function () {
 							Assert.that(data1).is.not.instance.of(data2);
-						}, 'Assert.not.instance - expected: not {0} found: {0}'.format(type));
+						}, 'expected: not {0} found: {0}'.format(type));
 					})
 					.addCase(new TestException(), TestException, 'TestException')
 					.addCase(new Object(), Object, 'Object')
@@ -559,7 +559,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).is.type(*) should fail for false conditions': function () {
 					assertFail(function () {
 						Assert.that(1).is.type('string');
-					}, 'Assert.type - expected: string found: number');
+					}, 'expected: string found: number');
 				},
 				'Assert.that(*).is.not.type(*) should pass for true conditions': function () {
 					assertPass(function () {
@@ -576,7 +576,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).is.not.type(*) should fail for false conditions': function () {
 					assertFail(function () {
 						Assert.that(1).is.not.type('number');
-					}, 'Assert.not.type - expected: not number found: number');
+					}, 'expected: not number found: number');
 				}
 			}),
 
@@ -614,7 +614,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).throws(*) should fail if the wrong exception is thrown': function () {
 					assertFail(function () {
 						Assert.that(function () { throw new Error() }).throws(TestException);
-					}, 'Assert.throws - expected: TestException found: Error');
+					}, 'expected: TestException found: Error');
 				},
 				'Assert.that(*).throws(*) should return the defined exception, if thrown': function () {
 					assertPass(function () {
@@ -688,7 +688,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).does.not.throw(*) should fail if the defined exception is thrown ': function () {
 					assertFail(function () {
 						Assert.that(function () { throw new Error() }).does.not.throw(Error);
-					}, 'Assert.not.throws - expected: Error not thrown found: Error was thrown');
+					}, 'Error was thrown');
 				}
 			}),
 
@@ -712,7 +712,7 @@ JTF.loadFramework(function () {
 				'Assert.that(*).does.not.throw() should fail if any exception is thrown ': function () {
 					assertFail(function () {
 						Assert.that(function () { throw new Error() }).does.not.throw();
-					}, 'Assert.not.throws - expected: exceptions were thrown found: Error was thrown');
+					}, 'exceptions were thrown');
 				}
 			})
 
