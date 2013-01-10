@@ -56,9 +56,9 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['true'] = function (condition, optionalInfo) {
 		if (condition === null)
-			throw new AssertException('assert condition was null');
+			throw new AssertException('Assert.true - assert condition was null');
 		if(isUndefined(condition) || (typeof condition === 'string' && !optionalInfo))
-			throw new AssertException('no assert condition found');
+			throw new AssertException('Assert.true - no assert condition found');
 		if (!condition) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
@@ -75,7 +75,8 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.equal = function (actual, expected, optionalInfo) {
-		//if(expected ==
+		if (arguments.length === 1)
+			throw new AssertException('Assert.equal - expected at least 2 arguments');
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);

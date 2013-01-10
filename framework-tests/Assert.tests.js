@@ -23,19 +23,19 @@ JTF.loadFramework(function () {
 						TestCase(Assert.true)
 							.addCase()
 							.addCase('optional message but no condition');
-					}, 'no assert condition found');
+					}, 'Assert.true - no assert condition found');
 					assertFail(function () {
 						Assert.true(null);
-					}, 'assert condition was null');
+					}, 'Assert.true - assert condition was null');
 				},
 
-				//'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-				//	assertFail(function () {
-				//		TestCase(Assert.equal)
-				//			.addCase()
-				//			.addCase(1);
-				//	}, 'no assert condition found');
-				//}
+				'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
+					assertFail(function () {
+						TestCase(Assert.equal)
+							.addCase()
+							.addCase(1);
+					}, 'Assert.equal - expected at least 2 arguments');
+				}
 			}),
 
 			new JTF.TestFixture('Conditions', {
