@@ -2,9 +2,7 @@ JTF.loadFramework(function () {
 	JTF.loadHtmlResources(function () {
 		JTF.loadConsoleResources(function () {
 
-			var TestFixture = JTF.TestFixture;
-			var Assert = JTF.Assert;
-
+			var TestFixture = JTF.TestFixture, Assert = JTF.Assert;
 			function DemoException(message) { this.message = message };
 
 			var fixtures = [
@@ -183,36 +181,17 @@ JTF.loadFramework(function () {
 				new TestFixture('Assert.throws', {
 					'Should pass': function () {
 						var info = 'fail message';
-						var exception = Assert.throws(function () { throw new DemoException(info) }, DemoException);
-						Assert.equal(exception.message, info);
+						Assert.throws(function () { throw new DemoException(info) }, DemoException);
 					},
 					'Should fail (when no exception is thrown) with generated reason': function () {
-						var exception = Assert.throws(function () { }, DemoException);
+						Assert.throws(function () { }, DemoException);
 					},
 					'Should fail (when a different exception is thrown) with generated reason': function () {
 						Assert.throws(function () { throw new DemoException() }, Error);
 					},
 					'Should fail with custom reason': function () {
 						Assert.throws(function () { throw new DemoException() }, Error, 'because a DemoException is thrown in the callback, but an Error was expected');
-					}
-				}),
-
-				new TestFixture('Assert.not.throws', {
-					'Should pass (when no exception is thrown)': function () {
-						Assert.not.throws(function () { }, DemoException);
 					},
-					'Should pass (when a different exception is thrown) with generated reason': function () {
-						var exception = Assert.not.throws(function () { throw new DemoException() }, Error);
-					},
-					'Should fail with generated reason': function () {
-						Assert.not.throws(function () { throw new DemoException() }, DemoException);
-					},
-					'Should fail with custom reason': function () {
-						Assert.not.throws(function () { throw new DemoException() }, DemoException, 'because this Asserts that an DemoException is not thrown in the callback, but an DemoException was thrown');
-					}
-				}),
-
-				new TestFixture('Composite assertions', {
 					'Should pass (using the returned exception from Assert.throws)': function () {
 						var message = 'error message';
 						var exception = Assert.throws(function () { throw new DemoException(message) }, DemoException);
@@ -228,13 +207,28 @@ JTF.loadFramework(function () {
 						var exception = Assert.throws(function () { throw new DemoException('omgwtfbbq') }, DemoException);
 						Assert.equal(exception.message, message, 'because the message from the thrown DemoException doesn\'t match the expected message');
 					}
-				})
+				}),
+
+				new TestFixture('Assert.not.throws', {
+					'Should pass (when no exception is thrown)': function () {
+						Assert.not.throws(function () { }, DemoException);
+					},
+					'Should pass (when a different exception is thrown)': function () {
+						Assert.not.throws(function () { throw new DemoException() }, Error);
+					},
+					'Should fail with generated reason': function () {
+						Assert.not.throws(function () { throw new DemoException() }, DemoException);
+					},
+					'Should fail with custom reason': function () {
+						Assert.not.throws(function () { throw new DemoException() }, DemoException, 'because this Asserts that a DemoException is not thrown in the callback, but an DemoException was thrown');
+					}
+				}),
 
 			];
 
 			var runner = new JTF.TestRunner(fixtures);
 			runner.run(new JTF.Console.TestHandler());
-			runner.run(new JTF.HTML.TestHandler({ collapse: JTF.HTML.CONFIG.COLLAPSE.NONE}));
+			runner.run(new JTF.HTML.TestHandler({ collapse: JTF.HTML.CONFIG.COLLAPSE.ALL }));
 
 		});
 	});

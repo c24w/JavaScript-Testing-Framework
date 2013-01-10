@@ -1,7 +1,7 @@
 JTF.namespace('Assert', function (Assert) {
 
-	function buildMessage(assertType, actual, expected) {
-		return '{0} - expected: {1} found: {2}'.format(assertType, expected, actual);
+	function buildMessage(actual, expected) {
+		return 'expected: {0} found: {1}'.format(expected, actual);
 	}
 
 	function areTheSameType(obj1, obj2) {
@@ -46,7 +46,7 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.DEFAULT_FAIL_MESSAGE = 'no additional information';
 
-	function isUndefined(v){
+	function isUndefined(v) {
 		return typeof v === 'undefined';
 	}
 
@@ -56,9 +56,9 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['true'] = function (condition, optionalInfo) {
 		if (condition === null)
-			throw new AssertException('Assert.true - assert condition was null');
-		if(isUndefined(condition) || (typeof condition === 'string' && !optionalInfo))
-			throw new AssertException('Assert.true - no assert condition found');
+			throw new AssertException('assert condition was null');
+		if (isUndefined(condition) || (typeof condition === 'string' && !optionalInfo))
+			throw new AssertException('no assert condition found');
 		if (!condition) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
@@ -70,27 +70,26 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert['null'] = function (subject, optionalInfo) {
-		var info = optionalInfo || 'Assert.null - argument was not null';
-		Assert.equal(subject, null, info);
+		Assert.equal(subject, null, optionalInfo);
 	};
 
 	Assert.equal = function (actual, expected, optionalInfo) {
 		if (arguments.length === 1)
-			throw new AssertException('Assert.equal - expected at least 2 arguments');
+			throw new AssertException('expected at least 2 arguments');
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
-		var info = optionalInfo || buildMessage('Assert.equal', act, exp);
+		var info = optionalInfo || buildMessage(act, exp);
 		Assert.true(actual === expected, info);
 	};
 
 	Assert.equiv = function (actual, expected, optionalInfo) {
 		if (arguments.length === 1)
-			throw new AssertException('Assert.equiv - expected at least 2 arguments');
+			throw new AssertException('expected at least 2 arguments');
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
-		var info = optionalInfo || buildMessage('Assert.equiv', act, exp);
+		var info = optionalInfo || buildMessage(act, exp);
 		Assert.true(actual == expected, info);
 	};
 
@@ -100,21 +99,21 @@ JTF.namespace('Assert', function (Assert) {
 	}
 
 	Assert.greater = function (number1, number2, optionalInfo) {
-		assertIsNumber(number1, 'Assert.greater - first argument');
-		assertIsNumber(number2, 'Assert.greater - second argument');
-		var info = optionalInfo || 'Assert.greater - {0} is not greater than {1}'.format(number1, number2);
+		assertIsNumber(number1, 'first argument');
+		assertIsNumber(number2, 'second argument');
+		var info = optionalInfo || '{0} is not greater than {1}'.format(number1, number2);
 		Assert.true(number1 > number2, info);
 	};
 
 	Assert.less = function (number1, number2, optionalInfo) {
-		assertIsNumber(number1, 'Assert.less - first argument');
-		assertIsNumber(number2, 'Assert.less - second argument');
-		var info = optionalInfo || 'Assert.less - {0} is not less than {1}'.format(number1, number2);
+		assertIsNumber(number1, 'first argument');
+		assertIsNumber(number2, 'second argument');
+		var info = optionalInfo || '{0} is not less than {1}'.format(number1, number2);
 		Assert.true(number1 < number2, info);
 	};
 
 	Assert.instance = function (obj, expectedClass, optionalInfo) {
-		var info = optionalInfo || 'Assert.instance - first argument was null';
+		var info = optionalInfo || 'first argument was null';
 		Assert.not.null(obj, optionalInfo);
 		try {
 			Assert.true(obj instanceof expectedClass);
@@ -122,14 +121,14 @@ JTF.namespace('Assert', function (Assert) {
 		catch (e) {
 			var actualClass = obj.constructor.name;
 			var shouldBeThisClass = expectedClass.name;
-			var info = optionalInfo || buildMessage('Assert.instance', actualClass, shouldBeThisClass);
+			var info = optionalInfo || buildMessage(actualClass, shouldBeThisClass);
 			Assert.equal(actualClass, shouldBeThisClass, info);
 		}
 	};
 
 	Assert.type = function (obj, type, optionalInfo) {
 		var actualType = typeof obj;
-		var info = optionalInfo || buildMessage('Assert.type', actualType, type);
+		var info = optionalInfo || buildMessage(actualType, type);
 		Assert.equal(actualType, type, info);
 	};
 
@@ -143,7 +142,7 @@ JTF.namespace('Assert', function (Assert) {
 		}
 		catch (e) {
 			if (typeof expectedException !== 'undefined') {
-				var info = optionalInfo || buildMessage('Assert.throws', e.name, expectedException.name);
+				var info = optionalInfo || buildMessage(e.constructor.name, expectedException.name);
 				Assert.instance(e, expectedException, info);
 			}
 			return e;
@@ -161,33 +160,32 @@ JTF.namespace('Assert', function (Assert) {
 	JTF.namespace('Assert.not', function (AssertNot) {
 
 		AssertNot['null'] = function (subject, optionalInfo) {
-			var info = optionalInfo || 'Assert.not.null - argument was null';
-			Assert.not.equal(subject, null, info);
+			Assert.not.equal(subject, null, optionalInfo);
 		};
 
 		AssertNot.equal = function (actual, expected, optionalInfo) {
 			var sameType = areTheSameType(actual, expected);
 			var act = sameType ? actual : encloseInType(actual);
 			var exp = sameType ? expected : encloseInType(expected);
-			var info = optionalInfo || buildMessage('Assert.not.equal', act, 'not ' + exp);
+			var info = optionalInfo || buildMessage(act, 'not ' + exp);
 			Assert.false(actual === expected, info);
 		};
 
 		AssertNot.equiv = function (actual, expected, optionalInfo) {
-			var info = optionalInfo || buildMessage('Assert.not.equiv', encloseInType(actual), encloseInType(expected));
+			var info = optionalInfo || buildMessage(encloseInType(actual), encloseInType(expected));
 			Assert.false(actual == expected, info);
 		};
 
 		AssertNot.instance = function (obj, objClass, optionalInfo) {
 			var actualClass = obj.constructor.name;
 			var shouldNotBeThisClass = objClass.name;
-			var info = optionalInfo || buildMessage('Assert.not.instance', actualClass, 'not ' + shouldNotBeThisClass);
+			var info = optionalInfo || buildMessage(actualClass, 'not ' + shouldNotBeThisClass);
 			Assert.not.equal(actualClass, shouldNotBeThisClass, info);
 		};
 
 		AssertNot.type = function (obj, type, optionalInfo) {
 			var actualType = typeof obj;
-			var info = optionalInfo || buildMessage('Assert.not.type', actualType, 'not ' + type);
+			var info = optionalInfo || buildMessage(actualType, 'not ' + type);
 			Assert.not.equal(actualType, type, info);
 		};
 
@@ -200,17 +198,11 @@ JTF.namespace('Assert', function (Assert) {
 				func();
 			}
 			catch (e) {
-				var expectedMsg = typeof unthrownException === 'undefined'
-					? 'exceptions were thrown'
-					: unthrownException.name + ' not thrown';
-				var info = optionalInfo
-					? optionalInfo
-					: buildMessage('Assert.not.throws', e.name + ' was thrown', expectedMsg);
-				if (typeof unthrownException !== 'undefined') {
-					Assert.not.instance(e, unthrownException, info);
+				if (typeof unthrownException === 'undefined') {
+					throw new AssertException(optionalInfo || 'exceptions were thrown');
 				}
 				else {
-					throw new AssertException(info);
+					Assert.not.instance(e, unthrownException, optionalInfo || unthrownException.name + ' was thrown');
 				}
 			}
 		};

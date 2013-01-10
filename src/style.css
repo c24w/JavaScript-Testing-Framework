@@ -1,6 +1,5 @@
 *
 {
-    font-size: 10pt;
     font-family: sans-serif;
 }
 
@@ -12,6 +11,7 @@ body
 
 .controls
 {
+	font-size: 10pt;
 }
 
     .controls button
@@ -21,6 +21,7 @@ body
 
 .testfixture
 {
+	font-size: 10pt;
     margin: 0.5em 0;
 }
 
