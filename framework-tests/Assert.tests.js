@@ -35,6 +35,14 @@ JTF.loadFramework(function () {
 							.addCase()
 							.addCase(1);
 					}, 'Assert.equal - expected at least 2 arguments');
+				},
+
+				'Assert.equiv should fail with the expected message when invalid arguments are supplied': function (TestCase) {
+					assertFail(function () {
+						TestCase(Assert.equiv)
+							.addCase()
+							.addCase(1);
+					}, 'Assert.equiv - expected at least 2 arguments');
 				}
 			}),
 

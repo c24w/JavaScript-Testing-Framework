@@ -85,6 +85,8 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.equiv = function (actual, expected, optionalInfo) {
+		if (arguments.length === 1)
+			throw new AssertException('Assert.equiv - expected at least 2 arguments');
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
