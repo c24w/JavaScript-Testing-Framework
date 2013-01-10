@@ -73,7 +73,7 @@ JTF.namespaceAtRoot(function (JTF) {
 				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
-					if (testSetup) runSetup(testSetup, testName);
+					runSetup(testSetup, sendEvent, testName);
 					try {
 						tests[testName](JTF.TestCase);
 						testEventHandler.handle(evt.TEST.PASS, testName);
@@ -97,12 +97,12 @@ JTF.namespaceAtRoot(function (JTF) {
 		};
 	};
 
-	function runSetup(setup, testName) {
+	function runSetup(setup, sendEvent, testName) {
 		try {
-			setup();
+			if (setup) setup();
 		}
 		catch (e) {
-			testEventHandler.handle(evt.TEST.SETUP.ERROR, testName, e);
+			sendEvent(evt.TEST.SETUP.ERROR, testName, e);
 		}
 	}
 

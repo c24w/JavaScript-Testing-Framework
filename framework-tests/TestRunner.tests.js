@@ -103,7 +103,7 @@ JTF.loadFramework(function () {
 			new TestFixture('Error events tests', {
 
 				'Should send fixture setup error event and data to the TestHandler': function () {
-					var errorHandled = false, expectedError = new Error('Fixture setup fail error message'), actualError;
+					var expectedError = new Error('Fixture setup fail error message'), actualError;
 
 					MockTestFixture = new TestFixture('', {
 						FIXTURE_SETUP: function () { throw expectedError; },
@@ -113,21 +113,18 @@ JTF.loadFramework(function () {
 							var args = Array.prototype.slice.call(arguments, 1);
 							switch (event) {
 								case evt.FIXTURE.ERROR:
-									errorHandled = true;
 									actualError = args[0];
 							}
 						}
 					};
 					new TestRunner(MockTestFixture).run(handler);
 
-					Assert.true(errorHandled);
 					Assert.equal(actualError, expectedError);
 				},
 
-				'Should send test setup event and data to the TestHandler': function () {
-					var errorHandled = false,
-						expectedError = new Error('Test setup fail error message'),
-						expectedTestName = 'Failing test name',
+				'Should send test setup error event and data to the TestHandler': function () {
+					var expectedError = new Error('Test setup fail error message'),
+						expectedTestName = 'Test preceded by setup',
 						actualTestName, actualError;
 
 					var tests = { TEST_SETUP: function () { throw expectedError; } };
@@ -139,7 +136,6 @@ JTF.loadFramework(function () {
 							var args = Array.prototype.slice.call(arguments, 1);
 							switch (event) {
 								case evt.TEST.SETUP.ERROR:
-									errorHandled = true;
 									actualTestName = args[0];
 									actualError = args[1];
 							}
@@ -147,17 +143,16 @@ JTF.loadFramework(function () {
 					};
 					new TestRunner(MockTestFixture).run(handler);
 
-					Assert.true(errorHandled);
 					Assert.equal(actualTestName, expectedTestName);
 					Assert.equal(actualError, expectedError);
 				},
 
-				'Should send test error event and data to the TestHandler': function () {
-					var errorHandled = false,
-						expectedError = new Error('Test fail error message'),
+				'Should send test error event and data to the TestHandler': function () {////////
+					var expectedError = new Error('Test fail error message'),
 						expectedTestName = 'Failing test name',
 						actualTestName, actualError;
 
+					var tests = {};
 					tests[expectedTestName] = function () { throw expectedError; };
 
 					MockTestFixture = new TestFixture('', tests);
@@ -166,7 +161,6 @@ JTF.loadFramework(function () {
 							var args = Array.prototype.slice.call(arguments, 1);
 							switch (event) {
 								case evt.TEST.ERROR:
-									errorHandled = true;
 									actualTestName = args[0];
 									actualError = args[1];
 							}
@@ -174,7 +168,6 @@ JTF.loadFramework(function () {
 					};
 					new TestRunner(MockTestFixture).run(handler);
 
-					Assert.true(errorHandled);
 					Assert.equal(actualTestName, expectedTestName);
 					Assert.equal(actualError, expectedError);
 				}

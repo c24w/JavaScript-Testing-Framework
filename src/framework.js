@@ -92,8 +92,8 @@
 	JTF.loadResources = function (/* resource.css, resource.js, ..., ..., callback */) {
 		var loadCount = 0;
 		var lastArg = arguments[arguments.length - 1];
-		var callback = lastArg instanceof Function ? lastArg : null;
-		var resourceCount = arguments.length - (callback !== null ? 1 : 0);
+		var callback = lastArg instanceof Function ? lastArg : undefined;
+		var resourceCount = arguments.length - (callback ? 1 : 0);
 		for (var i = 0; i < resourceCount; i++) {
 			JTF.loadResource(arguments[i], function () {
 				if (++loadCount === resourceCount && callback !== null) {

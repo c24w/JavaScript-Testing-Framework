@@ -6,7 +6,7 @@ JTF.loadFramework(function () {
 		var TestRunner = JTF.TestRunner;
 		var dummyRootEl, htmlHandler;
 
-		new TestRunner([
+		var fixtures = [
 
 			new TestFixture('HTML structure tests', {
 
@@ -166,10 +166,12 @@ JTF.loadFramework(function () {
 
 			})
 
-		]).run(new JTF.HTML.TestHandler({
+		];
+
+		JTF.runToHtml(fixtures, {
 			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
 			runInterval: 30000
-		}));
+		});
 
 		function getTagName(el) {
 			return el.tagName.toLowerCase();
