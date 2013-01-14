@@ -81,7 +81,7 @@ JTF.loadFramework(function () {
 				'Assert.false should fail for false conditions': function (TestCase) {
 					TestCase(function (bool) {
 						assertFail(function () { Assert.false(bool, genericFailMsg); });
-						assertFail(function () { Assert.that(bool).is.false(); });
+						assertFail(function () { Assert.that(bool).is.false(); }, Assert.DEFAULT_FAIL_MESSAGE);
 					})
 					.addCase(true)
 					.addCase('hi' == "hi")
