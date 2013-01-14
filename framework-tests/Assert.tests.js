@@ -183,9 +183,9 @@ JTF.loadFramework(function () {
 				'Assert.equal should pass for true conditions': function (TestCase) {
 					assertPass(function () {
 						TestCase(Assert.equal)
-						addCase(1, 1)
-						addCase('abc', 'abc')
-						addCase(true, true);
+						.addCase(1, 1)
+						.addCase('abc', "abc")
+						.addCase(true, true);
 					});
 				},
 				'Assert.equal should fail for false conditions': function (TestCase) {
@@ -200,25 +200,26 @@ JTF.loadFramework(function () {
 					.addCase(1, 2)
 					.addCase('hi', 'bye');
 				},
-				'Assert.equiv should pass for true conditions': function (TestCase) {
+
+				'Assert.not.equal should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						TestCase(Assert.equiv)
-							.addCase(true, 1)
-							.addCase(false, "0")
-							.addCase('1', 1);
+						TestCase(Assert.not.equal)
+						.addCase(true, false)
+						.addCase(1, 2)
+						.addCase('hi', 'bye');
 					});
 				},
-				'Assert.equiv should fail for false conditions': function (TestCase) {
+				'Assert.not.equal should fail for false conditions': function (TestCase) {
 					TestCase(
 						function (data1, data2) {
 							assertFail(function () {
-								Assert.equiv(data1, data2, genericFailMsg);
+								Assert.not.equal(data1, data2, genericFailMsg);
 							});
 						}
 					)
-					.addCase(true, false)
-					.addCase(1, 2)
-					.addCase('hi', 'bye');
+					.addCase(1, 1)
+					.addCase('abc', "abc")
+					.addCase(true, true);
 				},
 
 				'Assert.that(*).equals(*) should pass for true conditions': function (TestCase) {
@@ -243,6 +244,55 @@ JTF.loadFramework(function () {
 					.addCase(1, 2)
 					.addCase('hi', 'bye');
 				},
+
+				'Assert.that(*).does.not.equal(*) / Assert.that(*).is.not.equal.to(*) should pass for true conditions': function (TestCase) {
+					assertPass(function () {
+						TestCase(function (data1, data2) {
+							Assert.that(data1).does.not.equal(data2);
+							Assert.that(data1).is.not.equal.to(data2);
+						})
+						.addCase(true, false)
+						.addCase(1, 2)
+						.addCase('hi', 'bye');
+					});
+				},
+				'Assert.that(*).does.not.equal(*) / Assert.that(*).is.not.equal.to(*) should fail for false conditions': function (TestCase) {
+					TestCase(
+						function (data1, data2) {
+							assertFail(function () {
+								Assert.that(data1).does.not.equal(data2);
+								Assert.that(data1).is.not.equal.to(data2);
+							}, 'expected: not {0} found: {1}'.format(data2, data1));
+						}
+					)
+					.addCase(1, 1)
+					.addCase('abc', "abc")
+					.addCase(true, true);
+				}
+			}),
+
+			new JTF.TestFixture('Equivalence', {
+				'Assert.equiv should pass for true conditions': function (TestCase) {
+					assertPass(function () {
+						TestCase(Assert.equiv)
+							.addCase(true, 1)
+							.addCase(false, "0")
+							.addCase('1', 1);
+					});
+				},
+				'Assert.equiv should fail for false conditions': function (TestCase) {
+					TestCase(
+						function (data1, data2) {
+							assertFail(function () {
+								Assert.equiv(data1, data2, genericFailMsg);
+							});
+						}
+					)
+					.addCase(true, false)
+					.addCase(1, 2)
+					.addCase('hi', 'bye');
+				},
+
 				'Assert.that(*).is.equiv.to(*) should pass for true conditions': function (TestCase) {
 					assertPass(function () {
 						TestCase(function (data1, data2) {

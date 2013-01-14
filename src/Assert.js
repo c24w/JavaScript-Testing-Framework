@@ -17,7 +17,12 @@ JTF.namespace('Assert', function (Assert) {
 		var A = Assert;
 		var AN = A.not;
 		this.throws = function (exception) { return A.throws(subject, exception) },
-		this.does = { not: { 'throw': function (exception) { Assert.not.throws(subject, exception) } } },
+		this.does = {
+			not: {
+				equal: function (expected) { AN.equal(subject, expected) },
+				'throw': function (exception) { AN.throws(subject, exception) }
+			}
+		},
 		this.equals = function (expected) { A.equal(subject, expected) },
 		this.is = {
 			'true': function () { A.true(subject) },
