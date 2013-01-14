@@ -93,63 +93,38 @@ JTF.loadFramework(function () {
 				'Assert.null should pass for true conditions': function () {
 					assertPass(function () {
 						Assert.null(null);
+						Assert.that(null).is.null()
 					});
 				},
 				'Assert.null should fail for false conditions': function (TestCase) {
-					TestCase(function (subject, msg) {
+					TestCase(function (subject, type) {
+						assertFail(function () { Assert.null(subject, genericFailMsg); });
 						assertFail(function () {
-							Assert.null(subject, msg);
-						})
+							Assert.that(subject).is.null();
+						}, 'expected: null found: {0}({1})'.format(type, subject));
 					})
-					.addCase(1, genericFailMsg)
-					.addCase(true, genericFailMsg)
-					.addCase('not null', genericFailMsg);
+					.addCase(1, 'Number')
+					.addCase(true, 'Boolean')
+					.addCase('not null', 'String');
 				},
 				'Assert.not.null should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						TestCase(Assert.not.null)
-							.addCase(1)
-							.addCase(true)
-							.addCase('not null');
+						TestCase(function (subject) {
+							Assert.not.null(subject);
+							Assert.that(subject).is.not.null();
+						})
+						.addCase(1)
+						.addCase(true)
+						.addCase('not null');
 					});
 				},
 				'Assert.not.null should fail for false conditions': function (TestCase) {
 					assertFail(function () {
 						Assert.not.null(null, genericFailMsg)
 					});
-				},
-
-				'Assert.that(*).is.null() should pass for true conditions': function () {
-					assertPass(function () {
-						Assert.that(null).is.null()
-					});
-				},
-				'Assert.that(*).is.null() should fail for false conditions': function (TestCase) {
-					TestCase(function (subject, type) {
-						assertFail(function () {
-							Assert.that(subject).is.null();
-						}, 'expected: null found: {0}({1})'.format(type, subject))
-					})
-					.addCase(1, 'Number')
-					.addCase(true, 'Boolean')
-					.addCase('not null', 'String');
-				},
-				'Assert.that(*).is.not.null() should pass for true conditions': function (TestCase) {
-					TestCase(function (subject) {
-						assertPass(function () {
-							Assert.that(subject).is.not.null();
-						}, 'argument was null')
-					})
-					.addCase(1)
-					.addCase(true)
-					.addCase('not null');
-				},
-				'Assert.that(*).is.not.null() should fail for false conditions': function (TestCase) {
-					TestCase(function (subject) {
-						assertFail(function () {
-							Assert.that(subject).is.not.null();
-						})
-					})
+					assertFail(function () {
+						Assert.that(null).is.not.null();
+					}, 'expected: not null found: null');
 				}
 
 			}),
