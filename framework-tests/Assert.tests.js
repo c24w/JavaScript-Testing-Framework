@@ -49,68 +49,43 @@ JTF.loadFramework(function () {
 			new JTF.TestFixture('Conditions', {
 				'Assert.true should pass for true conditions': function (TestCase) {
 					assertPass(function () {
-						TestCase(Assert.true)
-							.addCase(true)
-							.addCase(1 === 1);
+						TestCase(function (bool) {
+							Assert.true(bool);
+							Assert.that(bool).is.true();
+						})
+						.addCase(true)
+						.addCase('hi' == "hi")
+						.addCase(1 === 1);
 					});
 				},
 				'Assert.true should fail for false conditions': function (TestCase) {
-					assertFail(function () {
-						TestCase(Assert.true)
-							.addCase(false, genericFailMsg)
-							.addCase(1 === 2, genericFailMsg);
-					});
+					TestCase(function (bool) {
+						assertFail(function () { Assert.true(bool, genericFailMsg) });
+						assertFail(function () { Assert.that(bool).is.true(); }, Assert.DEFAULT_FAIL_MESSAGE);
+					})
+					.addCase(false)
+					.addCase('hi' == "hello")
+					.addCase(1 === 2);
 				},
 				'Assert.false should pass for false conditions': function (TestCase) {
 					assertPass(function () {
-						TestCase(Assert.false)
-							.addCase(false)
-							.addCase(1 === 0);
+						TestCase(function (bool) {
+							Assert.false(bool);
+							Assert.that(bool).is.false();
+						})
+						.addCase(false)
+						.addCase('hi' == "hello")
+						.addCase(1 === 0);
 					});
 				},
 				'Assert.false should fail for false conditions': function (TestCase) {
-					assertFail(function () {
-						TestCase(Assert.false)
-							.addCase(true, genericFailMsg)
-							.addCase(1 === 1, genericFailMsg);
-					});
-				},
-
-				'Assert.that(*).is.true() should pass for true conditions': function (TestCase) {
-					assertPass(function () {
-						TestCase(function (subject) {
-							Assert.that(subject).is.true();
-						})
-						.addCase(true)
-						.addCase(1 === 1);
-					});
-				},
-				'Assert.that(*).is.true() should fail for false conditions': function (TestCase) {
-					assertFail(function () {
-						TestCase(function (subject) {
-							Assert.that(subject).is.true();
-						})
-						.addCase(false)
-						.addCase(1 === 2);
-					}, 'no additional information');
-				},
-				'Assert.that(*).is.false() should pass for false conditions': function (TestCase) {
-					assertPass(function () {
-						TestCase(function (subject) {
-							Assert.that(subject).is.false();
-						})
-						.addCase(false)
-						.addCase(1 === 2);
-					});
-				},
-				'Assert.that(*).is.false() should fail for false conditions': function (TestCase) {
-					assertFail(function () {
-						TestCase(function (subject) {
-							Assert.that(subject).is.false();
-						})
-						.addCase(true)
-						.addCase(1 === 1);
-					}, 'no additional information');
+					TestCase(function (bool) {
+						assertFail(function () { Assert.false(bool, genericFailMsg); });
+						assertFail(function () { Assert.that(bool).is.false(); });
+					})
+					.addCase(true)
+					.addCase('hi' == "hi")
+					.addCase(1 === 1);
 				}
 			}),
 
