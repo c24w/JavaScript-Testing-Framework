@@ -55,15 +55,22 @@ JTF.namespace('Assert', function (Assert) {
 		return typeof v === 'undefined';
 	}
 
+	function assertArgs(lowerBound, upperBound) {
+		var argsLength = arguments.callee.caller.arguments.length;
+		if (argsLength < lowerBound)
+			throw new AssertException('assertion expected at least {0} argument{1}'.format(lowerBound, lowerBound === 1 ? '' : 's'));
+		if (argsLength > upperBound)
+			throw new AssertException('assertion expected at most {0} argument{1}'.format(upperBound, lowerBound === 1 ? '' : 's'));
+	}
+
 	Assert.that = function (subject) {
 		return new AssertThat(subject);
 	};
 
 	Assert['true'] = function (condition, optionalInfo) {
+		assertArgs(1, 2);
 		if (condition === null)
 			throw new AssertException('assert condition was null');
-		if (isUndefined(condition) || (typeof condition === 'string' && !optionalInfo))
-			throw new AssertException('no assert condition found');
 		if (!condition) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
@@ -71,16 +78,17 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert['false'] = function (condition, optionalInfo) {
+		assertArgs(1, 2);
 		Assert.true(!condition, optionalInfo);
 	};
 
 	Assert['null'] = function (subject, optionalInfo) {
+		assertArgs(1, 2);
 		Assert.equal(subject, null, optionalInfo);
 	};
 
 	Assert.equal = function (actual, expected, optionalInfo) {
-		if (arguments.length === 1)
-			throw new AssertException('expected at least 2 arguments');
+		assertArgs(2, 3);
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
@@ -89,8 +97,7 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.equiv = function (actual, expected, optionalInfo) {
-		if (arguments.length === 1)
-			throw new AssertException('expected at least 2 arguments');
+		assertArgs(2, 3);
 		var sameType = areTheSameType(actual, expected);
 		var act = sameType ? actual : encloseInType(actual);
 		var exp = sameType ? expected : encloseInType(expected);
@@ -104,6 +111,7 @@ JTF.namespace('Assert', function (Assert) {
 	}
 
 	Assert.greater = function (number1, number2, optionalInfo) {
+		assertArgs(2, 3);
 		assertIsNumber(number1, 'first argument');
 		assertIsNumber(number2, 'second argument');
 		var info = optionalInfo || '{0} is not greater than {1}'.format(number1, number2);
@@ -111,6 +119,7 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.less = function (number1, number2, optionalInfo) {
+		assertArgs(2, 3);
 		assertIsNumber(number1, 'first argument');
 		assertIsNumber(number2, 'second argument');
 		var info = optionalInfo || '{0} is not less than {1}'.format(number1, number2);
@@ -118,8 +127,9 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.instance = function (obj, expectedClass, optionalInfo) {
-		var info = optionalInfo || 'first argument was null';
+		assertArgs(2, 3);
 		Assert.not.null(obj, optionalInfo);
+		Assert.not.null(expectedClass, optionalInfo);
 		try {
 			Assert.true(obj instanceof expectedClass);
 		}
@@ -132,12 +142,15 @@ JTF.namespace('Assert', function (Assert) {
 	};
 
 	Assert.type = function (obj, type, optionalInfo) {
+		assertArgs(2, 3);
+		Assert.instance(type, String);
 		var actualType = typeof obj;
 		var info = optionalInfo || buildMessage(actualType, type);
 		Assert.equal(actualType, type, info);
 	};
 
 	Assert.throws = function (func, expectedException, optionalInfo) {
+		assertArgs(1, 3);
 		if (typeof expectedException === 'string' && typeof optionalInfo === 'undefined') {
 			optionalInfo = expectedException;
 			expectedException = undefined;
@@ -165,10 +178,12 @@ JTF.namespace('Assert', function (Assert) {
 	JTF.namespace('Assert.not', function (AssertNot) {
 
 		AssertNot['null'] = function (subject, optionalInfo) {
+			assertArgs(1, 2);
 			Assert.not.equal(subject, null, optionalInfo);
 		};
 
 		AssertNot.equal = function (actual, expected, optionalInfo) {
+			assertArgs(2, 3);
 			var sameType = areTheSameType(actual, expected);
 			var act = sameType ? actual : encloseInType(actual);
 			var exp = sameType ? expected : encloseInType(expected);
@@ -177,11 +192,16 @@ JTF.namespace('Assert', function (Assert) {
 		};
 
 		AssertNot.equiv = function (actual, expected, optionalInfo) {
-			var info = optionalInfo || buildMessage(encloseInType(actual), encloseInType(expected));
+			assertArgs(2, 3);
+			var sameType = areTheSameType(actual, expected);
+			var act = sameType ? actual : encloseInType(actual);
+			var exp = sameType ? expected : encloseInType(expected);
+			var info = optionalInfo || buildMessage(act, 'not ' + exp);
 			Assert.false(actual == expected, info);
 		};
 
 		AssertNot.instance = function (obj, objClass, optionalInfo) {
+			assertArgs(2, 3);
 			var actualClass = obj.constructor.name;
 			var shouldNotBeThisClass = objClass.name;
 			var info = optionalInfo || buildMessage(actualClass, 'not ' + shouldNotBeThisClass);
@@ -189,12 +209,14 @@ JTF.namespace('Assert', function (Assert) {
 		};
 
 		AssertNot.type = function (obj, type, optionalInfo) {
+			assertArgs(2, 3);
 			var actualType = typeof obj;
 			var info = optionalInfo || buildMessage(actualType, 'not ' + type);
 			Assert.not.equal(actualType, type, info);
 		};
 
 		AssertNot.throws = function (func, unthrownException, optionalInfo) {
+			assertArgs(1, 3);
 			if (typeof unthrownException === 'string' && typeof optionalInfo === 'undefined') {
 				optionalInfo = unthrownException;
 				unthrownException = undefined;

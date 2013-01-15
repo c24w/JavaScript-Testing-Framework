@@ -52,6 +52,9 @@ JTF.namespace('HTML', function (HTML) {
 				case EVT.TEST.FAIL:
 					appendTestToHtml(false, args[0], args[1]);
 					break;
+				case EVT.TEST.ERROR:
+					console.error(args[0] + ' - ' + args[1]);
+					break;
 				case EVT.FIXTURE.STATS:
 					statsOutputter(args[0], args[1]);
 					break;

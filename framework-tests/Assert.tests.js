@@ -18,31 +18,48 @@ JTF.loadFramework(function () {
 		var fixtures = [
 
 			new JTF.TestFixture('Invalid method calls', {
-				'Assert.true should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-					assertFail(function () {
-						TestCase(Assert.true)
-							.addCase()
-							.addCase('optional message but no condition');
-					}, 'no assert condition found');
-					assertFail(function () {
-						Assert.true(null);
-					}, 'assert condition was null');
+				'Should fail with the expected message when no arguments are supplied': function (TestCase) {
+					TestCase(function (assert, minArgs, maxArgs) {
+						assertFail(function () {
+							assert();
+						}, 'assertion expected at least {0} argument{1}'.format(minArgs, minArgs === 1 ? '' : 's'));
+					})
+					.addCase(Assert.true, 1)
+					.addCase(Assert.false, 1)
+					.addCase(Assert.null, 1)
+					.addCase(Assert.equal, 2)
+					.addCase(Assert.equiv, 2)
+					.addCase(Assert.greater, 2)
+					.addCase(Assert.less, 2)
+					.addCase(Assert.instance, 2)
+					.addCase(Assert.type, 2)
+					.addCase(Assert.throws, 1)
+					.addCase(Assert.not.null, 1)
+					.addCase(Assert.not.equal, 2)
+					.addCase(Assert.not.equiv, 2)
+					.addCase(Assert.not.instance, 2)
+					.addCase(Assert.not.type, 2)
+					.addCase(Assert.not.throws, 1);
+				},
+
+				'Should fail with the expected message when null arguments are supplied': function (TestCase) {
+					assertFail(function () { Assert.true(null); }, 'assert condition was null');
 				},
 
 				'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-					assertFail(function () {
-						TestCase(Assert.equal)
-							.addCase()
-							.addCase(1);
-					}, 'expected at least 2 arguments');
+					/*	assertFail(function () {
+							TestCase(Assert.equal)
+								.addCase()
+								.addCase(1);
+						}, 'assertion expected 2 or more arguments');*/
 				},
 
 				'Assert.equiv should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-					assertFail(function () {
+					/*assertFail(function () {
 						TestCase(Assert.equiv)
 							.addCase()
 							.addCase(1);
-					}, 'expected at least 2 arguments');
+					}, 'assertion expected 2 or more arguments');*/
 				}
 			}),
 
@@ -423,7 +440,11 @@ JTF.loadFramework(function () {
 						TestCase(Assert.instance)
 							.addCase(new TestException(), TestException)
 							.addCase(new Object(), Object)
+							.addCase({}, Object)
 							.addCase('hello', String)
+							.addCase(/.*/, RegExp)
+							.addCase([1, 2, 3], Array)
+							.addCase(false, Boolean)
 							.addCase(1, Number);
 					});
 

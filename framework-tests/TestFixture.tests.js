@@ -41,14 +41,14 @@ JTF.loadFramework(function () {
 				for (var t in tests) Assert.equal(t, 'expected test ' + testNo++);
 			},
 
-			'implicit fixture is converted to test fixture': function () {
+			/*'implicit fixture is converted to test fixture': function () {
 				var implicitFixture = {
 					'fixture description': {
 						'test name': function () { }
 					}
 				};
 				Assert.equal();
-			}
+			}*/
 
 		}),
 		{
