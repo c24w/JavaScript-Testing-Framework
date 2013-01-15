@@ -26,7 +26,7 @@ JTF.namespace('Console', function (Console) {
 					testOutputter(false, args[0], args[1]);
 					break;
 				case TREvent.FIXTURE.STATS:
-					statsOutputter(args[0], args[1]);
+					statsOutputter.apply(null, args);
 					break;
 				case TREvent.FIXTURE.FIXTURE_END:
 					break;

@@ -1,134 +1,104 @@
-*
-{
-    font-family: sans-serif;
+* {
+	font-family: sans-serif;
 }
 
-body
-{
-    margin: 1em;
-    background: #fff;
+body {
+	margin: 1em;
+	background: #fff;
 }
 
-.controls
-{
+.controls {
 	font-size: 10pt;
 }
 
-    .controls button
-    {
-        margin: 0 0.5em;
-    }
+	.controls button {
+		margin: 0 0.5em;
+	}
 
-.testfixture
-{
+.testfixture {
 	font-size: 10pt;
-    margin: 0.5em 0;
+	margin: 0.5em 0;
 }
 
-    .testfixture.collapsed .tests
-    {
-        display: none;
-    }
+	.testfixture .tests {
+		box-shadow: inset 0 0 2px #999;
+	}
 
-    .testfixture.hidden
-    {
-        display: none;
-    }
+	.testfixture.collapsed .tests {
+		display: none;
+	}
 
-    .testfixture .header
-    {
-        -webkit-user-select: none;
-        cursor: pointer;
-        padding: 0.5em;
-        overflow: auto;
-    }
+	.testfixture.hidden {
+		display: none;
+	}
 
-    .testfixture.passed
-    {
-        background: #F5FAF5;
-    }
+	.testfixture .header {
+		position: relative;
+		z-index: 1;
+		-webkit-user-select: none;
+		cursor: pointer;
+		padding: 0.5em;
+		overflow: auto;
+		box-shadow: 0 1px 2px #999;
+	}
 
-        .testfixture.passed .header
-        {
-            border: 1px outset #F2E6E6;
-            background: #F5FAF5;
-        }
+		.testfixture .header:hover {
+			box-shadow: 0 1px 2px #999, inset 0 0 2px #999;
+		}
 
-        .testfixture.passed .tests
-        {
-            border: 1px inset #E6F2E6;
-        }
+		.testfixture .header .description {
+			float: left;
+			font-weight: bold;
+			color: #000;
+		}
 
-    .testfixture.failed
-    {
-        background: #FAF5F5;
-    }
+		.testfixture .header .result {
+			font-style: italic;
+			float: right;
+		}
 
-        .testfixture.failed .header
-        {
-            border: 1px outset #F2E6E6;
-            background: #FAF5F5;
-        }
+	.testfixture.passed {
+		background: #F5FAF5;
+	}
 
-        .testfixture.failed .tests
-        {
-            border: 1px inset #F2E6E6;
-        }
+	.testfixture.failed {
+		background: #FAF5F5;
+	}
 
-    .testfixture .header:hover
-    {
-        border-style: inset;
-        padding: 0.55em 0.45em 0.45em 0.55em;
-    }
-
-    .testfixture .header .description
-    {
-        float: left;
-        font-weight: bold;
-        color: #000;
-    }
-
-    .testfixture .header .result
-    {
-        font-style: italic;
-        float: right;
-    }
-
-.test
-{
-    color: #aaa;
+.test.fail {
+	box-shadow: inset 0 0 2px #999;
+	background: #FAEDED;
+	padding: 0.5em;
 }
 
-    .test.fail
-    {
-        background: #F7F7F7;
-        padding: 0.5em;
-        border: 1px solid #fff;
-    }
+	.test.error .name, .test.fail .name {
+		font-weight: bold;
+	}
 
-        .test.fail .name
-        {
-            color: #f00;
-        }
+	.test.error .info, .test.fail .info {
+		font-weight: bold;
+		margin-left: 1em;
+	}
 
-    .test.pass .name
-    {
-        padding: 0.25em 0.5em;
-        color: #000;
-    }
+	.test.fail .name {
+		color: #f00;
+	}
 
-    .test.fail .info
-    {
-        margin-left: 1em;
-        color: #888;
-    }
-
-.code
-{
-    font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
-    font-size: 95%;
+.test.error {
+	box-shadow: inset 0 0 2px #999;
+	background: #FAFAC8;
+	padding: 0.5em;
 }
 
-.result
-{
+	.test.error .name {
+		padding: 0.25em 0.5em;
+	}
+
+.test.pass .name {
+	padding: 0.2em 0.5em;
+}
+
+.code {
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
+	font-size: 95%;
 }

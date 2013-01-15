@@ -53,7 +53,7 @@ JTF.namespaceAtRoot(function (JTF) {
 
 				testEventHandler.handle(evt.FIXTURE.START);
 
-				var passes = 0, fails = 0;
+				var passes = 0, fails = 0, testErrors = 0;
 				var desc = formatDesc(testFixture.getDescription());
 				testEventHandler.handle(evt.FIXTURE.DESC, desc);
 
@@ -84,11 +84,13 @@ JTF.namespaceAtRoot(function (JTF) {
 							testEventHandler.handle(evt.TEST.FAIL, testName, formatMsg(e.message));
 							fails++;
 						}
-						else testEventHandler.handle(evt.TEST.ERROR, testName, e);
+						else {
+							testEventHandler.handle(evt.TEST.ERROR, testName, e);
+							testErrors++;
+						}
 					}
 				}
-
-				testEventHandler.handle(evt.FIXTURE.STATS, passes, fails);
+				testEventHandler.handle(evt.FIXTURE.STATS, passes, fails, testErrors);
 				testEventHandler.handle(evt.FIXTURE.END);
 			}
 

@@ -64,3 +64,6 @@ remove sugary assert tests? just test that they delegate correctly - switch in m
 Assert undefined
 greater equal etc
 check assert condition / other args for undefined
+doc testErrors
+extract actual and expected inside AssertException
+had errors n : : m passed - m reporting correct number?

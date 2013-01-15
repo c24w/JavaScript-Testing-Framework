@@ -140,7 +140,7 @@
 	function loadStylesheet(file, callback) {
 		var stylesheet = document.createElement('link');
 		stylesheet.rel = 'stylesheet';
-		stylesheet.href = frameworkBaseURL + file;
+		stylesheet.href = addCacheBuster(frameworkBaseURL + file);
 		stylesheet.onerror = JTF.resourceErrorFromEvent;
 		document.head.appendChild(stylesheet);
 		stylesheet.onload = function () {

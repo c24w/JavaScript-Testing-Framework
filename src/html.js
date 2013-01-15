@@ -53,10 +53,10 @@ JTF.namespace('HTML', function (HTML) {
 					appendTestToHtml(false, args[0], args[1]);
 					break;
 				case EVT.TEST.ERROR:
-					console.error(args[0] + ' - ' + args[1]);
+					addTestError(args[0], args[1]);
 					break;
 				case EVT.FIXTURE.STATS:
-					statsOutputter(args[0], args[1]);
+					statsOutputter(args[0], args[1], args[2]);
 					break;
 				case EVT.FIXTURE.END:
 					break;
@@ -77,7 +77,7 @@ JTF.namespace('HTML', function (HTML) {
 
 		function setHeader(description) {
 			var desc = HTML.makeDiv('description');
-			desc.innerHTML = formatCodeParts(description);
+			desc.innerHTML = description;
 			HTML.addTo(header, desc);
 		}
 
@@ -85,14 +85,25 @@ JTF.namespace('HTML', function (HTML) {
 			var className = getTestClassName(testPassed);
 			var test = HTML.makeDiv(className);
 			var name = HTML.makeDiv('name');
-			name.innerHTML = formatCodeParts(testName);
+			name.innerHTML = testName;
 			HTML.addTo(test, name);
 			if (typeof msg !== 'undefined') {
 				var info = HTML.makeDiv('info');
-				info.innerHTML = formatCodeParts(msg);
+				info.innerHTML = msg;
 				HTML.addTo(test, info);
 			}
 			HTML.addTo(testsContainer, test);
+		}
+
+		function addTestError(testName, error) {
+			var testError = HTML.makeDiv('test error');
+			var name = HTML.makeDiv('name');
+			name.innerHTML = testName;
+			HTML.addTo(testError, name);
+			var info = HTML.makeDiv('info');
+			info.innerHTML = error;
+			HTML.addTo(testError, info);
+			HTML.addTo(testsContainer, testError);
 		}
 
 		function batchEnd() {
@@ -184,14 +195,16 @@ JTF.namespace('HTML', function (HTML) {
 			HTML.addTo(currentConfig.rootElement, controls);
 		}
 
-		function statsOutputter(passes, fails) {
-			if (fixtureShouldBeCollapsed(fails === 0))
+		function statsOutputter(passes, fails, testErrors) {
+			var hasErrors = testErrors > 0;
+			var hasFailsOrErrors = fails > 0 || hasErrors;
+			if (fixtureShouldBeCollapsed(hasFailsOrErrors))
 				fixture.className += ' collapsed';
-			fixture.className += fails > 0 ? ' failed' : ' passed';
+			fixture.className += hasFailsOrErrors ? ' failed' : ' passed';
 			if (fails === 0 && !currentConfig.showPassedFixtures)
 				fixture.className += ' hidden';
 			var result = HTML.makeDiv('result');
-			HTML.addTextTo(result, HTML.getStatsLine(passes, fails));
+			HTML.addTextTo(result, HTML.getStatsLine(passes, fails, testErrors));
 			HTML.addTo(header, result);
 			if (fails > 0) batchHasFails = true;
 			header.onclick = headerOnclickClosure(fixture);
@@ -207,26 +220,42 @@ JTF.namespace('HTML', function (HTML) {
 			}
 		}
 
-		function fixtureShouldBeCollapsed(fixturePassed) {
+		function fixtureShouldBeCollapsed(hasFails) {
 			switch (currentConfig.collapse) {
 				case CONFIG.COLLAPSE.NONE:
 					return false;
 				case CONFIG.COLLAPSE.ALL:
 					return true;
 				case CONFIG.COLLAPSE.PASSES:
-					return fixturePassed;
+					return !hasFails;
 			}
 		}
 
-		HTML.getStatsLine = function (passes, fails) {
-			var total = passes + fails;
-			switch (total) {
-				case 0: return 'fixture contains no tests';
-				case passes: return passes + ' passed';
-				case fails: return fails + ' failed';
-				default: return fails + '/' + total + ' failed';
+		HTML.getStatsLine = function (passes, fails, testErrors) {
+			var total = passes + fails + testErrors;
+			if (total === 0) return 'fixture contains no tests';
+
+			var passMsg = passes + ' passed';
+			if (passes === total) return passMsg;
+
+			var failMsg = fails + ' failed';
+			if (fails === total) return failMsg;
+
+			var hadErrorsMsg = testErrors + ' had errors';
+			if (testErrors === total) return hadErrorsMsg;
+
+			if (testErrors > 0) {
+				var result = [];
+				var append = function (item) { result[result.length] = item; };
+				append(hadErrorsMsg);
+				if (passes > 0) append(passMsg);
+				if (fails > 0) append(failMsg);
+				return result.join(' : : ');
 			}
+			else return fails + '/' + total + ' failed';
+
 		}
+
 	}
 
 	function getTestClassName(testPassed) {
@@ -235,7 +264,7 @@ JTF.namespace('HTML', function (HTML) {
 		return className;
 	}
 
-	function formatCodeParts(testName) {
+	/*function formatCodeParts(testName) {
 		var text = testName;
 		var words = testName.split(/[,\u0020]/g);
 		var result = '';
@@ -247,7 +276,7 @@ JTF.namespace('HTML', function (HTML) {
 				text = text.replace(word, '<span class="code">' + word + '</span>');
 		}
 		return text;
-	}
+	}*/
 
 	function isDefined(word) {
 		if (window[word])
