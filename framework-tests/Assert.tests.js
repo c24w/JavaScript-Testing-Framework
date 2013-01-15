@@ -49,7 +49,9 @@ JTF.loadFramework(function () {
 						}, msg);
 					})
 					.addCase(Assert.true, [null], 'assert condition was null')
+					.addCase(Assert.true, ['not a boolean'], 'assert condition was not a boolean')
 					.addCase(Assert.false, [null], 'assert condition was null')
+					.addCase(Assert.false, ['not a boolean'], 'assert condition was not a boolean')
 					.addCase(Assert.instance, [null, String], 'object argument was null')
 					.addCase(Assert.instance, ['', null], 'class argument was null')
 					.addCase(Assert.throws, [null, Error], 'first argument should be a function')
@@ -57,6 +59,30 @@ JTF.loadFramework(function () {
 					.addCase(Assert.instance, ['', null], 'class argument was null')
 					.addCase(Assert.not.throws, [null, Error], 'first argument should be a function');
 				},
+
+				/*'Should fail with the expected message when fail message is not a string': function (TestCase) {
+					TestCase(function (assert) {
+						assertFail(function () {
+							assert();
+						}, 'blah');
+					})
+					.addCase(Assert.true)
+					.addCase(Assert.false)
+					.addCase(Assert.null)
+					.addCase(Assert.equal)
+					.addCase(Assert.equiv)
+					.addCase(Assert.greater)
+					.addCase(Assert.less)
+					.addCase(Assert.instance)
+					.addCase(Assert.type)
+					.addCase(Assert.throws)
+					.addCase(Assert.not.null)
+					.addCase(Assert.not.equal)
+					.addCase(Assert.not.equiv)
+					.addCase(Assert.not.instance)
+					.addCase(Assert.not.type)
+					.addCase(Assert.not.throws);
+				},*/
 
 				'Assert.[not.]type should fail with the expected message when invalid arguments are supplied': function (TestCase) {
 					TestCase(function (assert, args, msg) {

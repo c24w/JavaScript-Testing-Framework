@@ -69,9 +69,9 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['true'] = function (condition, optionalInfo) {
 		assertArgs(1, 2);
-		if (condition === null)
-			throw new AssertException('assert condition was null');
-		if (!condition) {
+		if (condition === null) throw new AssertException('assert condition was null');
+		if (typeof condition !== 'boolean') throw new AssertException('assert condition was not a boolean');
+		if (condition === false) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
 		}
@@ -79,9 +79,9 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['false'] = function (condition, optionalInfo) {
 		assertArgs(1, 2);
-		if (condition === null)
-			throw new AssertException('assert condition was null');
-		Assert.true(!condition, optionalInfo);
+		if (condition === null) throw new AssertException('assert condition was null');
+		if (typeof condition !== 'boolean') throw new AssertException('assert condition was not a boolean');
+		Assert.true(condition === false, optionalInfo);
 	};
 
 	Assert['null'] = function (subject, optionalInfo) {

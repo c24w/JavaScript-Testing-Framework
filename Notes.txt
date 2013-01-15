@@ -57,3 +57,10 @@ Assert instance checks no longer using toString.call() with regex to extract typ
 
 if setup fails, test should fail
 admin page? launch all tests; stop all tests
+
+handle errors in html
+assert instance of collection
+remove sugary assert tests? just test that they delegate correctly - switch in mock assert then switch back
+Assert undefined
+greater equal etc
+check assert condition / other args for undefined
