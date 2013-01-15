@@ -79,6 +79,8 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['false'] = function (condition, optionalInfo) {
 		assertArgs(1, 2);
+		if (condition === null)
+			throw new AssertException('assert condition was null');
 		Assert.true(!condition, optionalInfo);
 	};
 
@@ -128,8 +130,8 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.instance = function (obj, expectedClass, optionalInfo) {
 		assertArgs(2, 3);
-		Assert.not.null(obj, optionalInfo);
-		Assert.not.null(expectedClass, optionalInfo);
+		Assert.not.null(obj, optionalInfo || 'object argument was null');
+		Assert.not.null(expectedClass, optionalInfo || 'class argument was null');
 		try {
 			Assert.true(obj instanceof expectedClass);
 		}
@@ -143,7 +145,7 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.type = function (obj, type, optionalInfo) {
 		assertArgs(2, 3);
-		Assert.instance(type, String);
+		Assert.instance(type, String, optionalInfo || 'type argument should be a string');
 		var actualType = typeof obj;
 		var info = optionalInfo || buildMessage(actualType, type);
 		Assert.equal(actualType, type, info);
@@ -151,6 +153,7 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert.throws = function (func, expectedException, optionalInfo) {
 		assertArgs(1, 3);
+		Assert.instance(func, Function, optionalInfo || 'first argument should be a function');
 		if (typeof expectedException === 'string' && typeof optionalInfo === 'undefined') {
 			optionalInfo = expectedException;
 			expectedException = undefined;
@@ -202,6 +205,8 @@ JTF.namespace('Assert', function (Assert) {
 
 		AssertNot.instance = function (obj, objClass, optionalInfo) {
 			assertArgs(2, 3);
+			Assert.not.null(obj, optionalInfo || 'object argument was null');
+			Assert.not.null(objClass, optionalInfo || 'class argument was null');
 			var actualClass = obj.constructor.name;
 			var shouldNotBeThisClass = objClass.name;
 			var info = optionalInfo || buildMessage(actualClass, 'not ' + shouldNotBeThisClass);
@@ -210,6 +215,7 @@ JTF.namespace('Assert', function (Assert) {
 
 		AssertNot.type = function (obj, type, optionalInfo) {
 			assertArgs(2, 3);
+			Assert.instance(type, String, optionalInfo || 'type argument should be a string');
 			var actualType = typeof obj;
 			var info = optionalInfo || buildMessage(actualType, 'not ' + type);
 			Assert.not.equal(actualType, type, info);
@@ -217,6 +223,7 @@ JTF.namespace('Assert', function (Assert) {
 
 		AssertNot.throws = function (func, unthrownException, optionalInfo) {
 			assertArgs(1, 3);
+			Assert.instance(func, Function, optionalInfo || 'first argument should be a function');
 			if (typeof unthrownException === 'string' && typeof optionalInfo === 'undefined') {
 				optionalInfo = unthrownException;
 				unthrownException = undefined;

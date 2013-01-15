@@ -19,7 +19,7 @@ JTF.loadFramework(function () {
 
 			new JTF.TestFixture('Invalid method calls', {
 				'Should fail with the expected message when no arguments are supplied': function (TestCase) {
-					TestCase(function (assert, minArgs, maxArgs) {
+					TestCase(function (assert, minArgs) {
 						assertFail(function () {
 							assert();
 						}, 'assertion expected at least {0} argument{1}'.format(minArgs, minArgs === 1 ? '' : 's'));
@@ -43,23 +43,73 @@ JTF.loadFramework(function () {
 				},
 
 				'Should fail with the expected message when null arguments are supplied': function (TestCase) {
-					assertFail(function () { Assert.true(null); }, 'assert condition was null');
+					TestCase(function (assert, args, msg) {
+						assertFail(function () {
+							assert.apply(null, args);
+						}, msg);
+					})
+					.addCase(Assert.true, [null], 'assert condition was null')
+					.addCase(Assert.false, [null], 'assert condition was null')
+					.addCase(Assert.instance, [null, String], 'object argument was null')
+					.addCase(Assert.instance, ['', null], 'class argument was null')
+					.addCase(Assert.throws, [null, Error], 'first argument should be a function')
+					.addCase(Assert.not.instance, [null, String], 'object argument was null')
+					.addCase(Assert.instance, ['', null], 'class argument was null')
+					.addCase(Assert.not.throws, [null, Error], 'first argument should be a function');
 				},
 
-				'Assert.equal should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-					/*	assertFail(function () {
-							TestCase(Assert.equal)
-								.addCase()
-								.addCase(1);
-						}, 'assertion expected 2 or more arguments');*/
+				'Assert.[not.]type should fail with the expected message when invalid arguments are supplied': function (TestCase) {
+					TestCase(function (assert, args, msg) {
+						assertFail(function () {
+							assert.apply(null, args);
+						}, msg);
+					})
+					.addCase(Assert.not.type, [123, 123], 'type argument should be a string')
+					.addCase(Assert.type, [123, 123], 'type argument should be a string');
 				},
 
-				'Assert.equiv should fail with the expected message when invalid arguments are supplied': function (TestCase) {
-					/*assertFail(function () {
-						TestCase(Assert.equiv)
-							.addCase()
-							.addCase(1);
-					}, 'assertion expected 2 or more arguments');*/
+				'Assert.greater should fail for non-numeric first value': function (TestCase) {
+					TestCase(function (data, type) {
+						assertFail(function () {
+							Assert.greater(data, 1, genericFailMsg);
+						}, 'first argument: expected: number found: ' + type);
+					})
+					.addCase(false, 'boolean')
+					.addCase('hi', 'string')
+					.addCase(null, 'null');
+				},
+
+				'Assert.greater should fail for non-numeric second value': function (TestCase) {
+					TestCase(function (data, type) {
+						assertFail(function () {
+							Assert.greater(1, data, genericFailMsg);
+						}, 'second argument: expected: number found: ' + type);
+					})
+					.addCase(false, 'boolean')
+					.addCase('hi', 'string')
+					.addCase(null, 'null');
+				},
+
+				'Assert.less should fail for non-numeric first value': function (TestCase) {
+					TestCase(function (data, type) {
+						assertFail(function () {
+							Assert.less(data, 1, genericFailMsg);
+						}, 'first argument: expected: number found: ' + type);
+					})
+					.addCase(false, 'boolean')
+					.addCase('hi', 'string')
+					.addCase(null, 'null');
+				},
+
+				'Assert.less should fail for non-numeric second value': function (TestCase) {
+					TestCase(function (data, type) {
+						assertFail(function () {
+							Assert.less(1, data, genericFailMsg);
+						}, 'second argument: expected: number found: ' + type);
+					})
+					.addCase(false, 'boolean')
+					.addCase('hi', 'string')
+					.addCase(null, 'null');
 				}
 			}),
 
@@ -303,26 +353,6 @@ JTF.loadFramework(function () {
 					.addCase(0.5, 1)
 					.addCase(-1, 1);
 				},
-				'Assert.greater should fail for non-numeric first value': function (TestCase) {
-					TestCase(function (data, type) {
-						assertFail(function () {
-							Assert.greater(data, 1, genericFailMsg);
-						}, 'first argument: expected: number found: ' + type);
-					})
-					.addCase(false, 'boolean')
-					.addCase('hi', 'string')
-					.addCase(null, 'null');
-				},
-				'Assert.greater should fail for non-numeric second value': function (TestCase) {
-					TestCase(function (data, type) {
-						assertFail(function () {
-							Assert.greater(1, data, genericFailMsg);
-						}, 'second argument: expected: number found: ' + type);
-					})
-					.addCase(false, 'boolean')
-					.addCase('hi', 'string')
-					.addCase(null, 'null');
-				},
 
 				'Assert.that(*).is.greater.than(*) should pass for true conditions': function () {
 					assertPass(function () {
@@ -368,26 +398,6 @@ JTF.loadFramework(function () {
 					.addCase(1, 0)
 					.addCase(1, 0.5)
 					.addCase(1, -1);
-				},
-				'Assert.less should fail for non-numeric first value': function (TestCase) {
-					TestCase(function (data, type) {
-						assertFail(function () {
-							Assert.less(data, 1, genericFailMsg);
-						}, 'first argument: expected: number found: ' + type);
-					})
-					.addCase(false, 'boolean')
-					.addCase('hi', 'string')
-					.addCase(null, 'null');
-				},
-				'Assert.less should fail for non-numeric second value': function (TestCase) {
-					TestCase(function (data, type) {
-						assertFail(function () {
-							Assert.less(1, data, genericFailMsg);
-						}, 'second argument: expected: number found: ' + type);
-					})
-					.addCase(false, 'boolean')
-					.addCase('hi', 'string')
-					.addCase(null, 'null');
 				},
 
 				'Assert.that(*).is.less.than(*) should pass for true conditions': function (TestCase) {
