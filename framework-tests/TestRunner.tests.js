@@ -7,8 +7,8 @@ JTF.loadFramework(function () {
 
 		function addTrace(t) { trace[trace.length] = t }
 
-		function dataLengthError(type) {
-			return 'wrong amount of {0} data received'.format(type);
+		function assertDataLength(desc, act, exp) {
+			Assert.equal(act, exp, '{0} - expected: {2}, found: {1}'.format(desc, act, exp));
 		}
 
 		var fixtures = [
@@ -17,38 +17,50 @@ JTF.loadFramework(function () {
 
 				FIXTURE_SETUP: function () {
 					MockTestFixture = new TestFixture('Mock test fixture', {
-						'Passing test 1': function () { JTF.Assert.true(true) },
-						'Passing test 2': function () { JTF.Assert.true(true) },
-						'Passing test 3': function () { JTF.Assert.true(true) },
-						'Failing test 1': function () { JTF.Assert.true(false) },
-						'Failing test 2': function () { JTF.Assert.true(false) },
-						'Failing test 3': function () { JTF.Assert.true(false) }
+						'Passing test 1': function () { JTF.Assert.true(true); },
+						'Passing test 2': function () { JTF.Assert.true(true); },
+						'Passing test 3': function () { JTF.Assert.true(true); },
+						'Failing test 1': function () { JTF.Assert.true(false); },
+						'Failing test 2': function () { JTF.Assert.true(false); },
+						'Failing test 3': function () { JTF.Assert.true(false); },
+						'Erroneous test 1': function () { throw new Error('failing test 1'); },
+						'Erroneous test 2': function () { throw new Error('failing test 2'); }
 					});
 
 					MockTestHandler = {
 						fixtureEvents: { start: false, end: false },
-						receivedData: { desc: [], passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], noPasses: null, noFails: null },
+						receivedData: { desc: null, passedTestNames: [], failedTestsNames: [], failedTestsMsgs: [], erroneousTestsNames: [], erroneousTestsErrors: [], numPasses: null, numFails: null, numTestErrors: null },
 						handle: function (event) {
 							var args = Array.prototype.slice.call(arguments, 1);
+							var recData = this.receivedData;
 							switch (event) {
 								case evt.FIXTURE.START:
 									this.fixtureEvents.start = true;
 									break;
 								case evt.FIXTURE.DESC:
-									this.receivedData.desc = args;
+									recData.desc = args[0];
 									break;
 								case evt.TEST.PASS:
-									var index = this.receivedData.passedTestNames.length;
-									this.receivedData.passedTestNames[index] = args[0];
+									var passedTests = recData.passedTestNames;
+									var index = passedTests.length;
+									passedTests[index] = args[0];
 									break;
 								case evt.TEST.FAIL:
-									var index = this.receivedData.failedTestsNames.length;
-									this.receivedData.failedTestsNames[index] = args[0];
-									this.receivedData.failedTestsMsgs[index] = args[1];
+									var failedTests = recData.failedTestsNames;
+									var index = failedTests.length;
+									failedTests[index] = args[0];
+									recData.failedTestsMsgs[index] = args[1];
+									break;
+								case evt.TEST.ERROR:
+									var errorTestNames = recData.erroneousTestsNames;
+									var index = errorTestNames.length;
+									errorTestNames[index] = args[0];
+									recData.erroneousTestsErrors[index] = args[1];
 									break;
 								case evt.FIXTURE.STATS:
-									this.receivedData.noPasses = args[0];
-									this.receivedData.noFails = args[1];
+									recData.numPasses = args[0];
+									recData.numFails = args[1];
+									recData.numTestErrors = args[2];
 									break;
 								case evt.FIXTURE.END:
 									this.fixtureEvents.end = true;
@@ -61,19 +73,16 @@ JTF.loadFramework(function () {
 				},
 
 				'Should send fixture start event to the TestHandler': function () {
-					JTF.Assert.true(MockTestHandler.fixtureEvents.start, 'start event was not received/processed in TestHandler');
+					Assert.true(MockTestHandler.fixtureEvents.start, 'start event was not received/processed in TestHandler');
 				},
 
 				'Should send fixture description event and data to the TestHandler': function () {
-					var fixtureName = 'Mock test fixture';
-					var data = MockTestHandler.receivedData.desc;
-					Assert.equal(data.length, 1, dataLengthError('description'));
-					Assert.equal(data[0], fixtureName);
+					Assert.equal(MockTestHandler.receivedData.desc, 'Mock test fixture');
 				},
 
 				'Should send all test pass events and data to the TestHandler': function () {
 					var data = MockTestHandler.receivedData.passedTestNames;
-					Assert.equal(data.length, 3, dataLengthError('passed test'));
+					assertDataLength('number of passed tests', data.length, 3);
 					for (var i = 0; i < data.length;)
 						Assert.equal(data[i], 'Passing test ' + (++i));
 				},
@@ -81,8 +90,8 @@ JTF.loadFramework(function () {
 				'Should send all test fail events and data to the TestHandler': function () {
 					var testNames = MockTestHandler.receivedData.failedTestsNames;
 					var testMsgs = MockTestHandler.receivedData.failedTestsMsgs;
-					Assert.equal(testNames.length, 3, dataLengthError('failed test names'));
-					Assert.equal(testMsgs.length, 3, dataLengthError('failed test messages'));
+					assertDataLength('number of failed test names', testNames.length, 3);
+					assertDataLength('number of failed test messages', testMsgs.length, 3);
 					for (var i = 0; i < 3; i++) {
 						Assert.equal(testNames[i], 'Failing test ' + (i + 1));
 						Assert.equal(testMsgs[i], Assert.DEFAULT_FAIL_MESSAGE);
@@ -90,12 +99,13 @@ JTF.loadFramework(function () {
 				},
 
 				'Should send fixture stats event and data to the TestHandler': function () {
-					Assert.equal(MockTestHandler.receivedData.noPasses, 3, dataLengthError('number of passes'));
-					Assert.equal(MockTestHandler.receivedData.noFails, 3, dataLengthError('number of fails'));
+					assertDataLength('number of passes', MockTestHandler.receivedData.numPasses, 3);
+					assertDataLength('number of fails', MockTestHandler.receivedData.numFails, 3);
+					assertDataLength('number of test errors', MockTestHandler.receivedData.numTestErrors, 2);
 				},
 
 				'Should send fixture end event to the TestHandler': function () {
-					JTF.Assert.true(MockTestHandler.fixtureEvents.end, 'end event was not received/processed in TestHandler');
+					Assert.true(MockTestHandler.fixtureEvents.end, 'end event was not received/processed in TestHandler');
 				}
 
 			}),
@@ -147,7 +157,7 @@ JTF.loadFramework(function () {
 					Assert.equal(actualError, expectedError);
 				},
 
-				'Should send test error event and data to the TestHandler': function () {////////
+				'Should send test error event and data to the TestHandler': function () {
 					var expectedError = new Error('Test fail error message'),
 						expectedTestName = 'Failing test name',
 						actualTestName, actualError;

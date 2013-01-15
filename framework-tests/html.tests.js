@@ -161,7 +161,7 @@ JTF.loadFramework(function () {
 				'Test fixture > header > results contains the value of getStatsLine': function () {
 					new TestRunner(new TestFixture()).run(htmlHandler);
 					var result = dummyRootEl.children[1].children[0].children[1];
-					assertInnerHtml(result, JTF.HTML.getStatsLine(0, 0));
+					assertInnerHtml(result, JTF.HTML.getStatsLine(0, 0, 0));
 				}
 
 			})
