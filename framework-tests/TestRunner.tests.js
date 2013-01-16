@@ -40,7 +40,7 @@ JTF.loadFramework(function () {
 								case evt.FIXTURE.DESC:
 									recData.desc = args[0];
 									break;
-								case evt.TEST.PASS:
+								case evt.TEST.PASS: 
 									var passedTests = recData.passedTestNames;
 									var index = passedTests.length;
 									passedTests[index] = args[0];

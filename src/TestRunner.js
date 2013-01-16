@@ -44,18 +44,17 @@ JTF.namespaceAtRoot(function (JTF) {
 			if (!testFixtures) testFixtures = [];
 			else if (!(testFixtures instanceof Array)) testFixtures = [testFixtures];
 
-			var sendEvent = testEventHandler.handle;
-
+			var sendEvent = function () { testEventHandler.handle.apply(testEventHandler, arguments); };
 			sendEvent(evt.BATCH.START);
 
 			for (var i = 0; i < testFixtures.length; i++) {
 				var testFixture = testFixtures[i];
 
-				testEventHandler.handle(evt.FIXTURE.START);
+				sendEvent(evt.FIXTURE.START);
 
 				var passes = 0, fails = 0, testErrors = 0;
 				var desc = formatDesc(testFixture.getDescription());
-				testEventHandler.handle(evt.FIXTURE.DESC, desc);
+				sendEvent(evt.FIXTURE.DESC, desc);
 
 				var tests = testFixture.getTests();
 
@@ -64,7 +63,7 @@ JTF.namespaceAtRoot(function (JTF) {
 						tests.FIXTURE_SETUP();
 					}
 					catch (e) {
-						testEventHandler.handle(evt.FIXTURE.ERROR, e);
+						sendEvent(evt.FIXTURE.ERROR, e);
 					}
 					delete tests.FIXTURE_SETUP;
 				}
@@ -76,25 +75,25 @@ JTF.namespaceAtRoot(function (JTF) {
 					runSetup(testSetup, sendEvent, testName);
 					try {
 						tests[testName](JTF.TestCase);
-						testEventHandler.handle(evt.TEST.PASS, testName);
+						sendEvent(evt.TEST.PASS, testName);
 						passes++;
 					}
 					catch (e) {
 						if (e instanceof JTF.Assert.AssertException) {
-							testEventHandler.handle(evt.TEST.FAIL, testName, formatMsg(e.message));
+							sendEvent(evt.TEST.FAIL, testName, formatMsg(e.message));
 							fails++;
 						}
 						else {
-							testEventHandler.handle(evt.TEST.ERROR, testName, e);
+							sendEvent(evt.TEST.ERROR, testName, e);
 							testErrors++;
 						}
 					}
 				}
-				testEventHandler.handle(evt.FIXTURE.STATS, passes, fails, testErrors);
-				testEventHandler.handle(evt.FIXTURE.END);
+				sendEvent(evt.FIXTURE.STATS, passes, fails, testErrors);
+				sendEvent(evt.FIXTURE.END);
 			}
 
-			testEventHandler.handle(evt.BATCH.END);
+			sendEvent(evt.BATCH.END);
 
 		};
 	};

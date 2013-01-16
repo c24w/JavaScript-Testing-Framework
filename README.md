@@ -199,6 +199,9 @@ __Terminology__
 				case EVT.FIXTURE.DESC:
 					addDescription(args[0]);
 					break;
+				case EVT.TEST.SETUP.ERROR:
+					handleTestError(args[0]);
+					break;
 				case EVT.TEST.PASS:
 					if(optionalConfig.ShowPassedTests === true)
 						addPassedTest(args[0]);
