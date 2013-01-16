@@ -20,6 +20,18 @@ body {
 	margin: 0.5em 0;
 }
 
+	.testfixture.passed {
+		background: #F5FAF5;
+	}
+
+	.testfixture.failed {
+		background: #FAF5F5;
+	}
+
+	.testfixture.withErrors {
+		background: #FFF3D6;
+	}
+
 	.testfixture .tests {
 		box-shadow: inset 0 0 2px #999;
 	}
@@ -56,14 +68,6 @@ body {
 			font-style: italic;
 			float: right;
 		}
-
-	.testfixture.passed {
-		background: #F5FAF5;
-	}
-
-	.testfixture.failed {
-		background: #FAF5F5;
-	}
 
 .test.fail {
 	box-shadow: inset 0 0 2px #999;

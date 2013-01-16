@@ -68,3 +68,10 @@ doc testErrors
 extract actual and expected inside AssertException
 yellow favicon
 handle both types of setup errors
+html-tools hasClass add/removeClass
+
+break into sub-projects
+ - assert
+ - loadResources
+ - html tools
+ - namespacing

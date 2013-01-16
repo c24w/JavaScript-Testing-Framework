@@ -40,18 +40,26 @@ JTF.namespaceAtRoot(function (JTF) {
 
 	JTF.TestRunner = function (testFixtures) {
 		this.run = function (testEventHandler) {
+			var sendEvent = function () { testEventHandler.handle.apply(testEventHandler, arguments); };
 
 			if (!testFixtures) testFixtures = [];
 			else if (!(testFixtures instanceof Array)) testFixtures = [testFixtures];
 
-			var sendEvent = function () { testEventHandler.handle.apply(testEventHandler, arguments); };
 			sendEvent(evt.BATCH.START);
 
 			for (var i = 0; i < testFixtures.length; i++) {
-				var testFixture = testFixtures[i];
+				/*new TestFixtureRunner(testFixtures[i])
+					.start(function (evt) {
+						sendEvent(evt.FIXTURE.START);
+					})
+					.desc()
+					.stats()
+					.end()
+					.error();*/
 
 				sendEvent(evt.FIXTURE.START);
 
+				var testFixture = testFixtures[i];
 				var passes = 0, fails = 0, testErrors = 0;
 				var desc = formatDesc(testFixture.getDescription());
 				sendEvent(evt.FIXTURE.DESC, desc);
@@ -98,6 +106,72 @@ JTF.namespaceAtRoot(function (JTF) {
 
 		};
 	};
+
+
+
+	//function TestFixtureRunner(fixture) {
+
+	//	var testFixture = testFixtures[i];
+	//	var passes = 0, fails = 0, testErrors = 0;
+	//	var desc = formatDesc(testFixture.getDescription());
+	//	sendEvent(evt.FIXTURE.DESC, desc);
+
+	//	var tests = testFixture.getTests();
+
+	//	if (tests.FIXTURE_SETUP) {
+	//		try {
+	//			tests.FIXTURE_SETUP();
+	//		}
+	//		catch (e) {
+	//			sendEvent(evt.FIXTURE.ERROR, e);
+	//		}
+	//		delete tests.FIXTURE_SETUP;
+	//	}
+
+	//	var testSetup = tests.TEST_SETUP;
+	//	if (testSetup) delete tests.TEST_SETUP;
+
+	//	for (var testName in tests) {
+	//		runSetup(testSetup, function (e) {
+	//			sendEvent(evt.TEST.SETUP.ERROR, testName, e);
+	//		});
+	//		new SingleTestRunner(tests, testName)
+	//			.pass(function (passEvent, testName) {
+	//				sendEvent(passEvent, testName);
+	//				passes++;
+	//			})
+	//			.fail(function (failEvent, testName, failMessage) {
+	//				sendEvent(failEvent, testName, formatMsg(failMessage));
+	//				fails++;
+	//			})
+	//			.error(function (errorEvent, testName, e) {
+	//				sendEvent(errorEvent, testName, e);
+	//				testErrors++;
+	//			});
+
+	//	}
+		
+	//	this.start = function (callback) {
+	//		callback(evt.FIXTURE.START);
+	//		return this;
+	//	};
+	//	this.desc = function () {
+	//		return this;
+	//	};
+	//	this.error = function () {
+	//		return this;
+	//	};
+	//	this.stats = function () {
+	//		sendEvent(evt.FIXTURE.STATS, passes, fails, testErrors);
+	//		return this;
+	//	};
+	//	this.end = function () {
+	//		sendEvent(evt.FIXTURE.END);
+	//		return this;
+	//	};
+	//}
+
+
 
 	function SingleTestRunner(tests, testName) {
 		var test = tests[testName];

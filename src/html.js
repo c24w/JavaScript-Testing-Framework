@@ -25,7 +25,12 @@ JTF.namespace('HTML', function (HTML) {
 	}
 
 	HTML.TestHandler = function (configuration) {
-		var batchHasFails = false;
+		var PAGE_STATUS = {
+			PASS: 0,
+			FAIL: 1,
+			ERROR: 2
+		};
+		var pageStatus;
 
 		JTF.setState('', JTF.resources.progressIcon);
 		var TestRunner = JTF.TestRunner;
@@ -107,7 +112,9 @@ JTF.namespace('HTML', function (HTML) {
 		}
 
 		function batchEnd() {
-			if (batchHasFails) {
+			if (pageStatus === PAGE_STATUS.PASS)
+				JTF.setState('', JTF.resources.passIcon);
+			else if (pageStatus === PAGE_STATUS.FAIL) {
 				JTF.setState('', JTF.resources.failIcon);
 				if (currentConfig.notifyOnFail) {
 					if (isSetToReRun()) {
@@ -117,8 +124,9 @@ JTF.namespace('HTML', function (HTML) {
 					else showFailsAlert();
 				}
 			}
-			else JTF.setState('', JTF.resources.passIcon);
-			if (currentConfig.runInterval > 0)
+			else if (pageStatus === PAGE_STATUS.ERROR)
+				JTF.setState('', JTF.resources.errorIcon);
+			if (isSetToReRun())
 				reRunTimer = setTimeout(function () { JTF.reload(); }, currentConfig.runInterval);
 		}
 
@@ -196,18 +204,27 @@ JTF.namespace('HTML', function (HTML) {
 		}
 
 		function statsOutputter(passes, fails, testErrors) {
+			var hasFails = fails > 0;
 			var hasErrors = testErrors > 0;
-			var hasFailsOrErrors = fails > 0 || hasErrors;
-			if (fixtureShouldBeCollapsed(hasFailsOrErrors))
+			if (fixtureShouldBeCollapsed(hasFails || hasErrors))
 				fixture.className += ' collapsed';
-			fixture.className += hasFailsOrErrors ? ' failed' : ' passed';
-			if (fails === 0 && !currentConfig.showPassedFixtures)
+			fixture.className += hasErrors ? ' withErrors' : hasFails ? ' failed' : ' passed';
+			if (!hasFails && !currentConfig.showPassedFixtures)
 				fixture.className += ' hidden';
 			var result = HTML.makeDiv('result');
 			HTML.addTextTo(result, HTML.getStatsLine(passes, fails, testErrors));
 			HTML.addTo(header, result);
-			if (fails > 0) batchHasFails = true;
+			if (typeof pageStatus === 'undefined') {
+				pageStatus = getPageStatus(hasErrors, hasFails);
+			}
 			header.onclick = headerOnclickClosure(fixture);
+		}
+
+		function getPageStatus(hasErrors, hasFails) {
+			var ps = PAGE_STATUS;
+			if (hasErrors) return ps.ERROR;
+			if (hasFails) return ps.FAIL;
+			return ps.PASS;
 		}
 
 		function headerOnclickClosure(fixture) {
@@ -220,14 +237,14 @@ JTF.namespace('HTML', function (HTML) {
 			}
 		}
 
-		function fixtureShouldBeCollapsed(hasFails) {
+		function fixtureShouldBeCollapsed(hasFailsOrErrors) {
 			switch (currentConfig.collapse) {
 				case CONFIG.COLLAPSE.NONE:
 					return false;
 				case CONFIG.COLLAPSE.ALL:
 					return true;
 				case CONFIG.COLLAPSE.PASSES:
-					return !hasFails;
+					return !hasFailsOrErrors;
 			}
 		}
 
