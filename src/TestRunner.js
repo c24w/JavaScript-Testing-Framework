@@ -100,7 +100,7 @@ JTF.namespaceAtRoot(function (JTF) {
 	};
 
 	function SingleTestRunner(test) {
-		var result, resultData, pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
+		var result, resultCallback, resultData = [], pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
 		try {
 			test(JTF.TestCase);
 			result = pass;
@@ -108,27 +108,31 @@ JTF.namespaceAtRoot(function (JTF) {
 		catch (e) {
 			if (e instanceof JTF.Assert.AssertException) {
 				result = fail;
-				resultData = e.message;
+				resultData = [e.message];
 			}
 			else {
 				result = error;
-				resultData = e;
+				resultData = [e];
 			}
 		}
+
 		this.pass = function (callback) {
-			if (resultWas(pass)) callback(pass);
+			ifResultDoCallback(pass, callback);
 			return this;
 		};
 		this.fail = function (callback) {
-			if (resultWas(fail)) callback(fail, resultData);
+			ifResultDoCallback(fail, callback);
 			return this;
 		};
 		this.error = function (callback) {
-			if (resultWas(error)) callback(error, resultData);
+			ifResultDoCallback(error, callback);
 			return this;
 		};
-		function resultWas(expectedResult) {
-			return result === expectedResult;
+		function ifResultDoCallback(expectedResult, callback) {
+			if (result === expectedResult) {
+				resultData.splice(0, 0, result);
+				callback.apply(resultCallback, resultData);
+			}
 		}
 	}
 
