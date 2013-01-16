@@ -75,16 +75,16 @@ JTF.namespaceAtRoot(function (JTF) {
 					runSetup(testSetup, function (e) {
 						sendEvent(evt.TEST.SETUP.ERROR, testName, e);
 					});
-					new SingleTestRunner(tests[testName])
-						.pass(function (passEvent) {
+					new SingleTestRunner(tests, testName)
+						.pass(function (passEvent, testName) {
 							sendEvent(passEvent, testName);
 							passes++;
 						})
-						.fail(function (failEvent, failMessage) {
+						.fail(function (failEvent, testName, failMessage) {
 							sendEvent(failEvent, testName, formatMsg(failMessage));
 							fails++;
 						})
-						.error(function (errorEvent, e) {
+						.error(function (errorEvent, testName, e) {
 							sendEvent(errorEvent, testName, e);
 							testErrors++;
 						});
@@ -99,8 +99,10 @@ JTF.namespaceAtRoot(function (JTF) {
 		};
 	};
 
-	function SingleTestRunner(test) {
-		var result, resultCallback, resultData = [], pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
+	function SingleTestRunner(tests, testName) {
+		var test = tests[testName];
+		var result, resultCallback, resultData = [];
+		var pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
 		try {
 			test(JTF.TestCase);
 			result = pass;
@@ -108,30 +110,29 @@ JTF.namespaceAtRoot(function (JTF) {
 		catch (e) {
 			if (e instanceof JTF.Assert.AssertException) {
 				result = fail;
-				resultData = [e.message];
+				resultData = e.message;
 			}
 			else {
 				result = error;
-				resultData = [e];
+				resultData = e;
 			}
 		}
 
 		this.pass = function (callback) {
-			ifResultDoCallback(pass, callback);
+			ifResultUseCallback(pass, callback);
 			return this;
 		};
 		this.fail = function (callback) {
-			ifResultDoCallback(fail, callback);
+			ifResultUseCallback(fail, callback);
 			return this;
 		};
 		this.error = function (callback) {
-			ifResultDoCallback(error, callback);
+			ifResultUseCallback(error, callback);
 			return this;
 		};
-		function ifResultDoCallback(expectedResult, callback) {
+		function ifResultUseCallback(expectedResult, callback) {
 			if (result === expectedResult) {
-				resultData.splice(0, 0, result);
-				callback.apply(resultCallback, resultData);
+				callback.apply(callback, [result, testName, resultData]);
 			}
 		}
 	}
