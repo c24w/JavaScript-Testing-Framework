@@ -72,22 +72,23 @@ JTF.namespaceAtRoot(function (JTF) {
 				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
-					runSetup(testSetup, sendEvent, testName);
-					try {
-						tests[testName](JTF.TestCase);
-						sendEvent(evt.TEST.PASS, testName);
-						passes++;
-					}
-					catch (e) {
-						if (e instanceof JTF.Assert.AssertException) {
-							sendEvent(evt.TEST.FAIL, testName, formatMsg(e.message));
+					runSetup(testSetup, function (e) {
+						sendEvent(evt.TEST.SETUP.ERROR, testName, e);
+					});
+					new SingleTestRunner(tests[testName])
+						.pass(function (passEvent) {
+							sendEvent(passEvent, testName);
+							passes++;
+						})
+						.fail(function (failEvent, failMessage) {
+							sendEvent(failEvent, testName, formatMsg(failMessage));
 							fails++;
-						}
-						else {
-							sendEvent(evt.TEST.ERROR, testName, e);
+						})
+						.error(function (errorEvent, e) {
+							sendEvent(errorEvent, testName, e);
 							testErrors++;
-						}
-					}
+						});
+
 				}
 				sendEvent(evt.FIXTURE.STATS, passes, fails, testErrors);
 				sendEvent(evt.FIXTURE.END);
@@ -98,12 +99,45 @@ JTF.namespaceAtRoot(function (JTF) {
 		};
 	};
 
-	function runSetup(setup, sendEvent, testName) {
+	function SingleTestRunner(test) {
+		var result, resultData, pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
+		try {
+			test(JTF.TestCase);
+			result = pass;
+		}
+		catch (e) {
+			if (e instanceof JTF.Assert.AssertException) {
+				result = fail;
+				resultData = e.message;
+			}
+			else {
+				result = error;
+				resultData = e;
+			}
+		}
+		this.pass = function (callback) {
+			if (resultWas(pass)) callback(pass);
+			return this;
+		};
+		this.fail = function (callback) {
+			if (resultWas(fail)) callback(fail, resultData);
+			return this;
+		};
+		this.error = function (callback) {
+			if (resultWas(error)) callback(error, resultData);
+			return this;
+		};
+		function resultWas(expectedResult) {
+			return result === expectedResult;
+		}
+	}
+
+	function runSetup(setup, errorCallback) {
 		try {
 			if (setup) setup();
 		}
 		catch (e) {
-			sendEvent(evt.TEST.SETUP.ERROR, testName, e);
+			errorCallback(e);
 		}
 	}
 
