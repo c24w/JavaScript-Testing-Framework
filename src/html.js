@@ -214,9 +214,7 @@ JTF.namespace('HTML', function (HTML) {
 			var result = HTML.makeDiv('result');
 			HTML.addTextTo(result, HTML.getStatsLine(passes, fails, testErrors));
 			HTML.addTo(header, result);
-			if (typeof pageStatus === 'undefined') {
-				pageStatus = getPageStatus(hasErrors, hasFails);
-			}
+			pageStatus = getPageStatus(hasErrors, hasFails);
 			header.onclick = headerOnclickClosure(fixture);
 		}
 
