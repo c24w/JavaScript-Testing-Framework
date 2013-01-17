@@ -46,25 +46,25 @@ _my\_tests.js_
 
 				'First test': function () {
 					Assert.that(1).equals(2 - 1);
-},
+				},
 
 				'Second test': function () {
 					Assert.equiv(1, '1');
-}
+				}
 		
-};
+			});
 
 			var config = {
-	collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-	showPassedFixtures: true,
-	notifyOnFail: false,
-	runInterval: 10000
-};
+				collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
+				showPassedFixtures: true,
+				notifyOnFail: false,
+				runInterval: 10000
+			};
 
 			JTF.runToHtml(fixture, config);
 
-});
-});
+		});
+	});
 
 Components
 ----------
@@ -89,8 +89,8 @@ _(Example code in the following sections may have prerequisites - see [Typical s
 	var tests = {
 		'Test name 1': function () { /* assertions etc */ },
 		'Test name 2': function () { /* assertions etc */ }
-	// ...
-};
+		// ...
+	};
 
 #### Setup functions
 
@@ -111,20 +111,20 @@ Function names must be unique within an object - functions will overwrite previo
 		this.getValue = function () { return value; };
 		this.increment = function () { value++; };
 		this.reset = function () { value = 0; };
-}
+	}
 
 	var counter, value, Assert;
 
 	new JTF.TestFixture('Counter tests', {
 
-	FIXTURE_SETUP: function () {
-			Assert = JTF.Assert;
-			value = function () { return counter.getValue(); };
-},
+		FIXTURE_SETUP: function () {
+				Assert = JTF.Assert;
+				value = function () { return counter.getValue(); };
+		},
 
-	TEST_SETUP: function () {
-		counter = new Counter();
-	},
+		TEST_SETUP: function () {
+			counter = new Counter();
+		},
 
 		'Should be able to get value': function () {
 			Assert.equal(value(), 0);
@@ -141,7 +141,7 @@ Function names must be unique within an object - functions will overwrite previo
 			Assert.equal(value(), 0);
 		}
 	
-});
+	});
 
 ### TestCase
 
@@ -180,7 +180,7 @@ _`arguments`_ - comma-delimited arguments to be passed to the test function.
 			.addCase([1, 2, 3, 4]);
 		}
 	
-};
+	};
 
 ### TestHandler
 
@@ -254,7 +254,7 @@ Must contain a handle function and then be passed to the [TestRunner](#testrunne
 	new CustomTestHandler({
 		configurable_bool: true,
 		configurable_int: ENUM.STATIC.VALUE
-	// ...
+		// ...
 	});
 
 ### TestRunner
