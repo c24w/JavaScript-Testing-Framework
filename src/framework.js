@@ -6,11 +6,13 @@
 
 	JTF.setState = function (title, iconData) {
 		var favicon;
-		document.title = title;
+		document.title = title.isWhitespace() ? document.title : title;
 		var linkEls = document.head.getElementsByTagName('link');
 		for (var i = 0; i < linkEls.length; i++) {
-			if (linkEls[i].rel === 'shortcut icon')
+			if (linkEls[i].rel === 'shortcut icon') {
 				favicon = linkEls[i];
+				break;
+			}
 		}
 		if (!favicon) {
 			favicon = document.createElement('link');
