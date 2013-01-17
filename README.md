@@ -46,25 +46,25 @@ _my\_tests.js_
 
 				'First test': function () {
 					Assert.that(1).equals(2 - 1);
-				},
+},
 
 				'Second test': function () {
 					Assert.equiv(1, '1');
-				}
+}
 		
-			};
+};
 
 			var config = {
-				collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-				showPassedFixtures: true,
-				notifyOnFail: false,
-				runInterval: 10000
-			};
+	collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
+	showPassedFixtures: true,
+	notifyOnFail: false,
+	runInterval: 10000
+};
 
 			JTF.runToHtml(fixture, config);
 
-		});
-	});
+});
+});
 
 Components
 ----------
@@ -80,17 +80,17 @@ _(Example code in the following sections may have prerequisites - see [Typical s
 
 #### Usage
 
-	new TestFixture( string description, object tests )
+	new TestFixture( String description, Object tests )
 
-`string`_`description`_ - high-level description of behaviour being tested in the fixture.
+`String`_`description`_ - high-level description of behaviour being tested in the fixture.
 
-`object`_`tests`_ - object containing functions which represent tests.  For example:
+`Object`_`tests`_ - object containing functions which represent tests.  For example:
 
 	var tests = {
 		'Test name 1': function () { /* assertions etc */ },
 		'Test name 2': function () { /* assertions etc */ }
-		// ...
-	};
+	// ...
+};
 
 #### Setup functions
 
@@ -111,20 +111,20 @@ Function names must be unique within an object - functions will overwrite previo
 		this.getValue = function () { return value; };
 		this.increment = function () { value++; };
 		this.reset = function () { value = 0; };
-	}
+}
 
 	var counter, value, Assert;
 
 	new JTF.TestFixture('Counter tests', {
 
-		FIXTURE_SETUP: function () {
+	FIXTURE_SETUP: function () {
 			Assert = JTF.Assert;
 			value = function () { return counter.getValue(); };
-		},
+},
 
-		TEST_SETUP: function () {
-			counter = new Counter();
-		},
+	TEST_SETUP: function () {
+		counter = new Counter();
+	},
 
 		'Should be able to get value': function () {
 			Assert.equal(value(), 0);
@@ -141,18 +141,18 @@ Function names must be unique within an object - functions will overwrite previo
 			Assert.equal(value(), 0);
 		}
 	
-	});
+});
 
 ### TestCase
 
 #### Usage
 
-	TestCase( function test )
-		.addCase( arguments )
-		.addCase( arguments )
-		...
+TestCase( Function test )
+	.addCase( arguments )
+	.addCase( arguments )
+	...
 
-`function`_`test`_ - delegation to an assertion function or a more complex custom function.
+`Function`_`test`_ - delegation to an assertion function or a more complex custom function.
 
 _`arguments`_ - comma-delimited arguments to be passed to the test function.
 
@@ -180,114 +180,168 @@ _`arguments`_ - comma-delimited arguments to be passed to the test function.
 			.addCase([1, 2, 3, 4]);
 		}
 	
-	};
+};
 
 ### TestHandler
 
-#### Purpose
-
-To handle [test events](#testevents) from the [TestRunner](#testrunner).  Must be passed to the [TestRunner](#testrunner)'s `run` function.
-
 #### Usage
 
-	new TestHandler( object configuration )
+	new TestHandler( Object configuration )
 
-`object`_`configuration`_ - key/value pairs defining configuration, specific to that test handler.
+`Object`_`configuration`_ - key/value pairs defining configuration, specific to that test handler.
 
-#### Example
+#### Notes
 
-	new JTF.HTML.TestHandler({
-		collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
-		showPassedFixtures: true,
-		notifyOnFail: false,
-		runInterval: 10000
-	});
+	Must contain a handle function and then be passed to the [TestRunner](#testrunner)'s `run` function, to receive and handle [test events](#test-events).
 
-#### Creating a custom `TestHandler`
+	#### Example
 
-	CustomTestHandler = function (optionalConfig) {
+		new JTF.HTML.TestHandler({
+			collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES,
+			showPassedFixtures: true,
+			notifyOnFail: false,
+			runInterval: 10000
+		});
 
-		this.handle = function (event) {
-			var EVT = JTF.EVENT;
-			var args = Array.prototype.slice.call(arguments, 1);
-			switch (event) {
-				case EVT.BATCH.START:
-					beginBatch();
-					break;
-				case EVT.FIXTURE.START:
-					createFixture();
-					break;
-				case EVT.FIXTURE.DESC:
-					addDescription(args[0]);
-					break;
-				case EVT.TEST.SETUP.ERROR:
-					handleTestError(args[0]);
-					break;
-				case EVT.TEST.PASS:
-					if(optionalConfig.ShowPassedTests === true)
-						addPassedTest(args[0]);
-					break;
-				case EVT.TEST.FAIL:
-					addFailedTest(args[0], args[1]);
-					break;
-				case EVT.TEST.ERROR:
-					handleTestError(args[0]);
-					break;
-				case EVT.FIXTURE.ERROR:
-					handleFixtureError(args[0]);
-					break;
-				case EVT.FIXTURE.STATS:
-					addStats(args[0], args[1]);
-					break;
-				case EVT.FIXTURE.END:
-					showFixture();
-					break;
-				case EVT.BATCH.END:
-					batchEnd();
-					break;
-			}
+	#### Custom TestHandlers
+
+		CustomTestHandler = function (optionalConfig) {
+
+			setUpWithConfig(optionalConfig);
+
+			this.handle = function (event) {
+				var EVT = JTF.EVENT;
+				var args = Array.prototype.slice.call(arguments, 1);
+				switch (event) {
+					case EVT.BATCH.START:
+						beginBatch();
+						break;
+					case EVT.FIXTURE.START:
+						createFixture();
+						break;
+					case EVT.FIXTURE.DESC:
+						addDescription(args[0]);
+						break;
+					case EVT.TEST.SETUP.ERROR:
+						handleTestError(args[0]);
+						break;
+					case EVT.TEST.PASS:
+						handlePassedTest(args[0]);
+						break;
+					case EVT.TEST.FAIL:
+						handleFailedTest(args[0], args[1]);
+						break;
+					case EVT.TEST.ERROR:
+						handleTestError(args[0], args[1]);
+						break;
+					case EVT.FIXTURE.ERROR:
+						handleFixtureError(args[0]);
+						break;
+					case EVT.FIXTURE.STATS:
+						handleStats(args[0], args[1]);
+						break;
+					case EVT.FIXTURE.END:
+						showFixture();
+						break;
+					case EVT.BATCH.END:
+						batchEnd();
+						break;
+				}
+			};
+
 		};
 
-	};
+		new CustomTestHandler({
+			configurable_bool: true,
+			configurable_int: ENUM.STATIC.VALUE
+			// ...
+		});
 
-#### Test Events
+	### TestRunner
 
-The `TestRunner` will call `TestHandler.handle`, where the first argument passed is the event and any subsequent arguments contain associated data.
-<table>
-<tr><th>Event</th><th>Additional argument(s)</th></tr>
-<tr><td>BATCH.START</td><td>-</td></tr>
-<tr><td>BATCH.END</td><td>-</td></tr>
-<tr><td>FIXTURE.START</td><td>-</td></tr>
-<tr>
-	<td><code>FIXTURE.DESC</code></td>
-	<td><code>string</code> <code><em>description</em></code></td>
-</tr>
-<tr><td>FIXTURE.STATS</td><td><em>integer</em> passes, <em>integer</em> fails</td></tr>
-<tr><td>FIXTURE.ERROR</td><td><em>object</em> error/exception</tr>
-<tr><td>FIXTURE.END</td><td>-</td></tr>
-<tr><td>TEST.PASS</td><td><em>string</em> test name</td></tr>
-<tr><td>TEST.FAIL</td><td><em>string</em> test name, <em>string</em> error message</td></tr>
-<tr><td>TEST.ERROR</td><td><em>object</em> error/exception</tr>
-</table>
+	### Usage
 
-### `TestRunner`
+		new TestRunner( TestFixture testFixture ).run( TestHandler );
+		// or
+		new TestRunner( Array testFixtures ).run( TestHandler );
 
-#### Usage
+	#### Example
 
-	new TestRunner( array of TestFixture or TestFixture ).run( TestHandler );
+		var testFixture = new JTF.TestFixture('Test fixture', {
+			'Test': function () {
+				JTF.Assert.greater(2, 1);
+			}
+		});
 
-#### Example
+		var testHandler = new JTF.HTML.TestHandler({ runInterval: 10000 });
 
-	var testFixture = new JTF.TestFixture('Test fixture', {
-		'Test': function () {
-			JTF.Assert.greater(2, 1);
-		}
-	});
+		new JTF.TestRunner(testFixture).run(testHandler);
 
-	var testHandler = new JTF.HTML.TestHandler({ runInterval: 10000 });
+	### Sugary alternatives
 
-	new JTF.TestRunner(testFixture).run(testHandler);
+		JTF.runToHtml( TestFixture testFixture, optionalConfig );
+		// or
+		JTF.runToHtml( Array testFixtures, optionalConfig );
 
-### Sugary alternatives
+	### Test Events
 
-	JTF.runToHtml( array of TestFixture or TestFixture, JTF.HTML.TestHandler configuration object );
+	#### Usage
+
+		The [TestRunner](#testrunner) calls the `handle` function of a [TestHandler](#testhandler), where the first argument is the event (such as an enum reference) and any subsequent arguments are associated data:
+
+			myTestHandler.handle( event, data )
+
+		#### Example
+
+			myTestHandler.handle(JTF.EVENT.FAIL, testName, failMessage);
+
+		#### Events & data
+
+		<table>
+		<tr>
+			<th>Event</th>
+			<th>Additional argument(s)</th>
+		</tr>
+		<tr>
+			<td><code>BATCH.START</code></td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td><code>BATCH.END</code></td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td><code>FIXTURE.START</code></td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td><code>FIXTURE.DESC</code></td>
+			<td><code>String</code><code><em>description</em></code></td>
+		</tr>
+		<tr>
+			<td><code>FIXTURE.STATS</code></td>
+			<td><code>Number</code><code><em>passes</em></code><br>
+				<code>Number</code><code><em>fails</em></code></td>
+		</tr>
+		<tr>
+			<td><code>FIXTURE.ERROR</code></td>
+			<td><code>Object</code><code><em>error</em></code></td>
+		</tr>
+		<tr>
+			<td><code>FIXTURE.END</code></td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td><code>TEST.PASS</code></td>
+			<td><code>String</code><code><em>testName</em></code></td>
+		</tr>
+		<tr>
+			<td><code>TEST.FAIL</code></td>
+			<td><code>String</code><code><em>testName</em></code><br>
+				<code>String</code><code><em>failMessage</em></code></td>
+		</tr>
+		<tr>
+			<td><code>TEST.ERROR</code></td>
+			<td><code>Object</code><code><em>error</em></code></td>
+		</tr>
+		</table>
