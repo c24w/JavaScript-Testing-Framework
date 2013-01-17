@@ -82,9 +82,9 @@ _(Example code in the following sections may have prerequisites - see [Typical s
 
 	new TestFixture( String description, Object tests )
 
-`String description` - high-level description of behaviour being tested in the fixture.
+`String` `description` - high-level description of behaviour being tested in the fixture.
 
-`Object tests` - object containing functions which represent tests.  For example:
+`Object` `tests` - object containing functions which represent tests.  For example:
 
 	var tests = {
 		'Test name 1': function () { /* assertions etc */ },
@@ -152,7 +152,7 @@ TestCase( Function test )
 	.addCase( arguments )
 	...
 
-`Function test` - delegation to an assertion function or a more complex custom function.
+`Function` `test` - delegation to an assertion function or a more complex custom function.
 
 _`arguments` - comma-delimited arguments to be passed to the test function.
 
@@ -188,7 +188,7 @@ _`arguments` - comma-delimited arguments to be passed to the test function.
 
 	new TestHandler( Object configuration )
 
-`Object configuration` - key/value pairs defining configuration, specific to that test handler.
+`Object` `configuration` - key/value pairs defining configuration, specific to that test handler.
 
 #### Notes
 
