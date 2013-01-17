@@ -69,34 +69,47 @@ _my\_tests.js_
 Components
 ----------
 
-__Terminology__
+- [TestFixture](#testfixture) - a collection of tests
+- [TestCase](#testcase) - varying scenarios for an individual test
+- [TestHandler](#testhandler) - receives test events/data from a TestRunner
+- [TestRunner](#testrunner) - runs TestFixtures, passing events/data to a TestHandler
 
-* [TestFixture](#testfixture) - a collection of tests
-* [TestCase](#testcase) - varying scenarios for an individual test
-* [TestHandler](#testhandler) - receives test events/data from a TestRunner
-* [TestRunner](#testrunner) - runs TestFixtures, passing events/data to a TestHandler
+_(Example code in the following sections may have prerequisites - see [Typical set-up](#typical-set-up).)_
 
-### `TestFixture`
+### TestFixture
 
-##### Usage
+#### Usage
 
 	new TestFixture( string description, object tests )
 
-> _tests ( object )_
-> object containing functions, executed as tests
->
-> Reserved test names:
-> * FIXTURE_SETUP - executed once before anything else in the fixture.
-> * TEST_SETUP - executed once before each test in the fixture.
->
-> _Note: setup behaviour applies regardless of where they appear the fixture._
+`string`_`description`_ - high-level description of behaviour being tested in the fixture.
 
-##### Example
+`object`_`tests`_ - object containing functions which represent tests.  For example:
+
+	var tests = {
+		'Test name 1': function () { /* assertions etc */ },
+		'Test name 2': function () { /* assertions etc */ }
+		// ...
+	};
+
+#### Setup functions
+
+The following test names are reserved for specific behaviour, which apply regardless of where they appear in the fixture:
+
+`FIXTURE_SETUP` - executed once before any tests or other setups in the fixture.
+
+`TEST_SETUP` - executed once just before each test in the fixture.  Does not currently execute between [TestCase](#testcase) cases.
+
+#### Notes
+
+Function names must be unique within an object - functions will overwrite previously declared functions of the same name.  Therefore, test/setup functions will overwrite previously declared functions of the same name.
+
+#### Example
 
 	function Counter() {
 		var value = 0;
 		this.getValue = function () { return value; };
-		this.increment = function (amount) { value += amount; };
+		this.increment = function () { value++; };
 		this.reset = function () { value = 0; };
 	}
 
@@ -117,20 +130,20 @@ __Terminology__
 			Assert.equal(value(), 0);
 		},
 
-		'Should be able to increment value': function () {
-			counter.increment(5);
-			Assert.equal(value(), 5);
+		'Should be able to increment value by one': function () {
+			counter.increment();
+			Assert.equal(value(), 1);
 		},
 
 		'Should be able to reset value to zero': function () {
-			counter.increment(5);
+			counter.increment();
 			counter.reset();
 			Assert.equal(value(), 0);
 		}
 	
 	});
 
-### `TestCase`
+### TestCase
 
 #### Usage
 
@@ -138,6 +151,10 @@ __Terminology__
 		.addCase( arguments )
 		.addCase( arguments )
 		...
+
+`function`_`test`_ - delegation to an assertion function or a more complex custom function.
+
+_`arguments`_ - comma-delimited arguments to be passed to the test function.
 
 #### Example
 
@@ -152,14 +169,12 @@ __Terminology__
 				.addCase('not', 'equiv', 'expected to fail');
 		},
 
-		'Bespoke test function': function (TestCase) {
-			TestCase(
-				function (numbers) {
-					var total = 0;
-					numbers.forEach(function (n) { total += n; });
-					Assert.that(total).is.less.than(10);
-				}
-			)
+		'Custom test function': function (TestCase) {
+			TestCase(function (numbers) {
+				var total = 0;
+				numbers.forEach(function (n) { total += n; });
+				Assert.that(total).is.less.than(10);
+			})
 			.addCase([1, 2])
 			.addCase([1, 2, 3])
 			.addCase([1, 2, 3, 4]);
