@@ -93,12 +93,14 @@ body {
 		background: #FAFAC8;
 	}
 
-		.test.error .name, .test.fail .name {
+		.test.error .name,
+		.test.error .info,
+		.test.fail .name,
+		.test.fail .info {
 			font-weight: bold;
 		}
 
 		.test.error .info, .test.fail .info {
-			font-weight: bold;
 			margin-left: 1em;
 		}
 
