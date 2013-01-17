@@ -154,7 +154,7 @@ TestCase( Function test )
 
 `Function` `test` - delegation to an assertion function or a more complex custom function.
 
-_`arguments` - comma-delimited arguments to be passed to the test function.
+`arguments` - comma-delimited arguments to be passed to the test function.
 
 #### Example
 
