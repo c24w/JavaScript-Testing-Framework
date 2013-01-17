@@ -182,11 +182,17 @@ _`arguments`_ - comma-delimited arguments to be passed to the test function.
 	
 	};
 
-### `TestHandler`
+### TestHandler
+
+#### Purpose
+
+To handle [test events](#testevents) from the [TestRunner](#testrunner).  Must be passed to the [TestRunner](#testrunner)'s `run` function.
 
 #### Usage
 
 	new TestHandler( object configuration )
+
+`object`_`configuration`_ - key/value pairs defining configuration, specific to that test handler.
 
 #### Example
 
@@ -244,7 +250,7 @@ _`arguments`_ - comma-delimited arguments to be passed to the test function.
 
 	};
 
-__Test Events__
+#### Test Events
 
 The `TestRunner` will call `TestHandler.handle`, where the first argument passed is the event and any subsequent arguments contain associated data.
 <table>
@@ -252,7 +258,10 @@ The `TestRunner` will call `TestHandler.handle`, where the first argument passed
 <tr><td>BATCH.START</td><td>-</td></tr>
 <tr><td>BATCH.END</td><td>-</td></tr>
 <tr><td>FIXTURE.START</td><td>-</td></tr>
-<tr><td>FIXTURE.DESC</td><td><em>string</em> description</td></tr>
+<tr>
+	<td><code>FIXTURE.DESC</code></td>
+	<td><code>string</code> <code><em>description</em></code></td>
+</tr>
 <tr><td>FIXTURE.STATS</td><td><em>integer</em> passes, <em>integer</em> fails</td></tr>
 <tr><td>FIXTURE.ERROR</td><td><em>object</em> error/exception</tr>
 <tr><td>FIXTURE.END</td><td>-</td></tr>
