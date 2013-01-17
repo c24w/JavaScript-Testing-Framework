@@ -58,9 +58,9 @@ JTF.namespace('Assert', function (Assert) {
 	function assertArgs(lowerBound, upperBound) {
 		var argsLength = arguments.callee.caller.arguments.length;
 		if (argsLength < lowerBound)
-			throw new AssertException('assertion expected at least {0} argument{1}'.format(lowerBound, lowerBound === 1 ? '' : 's'));
+			throw new Error('assertion expected at least {0} argument{1}'.format(lowerBound, lowerBound === 1 ? '' : 's'));
 		if (argsLength > upperBound)
-			throw new AssertException('assertion expected at most {0} argument{1}'.format(upperBound, lowerBound === 1 ? '' : 's'));
+			throw new Error('assertion expected at most {0} argument{1}'.format(upperBound, lowerBound === 1 ? '' : 's'));
 	}
 
 	Assert.that = function (subject) {
@@ -69,8 +69,8 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['true'] = function (condition, optionalInfo) {
 		assertArgs(1, 2);
-		if (condition === null) throw new AssertException('assert condition was null');
-		if (typeof condition !== 'boolean') throw new AssertException('assert condition was not a boolean');
+		if (condition === null) throw new Error('assert condition was null');
+		if (typeof condition !== 'boolean') throw new Error('assert condition was not a boolean');
 		if (condition === false) {
 			var info = optionalInfo || Assert.DEFAULT_FAIL_MESSAGE;
 			throw new AssertException(info);
@@ -79,8 +79,8 @@ JTF.namespace('Assert', function (Assert) {
 
 	Assert['false'] = function (condition, optionalInfo) {
 		assertArgs(1, 2);
-		if (condition === null) throw new AssertException('assert condition was null');
-		if (typeof condition !== 'boolean') throw new AssertException('assert condition was not a boolean');
+		if (condition === null) throw new Error('assert condition was null');
+		if (typeof condition !== 'boolean') throw new Error('assert condition was not a boolean');
 		Assert.true(condition === false, optionalInfo);
 	};
 
