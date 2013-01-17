@@ -224,6 +224,16 @@ JTF.loadFramework(function () {
 					}
 				}),
 
+				new TestFixture('Fixture with an error', {
+					'Erroneous test': function () {
+						throw new Error('here is the error message');
+					},
+					'Failing test': function () {
+						Assert.true(false, 'here is the fail message');
+					},
+					'Passing test': function () { }
+				}),
+
 			];
 
 			var runner = new JTF.TestRunner(fixtures);

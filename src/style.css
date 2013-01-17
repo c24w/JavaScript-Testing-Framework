@@ -20,16 +20,16 @@ body {
 	margin: 0.5em 0;
 }
 
-	.testfixture.passed {
+	.testfixture.passed .header {
 		background: #F5FAF5;
 	}
 
-	.testfixture.failed {
+	.testfixture.failed .header {
 		background: #FAF5F5;
 	}
 
-	.testfixture.withErrors {
-		background: #FFF3D6;
+	.testfixture.withErrors .header {
+		background: #FAFAC8;
 	}
 
 	.testfixture .tests {
@@ -69,40 +69,39 @@ body {
 			float: right;
 		}
 
-.test.fail {
-	box-shadow: inset 0 0 2px #999;
-	background: #FAEDED;
-	padding: 0.5em;
+.test {
+	box-shadow: inset 0 0 1px #CCC;
 }
 
-	.test.error .name, .test.fail .name {
-		font-weight: bold;
+	.test.pass {
+		background: #F5FAF5;
 	}
 
-	.test.error .info, .test.fail .info {
-		font-weight: bold;
-		margin-left: 1em;
+		.test.pass .name {
+			padding: 0.2em 0.5em;
+		}
+
+	.test.fail {
+		background: #FAEDED;
 	}
 
-	.test.fail .name {
-		color: #f00;
+		.test.fail .name {
+			color: #f00;
+		}
+
+	.test.error {
+		background: #FAFAC8;
 	}
 
-.test.error {
-	box-shadow: inset 0 0 2px #999;
-	background: #FAFAC8;
-	padding: 0.5em;
-}
+		.test.error .name, .test.fail .name {
+			font-weight: bold;
+		}
 
-	.test.error .name {
-		padding: 0.25em 0.5em;
+		.test.error .info, .test.fail .info {
+			font-weight: bold;
+			margin-left: 1em;
+		}
+
+	.test.fail, .test.error {
+		padding: 0.5em;
 	}
-
-.test.pass .name {
-	padding: 0.2em 0.5em;
-}
-
-.code {
-	font-family: "Lucida Console", "Lucida Sans Typewriter", Monaco, "Bitstream Vera Sans Mono", monospace;
-	font-size: 95%;
-}
