@@ -7,3 +7,6 @@
 [submodule "src/namespacing"]
 	path = src/namespacing
 	url = https://gist.github.com/4204429.git
+[submodule ".\\src/namespace"]
+	path = .\\src/namespace
+	url = https://gist.github.com/4204429.git

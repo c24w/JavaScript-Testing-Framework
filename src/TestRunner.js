@@ -1,4 +1,4 @@
-JTF.namespaceAtRoot(function (JTF) {
+c24w.namespace('JTF', function (JTF) {
 
 	var evt = JTF.EVENT = Object.freeze({
 		FIXTURE: {

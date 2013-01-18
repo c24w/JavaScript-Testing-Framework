@@ -77,9 +77,15 @@
 		window.location.reload();
 	}
 
+	JTF.loadSubmodule = function (name, callback) {
+		JTF.loadResource(name + '/' + name + '.js', callback);
+	}
+
 	JTF.loadFramework = function (callback) {
 		JTF.loadResource('resources.js', function () {
-			JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', 'TestCase.js', callback);
+			JTF.loadSubmodule('namespace', function () {
+				JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', 'TestCase.js', callback);
+			});
 		});
 	}
 

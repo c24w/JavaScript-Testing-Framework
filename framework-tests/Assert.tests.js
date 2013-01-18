@@ -18,11 +18,10 @@ JTF.loadFramework(function () {
 		var fixtures = [
 
 			new JTF.TestFixture('Invalid method calls', {
-				'Should fail with the expected message when no arguments are supplied': function (TestCase) {
+				'Should throw Error with the expected message when no arguments are supplied': function (TestCase) {
 					TestCase(function (assert, minArgs) {
-						assertFail(function () {
-							assert();
-						}, 'assertion expected at least {0} argument{1}'.format(minArgs, minArgs === 1 ? '' : 's'));
+						var error = Assert.that(assert).throws(Error);
+						Assert.equal(error.message, 'assertion expected at least {0} argument{1}'.format(minArgs, minArgs === 1 ? '' : 's'));
 					})
 					.addCase(Assert.true, 1)
 					.addCase(Assert.false, 1)
@@ -42,7 +41,7 @@ JTF.loadFramework(function () {
 					.addCase(Assert.not.throws, 1);
 				},
 
-				'Should fail with the expected message when null arguments are supplied': function (TestCase) {
+				'Should throw AssertException with the expected message when null arguments are supplied': function (TestCase) {
 					TestCase(function (assert, args, msg) {
 						assertFail(function () {
 							assert.apply(null, args);
