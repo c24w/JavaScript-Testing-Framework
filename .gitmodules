@@ -1,3 +1,9 @@
 [submodule "wiki"]
 	path = wiki
 	url = git@github.com:c24w/JavaScript-Testing-Framework.wiki.git
+[submodule "src/try-catch-finally"]
+	path = src/try-catch-finally
+	url = https://gist.github.com/4557711.git
+[submodule "src/namespacing"]
+	path = src/namespacing
+	url = https://gist.github.com/4204429.git

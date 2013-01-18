@@ -20,6 +20,10 @@ body {
 	margin: 0.5em 0;
 }
 
+	.testfixture.failed {
+		margin: 1em 0;
+	}
+
 	.testfixture.passed .header {
 		background: #F5FAF5;
 	}

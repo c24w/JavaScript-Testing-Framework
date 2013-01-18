@@ -45,6 +45,7 @@ JTF.namespace('Assert', function (Assert) {
 
 	function AssertException(message) {
 		this.message = message;
+		this.toString = function () { return this.constructor.name + ': ' + this.message; }
 	}
 
 	Assert.AssertException = AssertException;

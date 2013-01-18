@@ -107,77 +107,61 @@ JTF.namespaceAtRoot(function (JTF) {
 		};
 	};
 
+	function TryCatch(tryBlock) {
+		var actual, errorHandled;
+		try {
+			tryBlock();
+		}
+		catch (e) {
+			actual = e;
+		}
+		this.catch = function (expected, callback) {
+			if (errorWasCaught() && !errorHandled) {
+				if (isUndefined(callback)) {
+					callback = expected;
+					expected = undefined;
+				}
+				if (isUndefined(expected) || caughtErrorIsType(expected)) {
+					callback(actual);
+					errorHandled = true;
+				}
+			}
+			return this;
+		};
+		this.finally = function (callback) {
+			callback();
+		};
+		function isUndefined(subject) { return typeof subject === 'undefined'; }
+		function errorWasCaught() { return !isUndefined(actual); }
+		function caughtErrorIsType(expected) {
+			return actual instanceof expected
+				|| actual.constructor.name === expected.name;
+		}
+	}
 
-
-	//function TestFixtureRunner(fixture) {
-
-	//	var testFixture = testFixtures[i];
-	//	var passes = 0, fails = 0, testErrors = 0;
-	//	var desc = formatDesc(testFixture.getDescription());
-	//	sendEvent(evt.FIXTURE.DESC, desc);
-
-	//	var tests = testFixture.getTests();
-
-	//	if (tests.FIXTURE_SETUP) {
-	//		try {
-	//			tests.FIXTURE_SETUP();
-	//		}
-	//		catch (e) {
-	//			sendEvent(evt.FIXTURE.ERROR, e);
-	//		}
-	//		delete tests.FIXTURE_SETUP;
-	//	}
-
-	//	var testSetup = tests.TEST_SETUP;
-	//	if (testSetup) delete tests.TEST_SETUP;
-
-	//	for (var testName in tests) {
-	//		runSetup(testSetup, function (e) {
-	//			sendEvent(evt.TEST.SETUP.ERROR, testName, e);
-	//		});
-	//		new SingleTestRunner(tests, testName)
-	//			.pass(function (passEvent, testName) {
-	//				sendEvent(passEvent, testName);
-	//				passes++;
-	//			})
-	//			.fail(function (failEvent, testName, failMessage) {
-	//				sendEvent(failEvent, testName, formatMsg(failMessage));
-	//				fails++;
-	//			})
-	//			.error(function (errorEvent, testName, e) {
-	//				sendEvent(errorEvent, testName, e);
-	//				testErrors++;
-	//			});
-
-	//	}
-		
-	//	this.start = function (callback) {
-	//		callback(evt.FIXTURE.START);
-	//		return this;
-	//	};
-	//	this.desc = function () {
-	//		return this;
-	//	};
-	//	this.error = function () {
-	//		return this;
-	//	};
-	//	this.stats = function () {
-	//		sendEvent(evt.FIXTURE.STATS, passes, fails, testErrors);
-	//		return this;
-	//	};
-	//	this.end = function () {
-	//		sendEvent(evt.FIXTURE.END);
-	//		return this;
-	//	};
-	//}
-
-
+	function _try(tryBlock) {
+		return new TryCatch(tryBlock);
+	}
 
 	function SingleTestRunner(tests, testName) {
 		var test = tests[testName];
 		var result, resultCallback, resultData = [];
 		var pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
-		try {
+
+		_try(function () {
+			test(JTF.TestCase);
+			result = pass;
+		})
+		.catch(JTF.Assert.AssertException, function (e) {
+			result = fail;
+			resultData = e.message;
+		})
+		.catch(function (e) {
+			result = error;
+			resultData = e;
+		});
+
+		/*try {
 			test(JTF.TestCase);
 			result = pass;
 		}
@@ -190,7 +174,7 @@ JTF.namespaceAtRoot(function (JTF) {
 				result = error;
 				resultData = e;
 			}
-		}
+		}*/
 
 		this.pass = function (callback) {
 			ifResultUseCallback(pass, callback);
