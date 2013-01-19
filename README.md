@@ -147,10 +147,8 @@ Function names must be unique within an object - functions will overwrite previo
 
 #### Usage
 
-TestCase( Function test )
-	.addCase( arguments )
-	.addCase( arguments )
-	...
+	TestCase( Function test )
+		[ .addCase( arguments ) ]*;
 
 `Function` `test` - delegation to an assertion function or a more complex custom function.
 
