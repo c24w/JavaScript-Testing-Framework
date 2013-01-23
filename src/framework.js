@@ -90,11 +90,11 @@
 	}
 
 	JTF.loadHtmlResources = function (callback) {
-		JTF.loadResources('HTML.js', 'HTML-tools.js', 'style.css', callback);
+		JTF.loadResources('html.js', 'html-tools.js', 'style.css', callback);
 	}
 
 	JTF.loadConsoleResources = function (callback) {
-		JTF.loadResources('Console.js', callback);
+		JTF.loadResources('console.js', callback);
 	}
 
 	JTF.loadResources = function (/* resource.css, resource.js, ..., ..., callback */) {
