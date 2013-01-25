@@ -91,7 +91,6 @@
 			JTF.loadSubmodule('Assert', function () {
 				JTF.loadSubmodule('namespace', function () {
 					JTF.Assert = c24w.Assert;
-					delete c24w.Assert;
 					JTF.loadResources('TestFixture.js', 'TestRunner.js', 'TestCase.js', callback);
 				});
 			});
