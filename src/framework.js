@@ -37,7 +37,7 @@
 	}
 
 	JTF.resourceErrorFromEvent = function (event) {
-		var file = (event.srcElement.attributes.src || event.srcElement.attributes.href).value
+		var file = (event.srcElement.attributes.src || event.srcElement.attributes.href).value;
 		resourceErrorMsg(file);
 	}
 
@@ -61,10 +61,6 @@
 		callback(currentNode);
 	}
 
-	//JTF.addNamespace = function (parent, child) {
-	//	return parent[child] = parent[child] || {};
-	//}
-
 	JTF.namespaceAtRoot = function (callback) {
 		callback(window.JTF);
 	}
@@ -81,10 +77,23 @@
 		JTF.loadResource(name + '/' + name + '.js', callback);
 	}
 
+	JTF.loadSubmodules = function () {
+		var args = Array.prototype.slice.call(arguments, 0);
+		args.forEach(function load_file_from_arg_excluding_callback(arg, i) {
+			if (i < args.length - 1)
+				args[i] = arg + '/' + arg + '.js';
+		});
+		JTF.loadResources.apply(null, args);
+	};
+
 	JTF.loadFramework = function (callback) {
 		JTF.loadResource('resources.js', function () {
-			JTF.loadSubmodule('namespace', function () {
-				JTF.loadResources('TestFixture.js', 'Assert.js', 'TestRunner.js', 'TestCase.js', callback);
+			JTF.loadSubmodule('Assert', function () {
+				JTF.loadSubmodule('namespace', function () {
+					JTF.Assert = c24w.Assert;
+					delete c24w.Assert;
+					JTF.loadResources('TestFixture.js', 'TestRunner.js', 'TestCase.js', callback);
+				});
 			});
 		});
 	}

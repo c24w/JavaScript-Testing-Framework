@@ -1,4 +1,4 @@
-c24w.namespace('JTF', function (JTF) {
+JTF.namespaceAtRoot(function (JTF) {
 
 	var evt = JTF.EVENT = Object.freeze({
 		FIXTURE: {
@@ -160,21 +160,6 @@ c24w.namespace('JTF', function (JTF) {
 			result = error;
 			resultData = e;
 		});
-
-		/*try {
-			test(JTF.TestCase);
-			result = pass;
-		}
-		catch (e) {
-			if (e instanceof JTF.Assert.AssertException) {
-				result = fail;
-				resultData = e.message;
-			}
-			else {
-				result = error;
-				resultData = e;
-			}
-		}*/
 
 		this.pass = function (callback) {
 			ifResultUseCallback(pass, callback);

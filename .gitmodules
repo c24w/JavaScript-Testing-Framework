@@ -7,3 +7,6 @@
 [submodule "wiki"]
 	path = wiki
 	url = git@github.com:c24w/JavaScript-Testing-Framework.wiki.git
+[submodule "src/Assert"]
+	path = src/Assert
+	url = git://github.com/c24w/Assert.git
