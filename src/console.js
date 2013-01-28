@@ -1,5 +1,5 @@
 JTF.namespace('Console', function (Console) {
-	var spacer = '\u0020';
+	var spacer = ' ';
 	var descPrefix = '\u250C' + spacer;
 	var testPrefix = '|' + spacer;
 	var nonFailPadding = spacer + spacer;
@@ -7,36 +7,36 @@ JTF.namespace('Console', function (Console) {
 
 	Console.TestHandler = function () {
 
-		this.handle = function (handleType /*, args */) {
-			var TREvent = JTF.EVENT;
+		this.handle = function (handleType) {
+			var e = JTF.EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
-				case TREvent.BATCH.START:
+				case e.BATCH.START:
 					break;
-				case TREvent.FIXTURE.START:
+				case e.FIXTURE.START:
 					console.log('');
 					break;
-				case TREvent.FIXTURE.DESC:
+				case e.FIXTURE.DESC:
 					console.log(Console.getDescriptionLine(args[0]));
 					break;
-				case TREvent.TEST.PASS:
+				case e.TEST.PASS:
 					testOutputter(true, args[0]);
 					break;
-				case TREvent.TEST.FAIL:
+				case e.TEST.FAIL:
 					testOutputter(false, args[0], args[1]);
 					break;
-				case TREvent.FIXTURE.STATS:
+				case e.FIXTURE.STATS:
 					statsOutputter.apply(null, args);
 					break;
-				case TREvent.FIXTURE.FIXTURE_END:
+				case e.FIXTURE.FIXTURE_END:
 					break;
-				case TREvent.BATCH.END:
+				case e.BATCH.END:
 					break;
 			}
 		};
 
 		function testOutputter(testPassed, testName, msg) {
-			if (testPassed) console.log(Console.getPassedTestLine(testName))
+			if (testPassed) console.log(Console.getPassedTestLine(testName));
 			else console.error(Console.getFailedTestLine(testName, msg));
 		}
 
@@ -55,8 +55,7 @@ JTF.namespace('Console', function (Console) {
 		};
 
 		Console.getFailedTestLine = function (testName, msg) {
-			var msg = !msg || msg.isWhitespace() ? '' : ' - ' + msg;
-			return testPrefix + testName + msg;
+			return testPrefix + testName + ' - ' + msg;
 		};
 
 		Console.getStatsLine = function (passes, fails) {
@@ -68,6 +67,6 @@ JTF.namespace('Console', function (Console) {
 			}
 		};
 
-	}
+	};
 
 });

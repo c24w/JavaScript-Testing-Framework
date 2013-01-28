@@ -58,11 +58,12 @@ JTF.loadFramework(function () {
 						collapse: JTF.HTML.CONFIG.COLLAPSE.ALL
 					});
 					new TestRunner([
-						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true); } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false); } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
+					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
 					assertTagAndClass(dummyRootEl.children[2], 'div', 'testfixture collapsed failed');
 				},
 
@@ -72,8 +73,8 @@ JTF.loadFramework(function () {
 						collapse: JTF.HTML.CONFIG.COLLAPSE.PASSES
 					});
 					new TestRunner([
-						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true); } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false); } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture collapsed passed');
@@ -86,8 +87,8 @@ JTF.loadFramework(function () {
 						collapse: JTF.HTML.CONFIG.COLLAPSE.NONE
 					});
 					new TestRunner([
-						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true) } }),
-						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false) } })
+						new TestFixture('Passed fixture', { 'Passing test': function () { Assert.true(true); } }),
+						new TestFixture('Failed fixture', { 'Failing test': function () { Assert.true(false); } })
 					]).run(htmlHandler);
 
 					assertTagAndClass(dummyRootEl.children[1], 'div', 'testfixture passed');
@@ -131,7 +132,7 @@ JTF.loadFramework(function () {
 				'getStatsLine returns the the expected value for all passed tests': function () {
 					new TestRunner(new TestFixture('', {
 						'Passing test': function () {
-							Assert.true(true)
+							Assert.true(true);
 						}
 					})).run(htmlHandler);
 
@@ -141,7 +142,7 @@ JTF.loadFramework(function () {
 
 				'getStatsLine returns the the expected value for all failed tests': function () {
 					new TestRunner(new TestFixture('', {
-						'Failing test': function () { Assert.true(false) }
+						'Failing test': function () { Assert.true(false); }
 					})).run(htmlHandler);
 
 					var result = dummyRootEl.children[1].children[0].children[1];
@@ -150,8 +151,8 @@ JTF.loadFramework(function () {
 
 				'getStatsLine returns the the expected value for mixed passed/failed tests': function () {
 					new TestRunner(new TestFixture('', {
-						'Passing test': function () { Assert.true(true) },
-						'Failing test': function () { Assert.true(false) }
+						'Passing test': function () { Assert.true(true); },
+						'Failing test': function () { Assert.true(false); }
 					})).run(htmlHandler);
 
 					var result = dummyRootEl.children[1].children[0].children[1];

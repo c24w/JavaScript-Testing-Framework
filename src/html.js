@@ -2,7 +2,7 @@ JTF.namespace('HTML', function (HTML) {
 
 	var CONFIG = HTML.CONFIG = {
 		COLLAPSE: { NONE: 0, PASSES: 1, ALL: 2 },
-	}
+	};
 
 	var DefaultConfig = {
 		collapse: CONFIG.COLLAPSE.PASSES,
@@ -10,7 +10,7 @@ JTF.namespace('HTML', function (HTML) {
 		runInterval: 0,
 		notifyOnFail: false,
 		rootElement: document.body
-	}
+	};
 
 	function updatePartialConfig(partialConfig) {
 		if (!partialConfig || !(partialConfig instanceof Object))
@@ -24,7 +24,7 @@ JTF.namespace('HTML', function (HTML) {
 		}
 	}
 
-	HTML.TestHandler = function (configuration) {
+	HTML.TestHandler = function HTML_test_handler(configuration) {
 		var PAGE_STATUS = {
 			PASS: 0,
 			FAIL: 1,
@@ -38,7 +38,7 @@ JTF.namespace('HTML', function (HTML) {
 		var fixture, header, testsContainer;
 		var reRunTimer;
 
-		this.handle = function (handleType) {
+		this.handle = function handle_event(handleType) {
 			var EVT = JTF.EVENT;
 			var args = Array.prototype.slice.call(arguments, 1);
 			switch (handleType) {
@@ -131,11 +131,11 @@ JTF.namespace('HTML', function (HTML) {
 		}
 
 		function shouldCancelReRuns() {
-			return confirm('Tests failed\n\nOK = review tests\n(stop further re-runs)\n\nCancel = ignore & continue')
+			return confirm('Tests failed\n\nOK = review tests\n(stop further re-runs)\n\nCancel = ignore & continue');
 		}
 
 		function showFailsAlert() {
-			alert('Tests failed')
+			alert('Tests failed');
 		}
 
 		function isSetToReRun() {
@@ -145,7 +145,8 @@ JTF.namespace('HTML', function (HTML) {
 		function addControls() {
 			var controls = HTML.makeDiv('controls');
 			var label = HTML.makeEl('span');
-			HTML.addTextTo(label, 'Expand:')
+			var btn;
+			HTML.addTextTo(label, 'Expand:');
 
 			HTML.addTo(controls, label);
 
@@ -163,7 +164,7 @@ JTF.namespace('HTML', function (HTML) {
 
 			label = HTML.makeEl('span');
 			label.style.marginLeft = '2em';
-			HTML.addTextTo(label, 'Collapse:')
+			HTML.addTextTo(label, 'Collapse:');
 			HTML.addTo(controls, label);
 
 			HTML.addTo(controls, HTML.makeOnClickButton('All', function () {
@@ -179,7 +180,7 @@ JTF.namespace('HTML', function (HTML) {
 			}));
 
 			if (currentConfig.showPassedFixtures) {
-				var btn = HTML.makeOnClickButton('Hide Passes', function () {
+				btn = HTML.makeOnClickButton('Hide Passes', function () {
 					HTML.addClassToMany('.testfixture.passed', 'hidden');
 					this.style.visibility = 'hidden';
 				});
@@ -196,7 +197,7 @@ JTF.namespace('HTML', function (HTML) {
 				HTML.addTo(controls, btn);
 			}
 
-			var btn = HTML.makeOnClickButton('Reload', JTF.reload);
+			btn = HTML.makeOnClickButton('Reload', JTF.reload);
 			btn.style.marginLeft = '2em';
 			HTML.addTo(controls, btn);
 
@@ -232,7 +233,7 @@ JTF.namespace('HTML', function (HTML) {
 					HTML.addClassTo(fixture, 'collapsed');
 				else
 					HTML.removeClassFrom(fixture, 'collapsed');
-			}
+			};
 		}
 
 		function fixtureShouldBeCollapsed(hasFailsOrErrors) {
@@ -269,40 +270,14 @@ JTF.namespace('HTML', function (HTML) {
 			}
 			else return fails + '/' + total + ' failed';
 
-		}
+		};
 
-	}
+	};
 
 	function getTestClassName(testPassed) {
 		var resultClass = testPassed ? ' pass' : ' fail';
 		var className = 'test' + resultClass;
 		return className;
-	}
-
-	/*function formatCodeParts(testName) {
-		var text = testName;
-		var words = testName.split(/[,\u0020]/g);
-		var result = '';
-		for (var i = 0; i < words.length; i++) {
-			var word = words[i];
-			if (/`.+`/.test(word))
-				text = text.replace(word, '<span class="code">' + word.replace(/`/g, '') + '</span>');
-			else if (isDefined(word))
-				text = text.replace(word, '<span class="code">' + word + '</span>');
-		}
-		return text;
-	}*/
-
-	function isDefined(word) {
-		if (window[word])
-			return true;
-		try {
-			eval(word);
-			return true;
-		}
-		catch (e) {
-			return false;
-		}
 	}
 
 });

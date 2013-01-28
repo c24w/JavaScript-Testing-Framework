@@ -45,7 +45,7 @@
 	// Tolerate Automatic Semicolon Insertion (no semicolons).
 	"asi"           : false,
 	// Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
-	"laxbreak"      : false,
+	"laxbreak"      : true,
 	// Prohibit bitwise operators (&, |, ^, etc.).
 	"bitwise"       : true,
 	// Tolerate assignments inside if, for & while. Usually conditions & loops
@@ -105,6 +105,6 @@
 	// Prohibit trailing whitespaces.
 	"trailing"      : true,
 	// Check against strict whitespace and indentation rules.
-	"white"         : true
+	"white"         : false
 }
 

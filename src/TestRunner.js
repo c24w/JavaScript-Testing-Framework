@@ -42,20 +42,29 @@ JTF.namespaceAtRoot(function (JTF) {
 		this.run = function (testEventHandler) {
 			var sendEvent = function () { testEventHandler.handle.apply(testEventHandler, arguments); };
 
+			function handleTestSetupError(e) { sendEvent(evt.TEST.SETUP.ERROR, testName, e); }
+
+			function handleTestPass(event, testName) {
+				sendEvent(event, testName);
+				passes++;
+			}
+
+			function handleTestFail(failEvent, testName, failMessage) {
+				sendEvent(failEvent, testName, formatMsg(failMessage));
+				fails++;
+			}
+
+			function handleTestError(errorEvent, testName, e) {
+				sendEvent(errorEvent, testName, e);
+				testErrors++;
+			}
+
 			if (!testFixtures) testFixtures = [];
 			else if (!(testFixtures instanceof Array)) testFixtures = [testFixtures];
 
 			sendEvent(evt.BATCH.START);
 
 			for (var i = 0; i < testFixtures.length; i++) {
-				/*new TestFixtureRunner(testFixtures[i])
-					.start(function (evt) {
-						sendEvent(evt.FIXTURE.START);
-					})
-					.desc()
-					.stats()
-					.end()
-					.error();*/
 
 				sendEvent(evt.FIXTURE.START);
 
@@ -80,22 +89,13 @@ JTF.namespaceAtRoot(function (JTF) {
 				if (testSetup) delete tests.TEST_SETUP;
 
 				for (var testName in tests) {
-					runSetup(testSetup, function (e) {
-						sendEvent(evt.TEST.SETUP.ERROR, testName, e);
-					});
-					new SingleTestRunner(tests, testName)
-						.pass(function (passEvent, testName) {
-							sendEvent(passEvent, testName);
-							passes++;
-						})
-						.fail(function (failEvent, testName, failMessage) {
-							sendEvent(failEvent, testName, formatMsg(failMessage));
-							fails++;
-						})
-						.error(function (errorEvent, testName, e) {
-							sendEvent(errorEvent, testName, e);
-							testErrors++;
-						});
+					if (tests.hasOwnProperty(testName)) {
+						runSetup(testSetup, handleTestSetupError);
+						new SingleTestRunner(tests, testName)
+							.pass(handleTestPass)
+							.fail(handleTestFail)
+							.error(handleTestError);
+					}
 
 				}
 				sendEvent(evt.FIXTURE.STATS, passes, fails, testErrors);
@@ -107,48 +107,53 @@ JTF.namespaceAtRoot(function (JTF) {
 		};
 	};
 
-	function TryCatch(tryBlock) {
-		var actual, errorHandled;
-		try {
-			tryBlock();
-		}
-		catch (e) {
-			actual = e;
-		}
-		this.catch = function (expected, callback) {
-			if (errorWasCaught() && !errorHandled) {
-				if (isUndefined(callback)) {
-					callback = expected;
-					expected = undefined;
-				}
-				if (isUndefined(expected) || caughtErrorIsType(expected)) {
-					callback(actual);
-					errorHandled = true;
-				}
-			}
-			return this;
-		};
-		this.finally = function (callback) {
-			callback();
-		};
-		function isUndefined(subject) { return typeof subject === 'undefined'; }
-		function errorWasCaught() { return !isUndefined(actual); }
-		function caughtErrorIsType(expected) {
-			return actual instanceof expected
-				|| actual.constructor.name === expected.name;
-		}
-	}
+	(function (c24w) {
 
-	function _try(tryBlock) {
-		return new TryCatch(tryBlock);
-	}
+		function TryCatch(tryBlock) {
+			var actual, errorHandled;
+			try {
+				tryBlock();
+			}
+			catch (e) {
+				actual = e;
+			}
+			this['catch'] = function (expected, callback) {
+				if (errorWasCaught() && !errorHandled) {
+					if (isUndefined(callback)) {
+						callback = expected;
+						expected = undefined;
+					}
+					if (isUndefined(expected) || caughtErrorIsType(expected)) {
+						callback(actual);
+						errorHandled = true;
+					}
+				}
+				return this;
+			};
+			this['finally'] = function (callback) {
+				if(callback) callback();
+				if (errorWasCaught() && !errorHandled) throw actual;
+			};
+			function isUndefined(subject) { return typeof subject === 'undefined'; }
+			function errorWasCaught() { return !isUndefined(actual); }
+			function caughtErrorIsType(expected) {
+				return actual instanceof expected
+					|| actual.constructor.name === expected.name;
+			}
+		}
+
+		c24w['try'] = function (tryBlock) {
+			return new TryCatch(tryBlock);
+		};
+
+	})(window.c24w = window.c24w || {});
 
 	function SingleTestRunner(tests, testName) {
 		var test = tests[testName];
 		var result, resultCallback, resultData = [];
 		var pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
 
-		_try(function () {
+		c24w.try(function () {
 			test(JTF.TestCase);
 			result = pass;
 		})

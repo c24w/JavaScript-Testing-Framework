@@ -12,9 +12,8 @@ JTF.loadFramework(function () {
 
 					FIXTURE_SETUP: function () {
 						logMsgs = [];
-						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
-						new JTF.TestRunner
-							(new JTF.TestFixture('Demo test fixture', {}))
+						window.console.log = function (msg) { logMsgs[logMsgs.length] = msg; };
+						new JTF.TestRunner(new JTF.TestFixture('Demo test fixture', {}))
 							.run(new JTF.Console.TestHandler());
 					},
 
@@ -34,12 +33,12 @@ JTF.loadFramework(function () {
 						logMsgs = [];
 
 						var demoFixture = new JTF.TestFixture('Demo test fixture', {
-							'Passing test 1': function () { Assert.true(true) },
-							'Passing test 2': function () { Assert.true(true) },
-							'Passing test 3': function () { Assert.true(true) },
+							'Passing test 1': function () { Assert.true(true); },
+							'Passing test 2': function () { Assert.true(true); },
+							'Passing test 3': function () { Assert.true(true); },
 						});
 
-						window.console = { log: function (msg) { logMsgs[logMsgs.length] = msg } };
+						window.console.log = function (msg) { logMsgs.push(msg); };
 
 						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
@@ -48,12 +47,12 @@ JTF.loadFramework(function () {
 						var numTests = 3;
 						Assert.greater(logMsgs.length, numTests - 1, 'at least {0} calls to console.log should have been made - 1 per passing test'.format(numTests));
 						for (var i = 0; i < numTests;) {
-							Assert.that(logMsgs[i + 2]).equals(console.getPassedTestLine('Passing test ' + ++i));
+							Assert.that(logMsgs[i + 2]).equals(console.getPassedTestLine('Passing test ' + (++i)));
 						}
 					},
 
 					'Statistics should be outputted to console.log, in the expected format': function () {
-						Assert.that(logMsgs[logMsgs.length - 1]).equals(JTF.Console.getStatsLine(3, 0));
+						Assert.that(logMsgs.pop()).equals(JTF.Console.getStatsLine(3, 0));
 					}
 
 				}),
@@ -64,12 +63,12 @@ JTF.loadFramework(function () {
 						errorMsgs = [];
 
 						var demoFixture = new JTF.TestFixture('Demo test fixture', {
-							'Failing test 1': function () { Assert.true(false, 'fail message 1') },
-							'Failing test 2': function () { Assert.true(false, 'fail message 2') },
-							'Failing test 3': function () { Assert.true(false, 'fail message 3') }
+							'Failing test 1': function () { Assert.true(false, 'fail message 1'); },
+							'Failing test 2': function () { Assert.true(false, 'fail message 2'); },
+							'Failing test 3': function () { Assert.true(false, 'fail message 3'); }
 						});
 
-						window.console = { log: function () { }, error: function (msg) { errorMsgs[errorMsgs.length] = msg } };
+						window.console.error = function (msg) { errorMsgs[errorMsgs.length] = msg; };
 
 						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
@@ -83,7 +82,7 @@ JTF.loadFramework(function () {
 					},
 
 					'Statistics should be outputted to console.error, in the expected format': function () {
-						Assert.that(errorMsgs[errorMsgs.length - 1]).equals(JTF.Console.getStatsLine(0, 3));
+						Assert.that(errorMsgs.pop()).equals(JTF.Console.getStatsLine(0, 3));
 					}
 
 				}),
@@ -95,18 +94,16 @@ JTF.loadFramework(function () {
 						errorMsgs = [];
 
 						var demoFixture = new JTF.TestFixture('Demo test fixture', {
-							'Passing test 1': function () { Assert.true(true) },
-							'Failing test 1': function () { Assert.true(false, 'fail message 1') },
-							'Failing test 2': function () { Assert.true(false, 'fail message 2') },
-							'Passing test 2': function () { Assert.true(true) },
-							'Passing test 3': function () { Assert.true(true) },
-							'Failing test 3': function () { Assert.true(false, 'fail message 3') }
+							'Passing test 1': function () { Assert.true(true); },
+							'Failing test 1': function () { Assert.true(false, 'fail message 1'); },
+							'Failing test 2': function () { Assert.true(false, 'fail message 2'); },
+							'Passing test 2': function () { Assert.true(true); },
+							'Passing test 3': function () { Assert.true(true); },
+							'Failing test 3': function () { Assert.true(false, 'fail message 3'); }
 						});
 
-						window.console = {
-							log: function (msg) { logMsgs[logMsgs.length] = msg },
-							error: function (msg) { errorMsgs[errorMsgs.length] = msg },
-						};
+						window.console.log = function (msg) { logMsgs[logMsgs.length] = msg; };
+						window.console.error = function (msg) { errorMsgs[errorMsgs.length] = msg; };
 
 						new JTF.TestRunner(demoFixture).run(new JTF.Console.TestHandler());
 					},
@@ -115,7 +112,7 @@ JTF.loadFramework(function () {
 						var numTests = 3;
 						Assert.greater(logMsgs.length, numTests - 1, 'at least {0} calls to console.log should have been made - 1 per passing test'.format(numTests));
 						for (var i = 0; i < numTests;) {
-							Assert.that(logMsgs[i + 2]).equals(console.getPassedTestLine('Passing test ' + ++i));
+							Assert.that(logMsgs[i + 2]).equals(console.getPassedTestLine('Passing test ' + (++i)));
 						}
 					},
 
