@@ -154,7 +154,8 @@ JTF.namespaceAtRoot(function (JTF) {
 		var pass = evt.TEST.PASS, fail = evt.TEST.FAIL, error = evt.TEST.ERROR;
 
 		c24w.try(function () {
-			test(JTF.TestCase);
+			if(test.length !== 0) test(JTF.TestCase);
+			else test();
 			result = pass;
 		})
 		.catch(JTF.Assert.AssertException, function (e) {
