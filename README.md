@@ -148,7 +148,7 @@ Function names must be unique within an object - functions will overwrite previo
 #### Usage
 
 	TestCase( Function test )
-		[ .addCase( arguments ) ]*;
+		[ .addCase( [ Object arg [, Object arg ]* ] ) ]*;
 
 `Function` `test` - delegation to an assertion function or a more complex custom function.
 
@@ -287,7 +287,7 @@ Must contain a handle function and then be passed to the [TestRunner](#testrunne
 
 The [TestRunner](#testrunner) calls the `handle` function of a [TestHandler](#testhandler), where the first argument is the event (such as an enum reference) and any subsequent arguments are associated data:
 
-	myTestHandler.handle( event, data )
+	myTestHandler.handle( Object event [, Object data [, Object data ]* ] )
 
 #### Example
 
