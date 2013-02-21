@@ -1,7 +1,7 @@
 ﻿JavaScript Testing Framework
 ============================
 
-Test JavaScript using JavaScript.  Built for Google Chrome.
+Test JavaScript using JavaScript.  Tested in Google Chrome.
 
 Typical set-up
 --------------
