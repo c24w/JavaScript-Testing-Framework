@@ -287,7 +287,7 @@ Must contain a handle function and then be passed to the [TestRunner](#testrunne
 
 The [TestRunner](#testrunner) calls the `handle` function of a [TestHandler](#testhandler), where the first argument is the event (such as an enum reference) and any subsequent arguments are associated data:
 
-	myTestHandler.handle( Object event [, Object data [, Object data ]* ] )
+	myTestHandler.handle( Object event [, Object data ]* )
 
 #### Example
 
