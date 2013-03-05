@@ -1,7 +1,7 @@
 ﻿JavaScript Testing Framework
 ============================
 
-Test JavaScript using JavaScript.  Tested in Google Chrome.
+Test JavaScript using JavaScript.  Bootstrap-tested in Google Chrome.
 
 Typical set-up
 --------------
