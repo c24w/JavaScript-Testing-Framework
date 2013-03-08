@@ -1,10 +1,9 @@
-(function (JTF) {
+(function setUpJTF(JTF) {
 
-	var frameworkBaseURL = document.documentElement.getAttribute('data-frameworkBaseURL');
+	var frameworkBaseURL = document.documentElement.getAttribute('data-frameworkBaseURL'),
+		suppressErrorAlerts = true;
 
-	var suppressErrorAlerts = true;
-
-	JTF.setState = function (title, iconData) {
+	JTF.setState = function setState(title, iconData) {
 		var favicon;
 		document.title = title.isWhitespace() ? document.title : title;
 		var linkEls = document.head.getElementsByTagName('link');
@@ -21,7 +20,7 @@
 		favicon.type = iconData.substring(iconData.indexOf(':') + 1, iconData.indexOf(';'));
 		favicon.href = iconData;
 		document.head.appendChild(favicon);
-	}
+	};
 
 	JTF.setState('', '');
 
@@ -34,12 +33,12 @@
 	window.onerror = function (msg) {
 		setErrorState();
 		confirmReload(msg);
-	}
+	};
 
 	JTF.resourceErrorFromEvent = function (event) {
 		var file = (event.srcElement.attributes.src || event.srcElement.attributes.href).value;
 		resourceErrorMsg(file);
-	}
+	};
 
 	function resourceErrorMsg(msg) {
 		setErrorState();
@@ -59,11 +58,11 @@
 		for (var i = 0 ; i < namespaceNodes.length; i++)
 			currentNode = addNamespaceNode(currentNode, namespaceNodes[i]);
 		callback(currentNode);
-	}
+	};
 
 	JTF.namespaceAtRoot = function (callback) {
 		callback(window.JTF);
-	}
+	};
 
 	function addNamespaceNode(parent, child) {
 		return parent[child] = parent[child] || {};
@@ -71,11 +70,11 @@
 
 	JTF.reload = function () {
 		window.location.reload();
-	}
+	};
 
 	JTF.loadSubmodule = function (name, callback) {
 		JTF.loadResource(name + '/' + name + '.js', callback);
-	}
+	};
 
 	JTF.loadSubmodules = function () {
 		var args = Array.prototype.slice.call(arguments, 0);
@@ -95,50 +94,52 @@
 				});
 			});
 		});
-	}
+	};
 
 	JTF.loadHtmlResources = function (callback) {
 		JTF.loadResources('html.js', 'html-tools.js', 'style.css', callback);
-	}
+	};
 
-	JTF.loadConsoleResources = function (callback) {
+	JTF.loadConsoleResources = function loadConsoleResources(callback) {
 		JTF.loadResources('console.js', callback);
-	}
+	};
 
-	JTF.loadResources = function (/* resource.css, resource.js, ..., ..., callback */) {
-		var loadCount = 0;
-		var lastArg = arguments[arguments.length - 1];
-		var callback = lastArg instanceof Function ? lastArg : undefined;
-		var resourceCount = arguments.length - (callback ? 1 : 0);
-		for (var i = 0; i < resourceCount; i++) {
-			JTF.loadResource(arguments[i], function () {
-				if (++loadCount === resourceCount && callback !== null) {
-					callback();
-				}
-			});
+	JTF.loadResources = function loadResources(/* resource.css, resource.js, ..., ..., callback */) {
+		var numberOfResources = arguments.length - 1,
+			resourcesToLoad = numberOfResources,
+			callback = arguments[numberOfResources];
+
+		function handleResourceLoaded() {
+			if (--resourcesToLoad === 0) callback();
 		}
-	}
 
-	JTF.loadResource = function (file, callback) {
+		for (var i = 0; i < numberOfResources; i++) {
+			JTF.loadResource(arguments[i], handleResourceLoaded);
+		}
+	};
+
+	JTF.loadResource = function loadResource(file, callback) {
+		var fileExt;
+
 		if (isLoaded(file)) {
-			if (typeof callback !== 'undefined')
-				callback();
+			if (callback) callback();
 			return;
 		}
 
 		if (isLoading(file)) {
-			setTimeout(function () { JTF.loadResource(file, callback) }, 50);
-			return;
+			setTimeout(JTF.loadResource.bind(JTF, file, callback), 100);
 		}
 
 		setLoading(file);
-		if (isScript(file))
-			loadScript(file, callback);
-		else if (isStylesheet(file))
-			loadStylesheet(file, callback);
-		else
-			resourceErrorMsg('Cannot handle resource type \'' + file.substring(file.lastIndexOf('.')) + '\' (' + file + ')');
-	}
+
+		fileExt = file.substring(file.lastIndexOf('.'));
+
+		switch (fileExt) {
+			case '.js': return loadScript(file, callback);
+			case '.css': return loadStylesheet(file, callback);
+			default: resourceErrorMsg('Cannot handle resource type \'' + fileExt + '\' (' + file + ')');
+		}
+	};
 
 	function loadScript(file, callback) {
 		var script = document.createElement('script');
@@ -173,12 +174,12 @@
 	var fileStatuses = {
 		LOADING: 0,
 		LOADED: 1
-	}
+	};
 
 	var fileStatus = {
 		'framework.js': fileStatuses.LOADED,
 		'utils.js': fileStatuses.LOADED
-	}
+	};
 
 	function isLoaded(file) {
 		return fileStatus[file] === fileStatuses.LOADED;
@@ -194,14 +195,6 @@
 
 	function setLoading(file) {
 		fileStatus[file] = fileStatuses.LOADING;
-	}
-
-	function isScript(file) {
-		return file.endsWith('.js');
-	}
-
-	function isStylesheet(file) {
-		return file.endsWith('.css');
 	}
 
 })(window.JTF = window.JTF || {});
