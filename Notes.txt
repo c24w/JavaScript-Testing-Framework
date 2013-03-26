@@ -76,3 +76,8 @@ break into sub-projects
  - html tools
  - namespacing
  - cachebuster
+
+ ---
+
+
+ Look at implementations in t-c-f.js. E.g. class.name is not part of the ES standard, maybe use Object.prototype.toString
