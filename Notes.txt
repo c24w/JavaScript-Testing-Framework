@@ -81,3 +81,140 @@ break into sub-projects
 
 
  Look at implementations in t-c-f.js. E.g. class.name is not part of the ES standard, maybe use Object.prototype.toString
+
+
+ -----------------------------------------
+
+
+# Just a bunch of thoughts and things I had related to this project
+
+var asyncTestKey, asyncArgPassed;
+
+asyncTestRunning = ( return asyncArgPassed !== null )
+
+for i = 0 in tests.keys
+    if not asyncTestRunning
+        test[keys[i]] ( asyncArgPassed if required )
+
+    if asyncTestRunning and asyncArgPassed.done
+        asyncArgPassed = null
+
+    if asyncTestRunning and asyncArgPassed.timeout has expired
+        throw 'async timeout expired'
+
+    if asyncTestRunning and not asyncArgPassed.done
+        make sure i is not incremented so the loop hangs while the aysnc test runs
+
+---
+
+function assert(condition){}
+
+assert.throws = function(func){}
+
+usage:
+
+assert(true)
+
+assert.throws(function({})
+
+---
+
+for a in b
+should be for var a in b
+
+--
+
+delete obj.prop returns boolean success - throw if fails in test runner?
+
+---
+
+don't to update partial config, just overwrite default config
+
+var completeConfig= {}, userConfig = {};
+
+for prop in userConfig
+    completeConfig[prop] = userConfig[prop]
+
+then use completeConfig
+
+---
+
+Add async attr to load resource - may as well load in parallel!
+test performance difference
+
+---
+
+use if('prop' in obj) because explicitly returns a boolean, not implicitly by whether a value is present or undefined. Also eliminates ambiguity if prop is a bool
+
+---
+
+want:
+assert(bool)
+may not be able to do this one because assert(1 === 1) and assert(1 === 1).is.not null would conflict (see below).
+
+assert.something(args)
+assert.equal(sth, sthelse)
+ -> static props on assert
+
+assert(sth).somethings
+assert(func).throws(sth)
+assert(sth).is.equiv.to(sthelse)
+ -> use assert constructor
+
+assert(sth).is.not.null;
+ -> Object.defineProperty(assert, 'null', {
+        get: function () { ... }
+    });
+
+
+starting point:
+
+works with
+  assert.equal(subject, target)
+  assert(subject).equals(target)
+  assert.null(subject)
+  assert(subject).is(target) - same as equal
+  assert(subject).is.null
+
+function is(target) {
+  return assert.equal(this.subject, target);
+};
+
+function assert(subject){
+  if (!(this instanceof arguments.callee))
+    return new arguments.callee(subject);
+
+  this.subject = subject;
+  this.is = assert.equal.bind(this, subject);
+  
+  Object.defineProperties(this.is, {
+    null: {
+      get: function _null() {
+        return assert.null(subject);
+      }
+    }
+  });
+}
+
+assert.equal = function equal(a,b) {
+  return a === b;
+};
+
+assert.null= function equal(subject) {
+  return assert.equal(subject, null);
+};
+
+//assert.prototype.equals = function equals(sth){
+//  return assert.equal(this.subject, sth);
+//}
+
+---
+Console
+console.log('%c Blah ', 'background: #222; color: #bada55');
+
+GROUP
+console.group
+console.time
+etc
+https://developers.google.com/chrome-developer-tools/docs/console#using_the_console_api
+
